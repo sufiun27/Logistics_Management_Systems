@@ -39,3 +39,7 @@ subsequently you can add & modify the Destination Country , Consignee , Transpor
 in TT Information you can add the following information: also this is configure with yajra datatable that is able to maintain the pagination and search functionality and also you can export the data in excel and pdf format and can be handle thousands of data with the help of server side processing.
 
 ![alt text](image-4.png)
+
+Also can be handle the Export Form with the following information: update live data with AJAX and also can be handle the pagination and search functionality with the help of yajra datatable.
+
+![Sufiun](image-5.png)
