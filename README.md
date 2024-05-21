@@ -11,7 +11,53 @@
 
 
 
-# Logistics Management System
+## Installation
+
+1. **Clone the Repository**: 
+   ```bash
+   git clone https://github.com/sufiun27/Logistics_Management_Systems.git
+   ```
+
+2. **Install Composer Dependencies**: 
+   ```bash
+   composer install
+   ```
+
+3. **Create `.env` File**: 
+   ```bash
+   cp .env.example .env
+   ```
+
+4. **Generate Application Key**: 
+   ```bash
+   php artisan key:generate
+   ```
+
+5. **Set Up Database**: 
+   - Configure your database connection details in the `.env` file.
+   - Update the following variables with your database information:
+     ```
+     DB_CONNECTION=mysql
+     DB_HOST=127.0.0.1
+     DB_PORT=3306
+     DB_DATABASE=your_database_name
+     DB_USERNAME=your_database_username
+     DB_PASSWORD=your_database_password
+     ```
+
+6. **Run Migrations and Seeders**  
+   ```bash
+   php artisan migrate
+   php artisan db:seed
+   ```
+
+7. **Serve the Application**: 
+   ```bash
+   php artisan serve
+   ```
+<hr>
+
+## Brief Overview
 
 ## Login
 To access the system, use your email and password.
