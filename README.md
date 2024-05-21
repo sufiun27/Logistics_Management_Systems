@@ -34,3 +34,8 @@ you can manage Export Formms
 
 ![alt text](image-3.png)
 
+subsequently you can add & modify the Destination Country , Consignee , Transport , TT Information and Export Form
+
+in TT Information you can add the following information: also this is configure with yajra datatable that is able to maintain the pagination and search functionality and also you can export the data in excel and pdf format and can be handle thousands of data with the help of server side processing.
+
+![alt text](image-4.png)
