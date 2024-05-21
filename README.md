@@ -43,3 +43,29 @@ in TT Information you can add the following information: also this is configure 
 Also can be handle the Export Form with the following information: update live data with AJAX and also can be handle the pagination and search functionality with the help of yajra datatable.
 
 ![Sufiun](image-5.png)
+
+Can be handle shipping information :
+
+![alt text](image-6.png)
+
+Can be handle audit with yajra datatable :
+
+![alt text](image-7.png)
+
+Billing Details:
+
+![alt text](image-8.png)
+
+Logistic Details:
+
+![alt text](image-9.png)
+
+There have Employe Authentication and Authorization with the following roles:
+You cad active or deactive a user and also can be handle the password reset functionality.
+also can be give specafic role and permission to a user.
+
+![alt text](image-10.png)
+
+also can be active or deavtice specific role and permission.
+
+![alt text](image-11.png)
