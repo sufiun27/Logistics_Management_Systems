@@ -9,7 +9,9 @@
 <a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
 </p>
 
-
+## Contract for more information
+- Email: abusufiun27@gmail.com
+- Phone: +880 1878 000 675
 
 ## Installation
 
