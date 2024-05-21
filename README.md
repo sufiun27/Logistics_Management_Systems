@@ -11,13 +11,18 @@
 
 
 
+# Logistics Management System
 
-For login : use mail and password
+## Login
+To access the system, use your email and password.
 
-![alt text](image.png)
+![Login](image.png)
 
-after login you can maintain the logistics management system with the following features:
-you can manage Export Formms
+## Features
+Once logged in, you can manage the logistics system with the following features:
+
+### Export Forms Management
+You can manage:
 - Exporter
 - Destination Country
 - Consignee
@@ -25,47 +30,61 @@ you can manage Export Formms
 - TT Information
 - Export Form
 
-![alt text](image-1.png)
+![Export Forms](image-1.png)
 
-<p> you can add & modify the Exporter :</p>
-<br>
+#### Exporter Management
+You can add and modify exporters:
 
-![alt text](image-2.png)
+![Add Exporter](image-2.png)
+![Modify Exporter](image-3.png)
 
-![alt text](image-3.png)
+#### Destination Country, Consignee, Transport, TT Information, and Export Form Management
+Similarly, you can add and modify details for Destination Country, Consignee, Transport, TT Information, and Export Form.
 
-subsequently you can add & modify the Destination Country , Consignee , Transport , TT Information and Export Form
+### TT Information
+In TT Information, you can manage the following details. The system is configured with Yajra Datatables, providing pagination, search functionality, and the ability to export data in Excel and PDF formats. It can handle thousands of records with server-side processing.
 
-in TT Information you can add the following information: also this is configure with yajra datatable that is able to maintain the pagination and search functionality and also you can export the data in excel and pdf format and can be handle thousands of data with the help of server side processing.
+![TT Information](image-4.png)
 
-![alt text](image-4.png)
+### Export Form
+You can manage the Export Form details with live data updates via AJAX. Yajra Datatables enable pagination and search functionality.
 
-Also can be handle the Export Form with the following information: update live data with AJAX and also can be handle the pagination and search functionality with the help of yajra datatable.
+![Export Form](image-5.png)
 
-![Sufiun](image-5.png)
+### Shipping Information
+Manage shipping information:
 
-Can be handle shipping information :
+![Shipping Information](image-6.png)
 
-![alt text](image-6.png)
+### Audit Management
+Handle audits with Yajra Datatables:
 
-Can be handle audit with yajra datatable :
+![Audit](image-7.png)
 
-![alt text](image-7.png)
+### Billing Details
+Manage billing details:
 
-Billing Details:
+![Billing Details](image-8.png)
 
-![alt text](image-8.png)
+### Logistic Details
+Manage logistic details:
 
-Logistic Details:
+![Logistic Details](image-9.png)
 
-![alt text](image-9.png)
+### Employee Authentication and Authorization
+The system supports employee authentication and authorization with specific roles. You can activate or deactivate users and handle password reset functionality. You can also assign specific roles and permissions to users.
 
-There have Employe Authentication and Authorization with the following roles:
-You cad active or deactive a user and also can be handle the password reset functionality.
-also can be give specafic role and permission to a user.
+![Employee Roles](image-10.png)
 
-![alt text](image-10.png)
+You can activate or deactivate specific roles and permissions as well.
 
-also can be active or deavtice specific role and permission.
+![Role Management](image-11.png)
 
-![alt text](image-11.png)
+### Reports
+In the report section, you can view various reports with detailed information.
+
+---
+
+This README provides an overview of the features and capabilities of the Logistics Management System. For more detailed instructions on how to use each feature, refer to the respective sections above.
+
+```
