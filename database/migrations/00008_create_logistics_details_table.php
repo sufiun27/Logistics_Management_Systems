@@ -16,6 +16,7 @@ return new class extends Migration
 
             $table->string('invoice_no')->unique();
             $table->foreign('invoice_no')->references('invoice_no')->on('export_form_apparels');
+
             $table->float('receivable_amount')->nullable();
             $table->float('doc_process_fee')->nullable();
 

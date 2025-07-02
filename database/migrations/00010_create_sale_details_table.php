@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('invoice_no')->unique();
             $table->foreign('invoice_no')->references('invoice_no')->on('export_form_apparels');
+
             $table->string('order_no')->nullable();
             $table->string('style_no')->nullable();
             $table->string('product_type')->nullable();
@@ -35,8 +36,8 @@ return new class extends Migration
             $table->float('final_fob')->nullable();
             $table->float('final_cm')->nullable();
             $table->string('remarks')->nullable();
-            
-            $table->string('createad_by')->nullable();
+
+            $table->string('created_by')->nullable();
             $table->string('updated_by')->nullable();
             $table->timestamps();
         });

@@ -11,17 +11,15 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('custom_audit_details', function (Blueprint $table) {
+        Schema::create('invoices', function (Blueprint $table) {
             $table->id();
-            $table->string('invoice_no')->unique();
+
+            $table->string('invoice_no');
             $table->foreign('invoice_no')->references('invoice_no')->on('export_form_apparels');
-            $table->string('import_reg_no');
-            $table->string('import_bond');
-            $table->float('total_fabric_used');
-            $table->string('adjusted_reg');
-            $table->string('adjusted_reg_page');
-            $table->string('createad_by');
-            $table->string('updated_by')->nullable();
+
+            $table->string('name');
+            $table->string('country');
+            $table->integer('balance');
             $table->timestamps();
         });
     }
@@ -31,6 +29,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('custom_audit_details');
+        Schema::dropIfExists('invoices');
     }
 };

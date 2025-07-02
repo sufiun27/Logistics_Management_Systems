@@ -23,8 +23,8 @@ return new class extends Migration
             //hs_code_second
             $table->string('hs_code_second')->nullable();
 
-            //invoice_no
-            $table->string('invoice_no');
+            //invoice_no //! main invoice no that is use as foreign key at many where
+            $table->string('invoice_no')->unique();
 
             //invoice_date
             $table->date('invoice_date');
@@ -50,7 +50,9 @@ return new class extends Migration
             // tt_no
             // tt_date
             $table->string('section');
+
             $table->string('tt_no');//foreign key
+
             $table->string('site');
             $table->date('tt_date');
 
@@ -89,16 +91,16 @@ return new class extends Migration
             //update_by
             $table->string('create_by');
             $table->string('update_by')->nullable();
-           
+
             //foreign key dst_country_port to table dest_countries column port
-            $table->foreign('dst_country_port')->references('port')->on('dest_countries');   
+            $table->foreign('dst_country_port')->references('port')->on('dest_countries');
             //foreign key tt_no to table tt_information column tt_no
             $table->foreign('tt_no')->references('tt_no')->on('tt_information');
             //foreign key consignee_site to table consignees column consignee_site
             $table->foreign('consignee_site')->references('consignee_site')->on('consignees');
 
             $table->timestamps();
-            
+
         });
     }
 
