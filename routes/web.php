@@ -20,13 +20,13 @@ Route::get('/logout', [AuthManager::class, 'logout'])->name('logout');
 
 
 //Dashboard routes///////////////////////////
-Route::get('/', function () {return view('dashboard.dashboard');})->name('dashboard.dashboard')->middleware('auth');  
+Route::get('/', function () {return view('dashboard.dashboard');})->name('dashboard.dashboard')->middleware('auth');
 
 //Invoice Module Routes//////////////////////
 Route::get('/invoice', [InvoiceController::class, 'index'])->name('invoice');
 
 //->middleware('authorization:emp_viewx')
-  
+
 
 //////////Employee routes/////////////////////
 Route::prefix('employee')->group(function () {
@@ -127,10 +127,10 @@ Route::prefix('exportFormApparel')->middleware('authorization:export_manage')->g
 ///////shipping/////////////////////
 use App\Http\Controllers\ShippingController;
 Route::prefix('shipping')->middleware('authorization:shipping_manage')->group(function(){
-    Route::get('shipping', [ShippingController::class, 'shipping'])->name('shipping.shipping'); 
-    Route::get('addShipping', [ShippingController::class, 'addShipping'])->name('shipping.addShipping'); 
+    Route::get('shipping', [ShippingController::class, 'shipping'])->name('shipping.shipping');
+    Route::get('addShipping', [ShippingController::class, 'addShipping'])->name('shipping.addShipping');
     //shipping.getInvoice
-    Route::post('getInvoice', [ShippingController::class, 'getInvoice'])->name('shipping.getInvoice'); 
+    Route::post('getInvoice', [ShippingController::class, 'getInvoice'])->name('shipping.getInvoice');
     //Shipment Status Info
     Route::post('storeShipmentStatusInfo', [ShippingController::class, 'storeShipmentStatusInfo'])->name('shipping.storeShipmentStatusInfo');
     //storeShipmentOtherInfo
@@ -198,4 +198,4 @@ Route::prefix('logistics')->middleware('authorization:logistics_manage')->group(
 use App\Http\Controllers\ReportController;
 Route::prefix('reports')->middleware('auth')->group(function(){
     Route::get('sales', [ReportController::class, 'sales'])->name('reports.sales');
-});   
+});

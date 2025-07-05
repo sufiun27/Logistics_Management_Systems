@@ -9,15 +9,17 @@ class ConsigneeController extends Controller
 {
     public function consignee()
     {
-       // $consignees = Consignee::all();
+        // $consignees = Consignee::all();
         //pagineat
-         $consignees = Consignee::paginate(10);
+        $consignees = Consignee::paginate(10);
         return view('consignee.consignee', compact('consignees'));
     }
-    public  function storeConsignee(Request $request){
+    public function storeConsignee(Request $request)
+    {
         // dd($request->all());
         $request->validate([
-            'consignee_name' => 'required|unique:consignees',
+            'consignee_name' => 'required',
+            'consignee_site' => 'required',
             'consignee_address' => 'required',
             'consignee_country' => 'required',
         ]);
@@ -29,13 +31,16 @@ class ConsigneeController extends Controller
         $consignee->save();
         return redirect()->back()->with('success', 'Consignee added successfully');
     }
-    public function editConsignee($id){
+    public function editConsignee($id)
+    {
         $consignee = Consignee::find($id);
         return view('consignee.editConsignee', compact('consignee'));
     }
-    public function updateConsignee(Request $request, $id){
+    public function updateConsignee(Request $request, $id)
+    {
         $request->validate([
-            'consignee_name' => 'required|unique:consignees,consignee_name,'.$id,
+            'consignee_name' => 'required',
+            'consignee_site' => 'required',
             'consignee_address' => 'required',
             'consignee_country' => 'required',
         ]);
@@ -47,7 +52,8 @@ class ConsigneeController extends Controller
         $consignee->save();
         return redirect()->back()->with('success', 'Consignee updated successfully');
     }
-    public function deleteConsignee($id){
+    public function deleteConsignee($id)
+    {
         $consignee = Consignee::find($id);
         $consignee->delete();
         return redirect()->back()->with('success', 'Consignee deleted successfully');

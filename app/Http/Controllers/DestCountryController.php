@@ -16,7 +16,7 @@ class DestCountryController extends Controller
     {
         $request->validate([
             'country_name' => 'required',
-            'country_code' => 'required|unique:dest_countries',
+            'country_code' => 'required',
             'port' => 'required|unique:dest_countries',
 
         ]);
@@ -36,7 +36,7 @@ class DestCountryController extends Controller
     {
         $request->validate([
             'country_name' => 'required',
-            'country_code' => 'required|unique:dest_countries,country_code,'.$id,
+            'country_code' => 'required',
             'port' => 'required|unique:dest_countries,port,'.$id,
 
         ]);

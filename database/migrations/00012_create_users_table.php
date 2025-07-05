@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
@@ -30,6 +31,21 @@ return new class extends Migration
             $table->rememberToken();
             $table->timestamps();
         });
+
+
+        DB::table('users')->insert([
+            'emp_id' => 'HM011290',
+            'name' => 'Abu Sufiun',
+            'email' => 'abu.sufiun@hoplun.com',
+            'password' => bcrypt('12345678'),
+            'designation' => 'Officer',
+            'department' => 'IT',
+            'site' => 'HLFS',
+            'phone' => '01878000675',
+            'address' => 'Dhaka',
+            'remarks' => 'Developer',
+            'status' => true,
+        ]);
     }
 
     /**

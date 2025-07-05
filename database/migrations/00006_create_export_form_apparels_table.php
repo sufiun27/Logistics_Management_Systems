@@ -15,10 +15,10 @@ return new class extends Migration
             $table->id();
 
             // item_name
-            $table->string('item_name');
+            $table->string('item_name')->nullable();
 
             // hs_code
-            $table->string('hs_code');
+            $table->string('hs_code')->nullable();
 
             //hs_code_second
             $table->string('hs_code_second')->nullable();
@@ -27,34 +27,48 @@ return new class extends Migration
             $table->string('invoice_no')->unique();
 
             //invoice_date
-            $table->date('invoice_date');
+            $table->date('invoice_date')->nullable();
 
             //contract_no
             //contract_date
-            $table->string('contract_no');
-            $table->date('contract_date');
+            $table->string('contract_no')->nullable();
+            $table->date('contract_date')->nullable();
 
             // consignee_name
             // consignee_site
             // consignee_address
-            $table->string('consignee_name');//foreign key
-            $table->string('consignee_site');//foreign key
-            $table->string('consignee_address');//foreign key
+            $table->string('consignee_name')->nullable();//foreign key
+            $table->string('consignee_site')->nullable();//foreign key
+            $table->string('consignee_address')->nullable();//foreign key
 
             // dst_country_name
             // dst_country_port
-            $table->string('dst_country_name');//foreign key
-            $table->string('dst_country_port');//foreign key
+            //country_code
+            $table->string('dst_country_code')->nullable();
+            $table->string('dst_country_name')->nullable();
+            $table->string('dst_country_port')->nullable();
+
+
+
+            // transport_name
+            // transport_address
+            // transport_port
+            $table->string('transport_name')->nullable();//foreign key
+            $table->string('transport_address')->nullable();//foreign key
+            $table->string('transport_port')->nullable();//foreign key
+
+
 
             // section
             // tt_no
             // tt_date
-            $table->string('section');
+            $table->string('section')->nullable();
 
             $table->string('tt_no');//foreign key
+            $table->foreign('tt_no')->references('tt_no')->on('tt_information');
 
-            $table->string('site');
-            $table->date('tt_date');
+            $table->string('tt_site')->nullable();
+            $table->date('tt_date')->nullable();
 
             // unit
             // quantity
@@ -65,14 +79,14 @@ return new class extends Migration
             $table->string('unit');
             $table->integer('quantity');
             $table->string('currency');
-            $table->float('amount');
-            $table->float('cm_percentage');
+            $table->decimal('amount', 10, 4)->default(0.00);//cm value
+            $table->decimal('cm_percentage', 10, 4)->default(0.00);//cm value
             $table->string('incoterm');
 
             //cm_amount
             //freight_value
-            $table->float('cm_amount');
-            $table->float('freight_value')->nullable();
+            $table->decimal('cm_amount', 10, 4)->default(0.00);//cm value
+            $table->decimal('freight_value', 10, 4)->default(0.00);//cm value
 
             // exp_no
             // exp_date
@@ -92,12 +106,9 @@ return new class extends Migration
             $table->string('create_by');
             $table->string('update_by')->nullable();
 
-            //foreign key dst_country_port to table dest_countries column port
-            $table->foreign('dst_country_port')->references('port')->on('dest_countries');
-            //foreign key tt_no to table tt_information column tt_no
-            $table->foreign('tt_no')->references('tt_no')->on('tt_information');
-            //foreign key consignee_site to table consignees column consignee_site
-            $table->foreign('consignee_site')->references('consignee_site')->on('consignees');
+
+
+
 
             $table->timestamps();
 
