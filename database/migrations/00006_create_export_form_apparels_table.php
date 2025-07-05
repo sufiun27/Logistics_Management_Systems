@@ -86,7 +86,7 @@ return new class extends Migration
             //cm_amount
             //freight_value
             $table->decimal('cm_amount', 10, 4)->default(0.00);//cm value
-            $table->decimal('freight_value', 10, 4)->default(0.00);//cm value
+            $table->decimal('freight_value', 10, 4)->nullable();//cm value
 
             // exp_no
             // exp_date
