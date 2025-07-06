@@ -119,6 +119,9 @@ Route::prefix('ttInformation')->middleware('authorization:tt_manage')->group(fun
     Route::get('deleteTtInformation/{id}', [TtInformationController::class, 'deleteTtInformation'])->name('ttInformation.deleteTtInformation');
 });//->middleware('authorization:tt_information_manage')
 //////////exportFromApparel/////////////////////
+
+Route::post('/export-form-apparel/fetch-invoice', [ExportFormApparelController::class, 'fetchInvoiceData'])->name('exportFormApparel.fetchInvoiceData');
+
 Route::prefix('exportFormApparel')->middleware('authorization:export_manage')->group(function(){
     Route::get('exportFormApparel', [ExportFormApparelController::class, 'exportFormApparel'])->name('exportFormApparel.exportFormApparel');
     Route::get('addExportFormApparel', [ExportFormApparelController::class, 'addExportFormApparel'])->name('exportFormApparel.addExportFormApparel');

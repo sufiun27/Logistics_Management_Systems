@@ -10,7 +10,6 @@
         <form action="{{ route('exportFormApparel.storeExportFormApparel') }}" method="POST">
             @csrf
             <div class="row">
-
                 <div class="col-6">
                     <!-- Left Side Inputs -->
                     @foreach([
@@ -26,15 +25,17 @@
                         <label for="{{ $name }}" class="col-sm-3 text-end control-label col-form-label">{{ $label }}:</label>
                         <div class="col-sm-9">
                             <input type="{{ $type }}" {{ $required ? 'required' : '' }} name="{{ $name }}" class="form-control" id="{{ $name }}" placeholder="{{ $label }}" value="{{ old($name) }}" />
+                            @if($name == 'invoice_no')
+                            <span id="invoice_validation" class="text-success"></span>
+                            @endif
                         </div>
                     </div>
                     @endforeach
                 </div>
 
-                {{-- ! Right Side --}}
-
+                {{-- Right Side --}}
                 <div class="col-6">
-                    <!-- Right Side Inputs -->
+                    <!-- Consignee Information -->
                     <div class="form-group row">
                         <label for="consignee_name" class="col-sm-3 text-end control-label col-form-label">Consignee Name:</label>
                         <div class="col-sm-9">
@@ -63,31 +64,28 @@
 
                     <hr>
 
+                    <!-- Notify Information -->
                     <div class="form-group row">
                         <label for="notify_name" class="col-sm-3 text-end control-label col-form-label">Notify:</label>
                         <div class="col-sm-9">
                             <select id="notify_name" required name="notify_name" class="form-control">
                                 <option value="">Select Notify</option>
                                 @foreach($notifies as $notify)
-                                <option value="{{ $notify->name }}" {{ old('notify') == $notify->name ? 'selected' : '' }}>{{ $notify->name}}</option>
+                                <option value="{{ $notify->name }}" {{ old('notify_name') == $notify->name ? 'selected' : '' }}>{{ $notify->name }}</option>
                                 @endforeach
                             </select>
                         </div>
-
-                        <div class="form-group row mt-3">
-                            <label for="notify_address" class="col-sm-3 text-end control-label col-form-label">Address:</label>
-                            <div class="col-sm-9">
-                                <input type="text" id="notify_address" name="notify_address" class="form-control" value="{{ old('notify_address') }}" readonly>
-                            </div>
+                    </div>
+                    <div class="form-group row mt-3">
+                        <label for="notify_address" class="col-sm-3 text-end control-label col-form-label">Address:</label>
+                        <div class="col-sm-9">
+                            <input type="text" id="notify_address" name="notify_address" class="form-control" value="{{ old('notify_address') }}" readonly>
                         </div>
-
-
                     </div>
 
                     <hr>
 
-                    <!-- Destination Country & Transport Information//////////////////////////////////////////////////////////////////////////////////////////// -->
-
+                    <!-- Destination Country -->
                     <div class="form-group row">
                         <label for="dst_country_name" class="col-sm-3 text-end control-label col-form-label">Destination Country:</label>
                         <div class="col-sm-9">
@@ -114,7 +112,8 @@
                     @endforeach
 
                     <hr>
-                    <!-- Transport Information Entry -->
+
+                    <!-- Transport Information -->
                     <div class="form-group row">
                         <label for="transport_name" class="col-sm-3 text-end control-label col-form-label">Transport Name:</label>
                         <div class="col-sm-9">
@@ -148,8 +147,7 @@
 
                     <hr>
 
-
-                    {{-- //! TT Information Entry --}}
+                    <!-- TT Information -->
                     <div class="form-group row">
                         <label for="tt_no" class="col-sm-3 text-end control-label col-form-label">TT No:</label>
                         <div class="col-sm-9">
@@ -180,6 +178,7 @@
                         <label for="unit" class="col-sm-3 text-end control-label col-form-label">Unit:</label>
                         <div class="col-sm-9">
                             <select id="unit" required name="unit" class="form-control">
+                                <option value="">Select Unit</option>
                                 <option value="PCS" {{ old('unit') == 'PCS' ? 'selected' : '' }}>PCS</option>
                                 <option value="SET" {{ old('unit') == 'SET' ? 'selected' : '' }}>SET</option>
                             </select>
@@ -195,6 +194,7 @@
                         <label for="currency" class="col-sm-3 text-end control-label col-form-label">Currency:</label>
                         <div class="col-sm-9">
                             <select required id="currency" name="currency" class="form-control">
+                                <option value="">Select Currency</option>
                                 <option value="USDollers" {{ old('currency') == 'USDollers' ? 'selected' : '' }}>USDollers</option>
                                 <option value="EUros" {{ old('currency') == 'EUros' ? 'selected' : '' }}>EUros</option>
                                 <option value="Pound" {{ old('currency') == 'Pound' ? 'selected' : '' }}>Pound</option>
@@ -210,7 +210,7 @@
                     <div class="form-group row">
                         <label for="cm_percentage" class="col-sm-3 text-end control-label col-form-label">CM Percentage:</label>
                         <div class="col-sm-9">
-                            <input required readonly name="cm_percentage" id="cm_percentage" type="number" class="form-control" value="{{ $cmValue->cm_value }}" placeholder="..%"/>
+                            <input required readonly name="cm_percentage" id="cm_percentage" type="number" class="form-control" value="{{ $cmValue->cm_value ?? '' }}" placeholder="..%"/>
                         </div>
                     </div>
                     <div class="form-group row">
@@ -233,7 +233,6 @@
                     <div id="freight_value"></div>
                 </div>
 
-                {{-- ! ---------------------------------      --}}
                 <!-- Ex-Factory Information Entry -->
                 <div class="col-6">
                     <h4>Ex-Factory Information Entry</h4>
@@ -268,7 +267,78 @@ var transports = @json($transports);
 var notifies = @json($notifies);
 
 $(document).ready(function() {
+    // Invoice No Auto-Fill
+    $('#invoice_no').on('input', function() {
+        var invoiceNo = $(this).val();
+        if (invoiceNo.length > 0) {
+            $.ajax({
+                url: "{{ route('exportFormApparel.fetchInvoiceData') }}",
+                type: "POST",
+                data: {
+                    "_token": "{{ csrf_token() }}",
+                    "invoice_no": invoiceNo
+                },
+                success: function(response) {
+                    console.log(response);
+                    if (response.status === 'success') {
+                        $('#invoice_validation').html('');
+                        $('#invoice_validation').html(response.message || 'Invoice data fetched successfully');
+                        // Populate form fields
+                        $('#item_name').val(response.data.item_name || '');
+                        $('#hs_code').val(response.data.hs_code || '');
+                        $('#hs_code_second').val(response.data.hs_code_second || '');
+                        $('#invoice_date').val(response.data.invoice_date || '');
+                        $('#contract_no').val(response.data.contract_no || '');
+                        $('#contract_date').val(response.data.contract_date || '');
+                        $('#consignee_name').val(response.data.consignee_name || '').trigger('change');
+                        $('#notify_name').val(response.data.notify_name || '').trigger('change');
+                        $('#dst_country_name').val(response.data.dst_country_name || '').trigger('change');
+                        $('#transport_name').val(response.data.transport_name || '').trigger('change');
+                        $('#tt_no').val(response.data.tt_no || '');
+                        $('#invoice_site').val(response.data.invoice_site || '');
+                        $('#tt_date').val(response.data.tt_date || '');
+                        $('#unit').val(response.data.unit || '').trigger('change');
+                        $('#quantity').val(response.data.quantity || '');
+                        $('#currency').val(response.data.currency || '').trigger('change');
+                        $('#amount').val(response.data.amount || '').trigger('input');
+                        $('#incoterm').val(response.data.incoterm || '').trigger('change');
+                        $('#exp_no').val(response.data.exp_no || '');
+                        $('#exp_date').val(response.data.exp_date || '');
+                        $('#exp_permit_no').val(response.data.exp_permit_no || '');
+                        $('#bl_no').val(response.data.bl_no || '');
+                        $('#bl_date').val(response.data.bl_date || '');
+                        $('#ex_factory_date').val(response.data.ex_factory_date || '');
 
+                        // Trigger cascades for dependent fields
+                        setTimeout(function() {
+                            $('#consignee_site').val(response.data.consignee_site || '').trigger('change');
+                            setTimeout(function() {
+                                $('#consignee_country').val(response.data.consignee_country || '').trigger('change');
+                                setTimeout(function() {
+                                    $('#consignee_address').val(response.data.consignee_address || '');
+                                }, 100);
+                            }, 100);
+                            $('#dst_country_code').val(response.data.dst_country_code || '').trigger('change');
+                            setTimeout(function() {
+                                $('#dst_country_port').val(response.data.dst_country_port || '');
+                            }, 100);
+                            $('#transport_address').val(response.data.transport_address || '').trigger('change');
+                            setTimeout(function() {
+                                $('#transport_port').val(response.data.transport_port || '');
+                            }, 100);
+                        }, 100);
+                    } else {
+                        $('#invoice_validation').html(response.message || 'New Invoice No');
+                    }
+                },
+                error: function() {
+                    $('#invoice_validation').html('Error fetching invoice data');
+                }
+            });
+        } else {
+            $('#invoice_validation').html('');
+        }
+    });
 
     // Notify Cascade
     $('#notify_name').on('change', function() {
@@ -280,7 +350,6 @@ $(document).ready(function() {
             $('#notify_address').val('');
         }
     });
-
 
     // Consignee Cascade
     $('#consignee_name').on('change', function() {
@@ -365,10 +434,10 @@ $(document).ready(function() {
         }
     });
 
-    //TODO: TT No Validation (AJAX)
+    // TT No Validation (AJAX)
     $('#tt_no').on('input', function() {
         var tt_no = $(this).val();
-        if(tt_no.length > 0){
+        if (tt_no.length > 0) {
             $.ajax({
                 url: "{{ route('exportFormApparel.addExportFormApparelTtNo') }}",
                 type: "POST",
@@ -420,27 +489,27 @@ $(document).ready(function() {
     $('#cm_percentage, #amount').on('input', updateIncotermCalculation);
     $('#incoterm').on('change', updateIncotermCalculation);
 
-    // If form is being repopulated (old input), trigger calculations and cascades
-    if($('#consignee_name').val()){
+    // Trigger calculations and cascades for old input
+    if ($('#consignee_name').val()) {
         $('#consignee_name').trigger('change');
-        setTimeout(function(){
-            if($('#consignee_site').data('old')) $('#consignee_site').val($('#consignee_site').data('old')).trigger('change');
-            if($('#consignee_country').data('old')) $('#consignee_country').val($('#consignee_country').data('old')).trigger('change');
-            if($('#consignee_address').data('old')) $('#consignee_address').val($('#consignee_address').data('old'));
+        setTimeout(function() {
+            if ($('#consignee_site').data('old')) $('#consignee_site').val($('#consignee_site').data('old')).trigger('change');
+            if ($('#consignee_country').data('old')) $('#consignee_country').val($('#consignee_country').data('old')).trigger('change');
+            if ($('#consignee_address').data('old')) $('#consignee_address').val($('#consignee_address').data('old'));
         }, 300);
     }
-    if($('#dst_country_name').val()){
+    if ($('#dst_country_name').val()) {
         $('#dst_country_name').trigger('change');
-        setTimeout(function(){
-            if($('#dst_country_code').data('old')) $('#dst_country_code').val($('#dst_country_code').data('old')).trigger('change');
-            if($('#dst_country_port').data('old')) $('#dst_country_port').val($('#dst_country_port').data('old'));
+        setTimeout(function() {
+            if ($('#dst_country_code').data('old')) $('#dst_country_code').val($('#dst_country_code').data('old')).trigger('change');
+            if ($('#dst_country_port').data('old')) $('#dst_country_port').val($('#dst_country_port').data('old'));
         }, 300);
     }
-    if($('#transport_name').val()){
+    if ($('#transport_name').val()) {
         $('#transport_name').trigger('change');
-        setTimeout(function(){
-            if($('#transport_address').data('old')) $('#transport_address').val($('#transport_address').data('old')).trigger('change');
-            if($('#transport_port').data('old')) $('#transport_port').val($('#transport_port').data('old'));
+        setTimeout(function() {
+            if ($('#transport_address').data('old')) $('#transport_address').val($('#transport_address').data('old')).trigger('change');
+            if ($('#transport_port').data('old')) $('#transport_port').val($('#transport_port').data('old'));
         }, 300);
     }
     updateIncotermCalculation();

@@ -70,6 +70,25 @@ class ExportFormApparelController extends Controller
         return view('exportFormApparel.addExportFormApparel', compact('consignees', 'dest_countries', 'transports', 'exporters', 'notifies', 'cmValue'));
     }
 
+    // In your controller (e.g., ExportFormApparelController.php)
+public function fetchInvoiceData(Request $request)
+{
+    $invoiceNo = $request->input('invoice_no');
+    $data = ExportFormApparel::where('invoice_no', $invoiceNo)->first();
+
+    if ($data) {
+        return response()->json([
+            'status' => 'success',
+            'data' => $data
+        ]);
+    } else {
+        return response()->json([
+            'status' => 'error',
+            'message' => 'New Invoice No'
+        ]);
+    }
+}
+
 
 
     //! only use this for tt information
