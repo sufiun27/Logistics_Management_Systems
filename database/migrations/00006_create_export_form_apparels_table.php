@@ -39,6 +39,7 @@ return new class extends Migration
             // consignee_address
             $table->string('consignee_name')->nullable();//foreign key
             $table->string('consignee_site')->nullable();//foreign key
+            $table->string('consignee_country')->nullable();//foreign key
             $table->string('consignee_address')->nullable();//foreign key
 
             // dst_country_name

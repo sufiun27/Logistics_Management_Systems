@@ -239,7 +239,7 @@
                     <h4>Ex-Factory Information Entry</h4>
                     <hr>
                     @foreach([
-                        ['exp_no', 'Exp No', 'number'],
+                        ['exp_no', 'Exp No', 'text'],
                         ['exp_date', 'Exp Date', 'date'],
                         ['exp_permit_no', 'Exp Permit No', 'text'],
                         ['bl_no', 'B/L No', 'text'],
