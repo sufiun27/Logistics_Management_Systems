@@ -10,16 +10,17 @@
         <form action="{{ route('exportFormApparel.storeExportFormApparel') }}" method="POST">
             @csrf
             <div class="row">
+
                 <div class="col-6">
                     <!-- Left Side Inputs -->
                     @foreach([
-                        ['item_name', 'Item Name', 'text', true],
-                        ['hs_code', 'HS Code', 'text', true],
+                        ['item_name', 'Item Name', 'text', false],
+                        ['hs_code', 'HS Code', 'text', false],
                         ['hs_code_second', 'HS Code Second', 'text', false],
                         ['invoice_no', 'Invoice No', 'text', true],
-                        ['invoice_date', 'Invoice Date', 'date', true],
-                        ['contract_no', 'Contract No', 'text', true],
-                        ['contract_date', 'Contract Date', 'date', true]
+                        ['invoice_date', 'Invoice Date', 'date', false],
+                        ['contract_no', 'Contract No', 'text', false],
+                        ['contract_date', 'Contract Date', 'date', false]
                     ] as [$name, $label, $type, $required])
                     <div class="form-group row">
                         <label for="{{ $name }}" class="col-sm-3 text-end control-label col-form-label">{{ $label }}:</label>
@@ -29,6 +30,9 @@
                     </div>
                     @endforeach
                 </div>
+
+                {{-- ! Right Side --}}
+
                 <div class="col-6">
                     <!-- Right Side Inputs -->
                     <div class="form-group row">
@@ -36,7 +40,7 @@
                         <div class="col-sm-9">
                             <select id="consignee_name" required name="consignee_name" class="form-control">
                                 <option value="">Select Consignee Name</option>
-                                @foreach($consignees as $consignee)
+                                @foreach($consignees->unique('consignee_name') as $consignee)
                                 <option value="{{ $consignee->consignee_name }}" {{ old('consignee_name') == $consignee->consignee_name ? 'selected' : '' }}>{{ $consignee->consignee_name }}</option>
                                 @endforeach
                             </select>
@@ -56,12 +60,40 @@
                         </div>
                     </div>
                     @endforeach
+
+                    <hr>
+
+                    <div class="form-group row">
+                        <label for="notify_name" class="col-sm-3 text-end control-label col-form-label">Notify:</label>
+                        <div class="col-sm-9">
+                            <select id="notify_name" required name="notify_name" class="form-control">
+                                <option value="">Select Notify</option>
+                                @foreach($notifies as $notify)
+                                <option value="{{ $notify->name }}" {{ old('notify') == $notify->name ? 'selected' : '' }}>{{ $notify->name}}</option>
+                                @endforeach
+                            </select>
+                        </div>
+
+                        <div class="form-group row mt-3">
+                            <label for="notify_address" class="col-sm-3 text-end control-label col-form-label">Address:</label>
+                            <div class="col-sm-9">
+                                <input type="text" id="notify_address" name="notify_address" class="form-control" value="{{ old('notify_address') }}" readonly>
+                            </div>
+                        </div>
+
+
+                    </div>
+
+                    <hr>
+
+                    <!-- Destination Country & Transport Information//////////////////////////////////////////////////////////////////////////////////////////// -->
+
                     <div class="form-group row">
                         <label for="dst_country_name" class="col-sm-3 text-end control-label col-form-label">Destination Country:</label>
                         <div class="col-sm-9">
                             <select id="dst_country_name" required name="dst_country_name" class="form-control">
                                 <option value="">Select Destination Country</option>
-                                @foreach($dest_countries as $destcountry)
+                                @foreach($dest_countries->unique('country_name') as $destcountry)
                                 <option value="{{ $destcountry->country_name }}" {{ old('dst_country_name') == $destcountry->country_name ? 'selected' : '' }}>{{ $destcountry->country_name }}</option>
                                 @endforeach
                             </select>
@@ -80,6 +112,9 @@
                         </div>
                     </div>
                     @endforeach
+
+                    <hr>
+                    <!-- Transport Information Entry -->
                     <div class="form-group row">
                         <label for="transport_name" class="col-sm-3 text-end control-label col-form-label">Transport Name:</label>
                         <div class="col-sm-9">
@@ -110,6 +145,11 @@
                             <input readonly name="section" id="section" type="text" class="form-control" value="Private" placeholder="Private"/>
                         </div>
                     </div>
+
+                    <hr>
+
+
+                    {{-- //! TT Information Entry --}}
                     <div class="form-group row">
                         <label for="tt_no" class="col-sm-3 text-end control-label col-form-label">TT No:</label>
                         <div class="col-sm-9">
@@ -118,9 +158,9 @@
                         </div>
                     </div>
                     <div class="form-group row">
-                        <label for="tt_site" class="col-sm-3 text-end control-label col-form-label">Create By Site:</label>
+                        <label for="invoice_site" class="col-sm-3 text-end control-label col-form-label">Create By Site:</label>
                         <div class="col-sm-9">
-                            <input type="text" name="tt_site" id="tt_site" class="form-control" value="{{ old('tt_site') }}" placeholder="Put Origin Site">
+                            <input type="text" name="invoice_site" id="invoice_site" class="form-control" value="{{ old('invoice_site') }}" placeholder="Put Origin Site">
                         </div>
                     </div>
                     <div class="form-group row">
@@ -192,6 +232,8 @@
                     </div>
                     <div id="freight_value"></div>
                 </div>
+
+                {{-- ! ---------------------------------      --}}
                 <!-- Ex-Factory Information Entry -->
                 <div class="col-6">
                     <h4>Ex-Factory Information Entry</h4>
@@ -223,8 +265,23 @@
 var consignees = @json($consignees);
 var dest_countries = @json($dest_countries);
 var transports = @json($transports);
+var notifies = @json($notifies);
 
 $(document).ready(function() {
+
+
+    // Notify Cascade
+    $('#notify_name').on('change', function() {
+        var selectedName = $(this).val();
+        if (selectedName) {
+            var notify = notifies.find(n => n.name === selectedName);
+            $('#notify_address').val(notify ? notify.address : '');
+        } else {
+            $('#notify_address').val('');
+        }
+    });
+
+
     // Consignee Cascade
     $('#consignee_name').on('change', function() {
         var consigneeName = $(this).val();
@@ -308,7 +365,7 @@ $(document).ready(function() {
         }
     });
 
-    // TT No Validation (AJAX)
+    //TODO: TT No Validation (AJAX)
     $('#tt_no').on('input', function() {
         var tt_no = $(this).val();
         if(tt_no.length > 0){

@@ -10,6 +10,7 @@ use App\Models\TtInformation;
 use App\Models\Transport;
 use App\Models\Export;
 use App\DataTables\ExportFormApparelDataTable;
+use App\Models\Notify;
 use Yajra\DataTables\Facades\DataTables;
 use Barryvdh\DomPDF\Facade\Pdf;
 
@@ -54,56 +55,65 @@ class ExportFormApparelController extends Controller
         $dest_countries = DestCountry::all(['id', 'country_name', 'country_code', 'port']);
         $transports = Transport::all(['id', 'name', 'address', 'port']);
         $exporters = Export::all(['id', 'ExpoterNo', 'ExpoterName', 'ExpoterAddress', 'RegDetails', 'EPBReg']);
-        $tt_information = TtInformation::all(['id', 'tt_no', 'tt_site', 'tt_amount', 'tt_currency']);
+        $notifies = Notify::all(['id', 'name', 'address']);
 
-        return view('exportFormApparel.addExportFormApparel', compact('consignees', 'dest_countries', 'transports', 'exporters', 'tt_information'));
+        // return response()->json([
+            // 'consignees' => $consignees,
+            // 'dest_countries' => $dest_countries,
+            // 'transports' => $transports,
+            // 'exporters' => $exporters,
+        //     'notifies' => $notifies,
+        // ]);
+
+        return view('exportFormApparel.addExportFormApparel', compact('consignees', 'dest_countries', 'transports', 'exporters', 'notifies'));
     }
 
 
-    public function addExportFormApparelConsigneeSite(Request $request){
-        $consignee_name = $request->input('selectedOption');
-        $consignee_site = consignee::where('consignee_name',$consignee_name)->get();
+    // public function addExportFormApparelConsigneeSite(Request $request){
+    //     $consignee_name = $request->input('selectedOption');
+    //     $consignee_site = consignee::where('consignee_name',$consignee_name)->get();
 
-        $output = ' <select id="consignee_site" name="consignee_site" class="form-control site">';
-            $output .= '<option value="">Select Site</option>';
-        foreach($consignee_site as $row){
-            $output .= '<option value="'.$row->consignee_site.'">'.$row->consignee_site.'</option>';
-        }
-         $output .= '</select>';
+    //     $output = ' <select id="consignee_site" name="consignee_site" class="form-control site">';
+    //         $output .= '<option value="">Select Site</option>';
+    //     foreach($consignee_site as $row){
+    //         $output .= '<option value="'.$row->consignee_site.'">'.$row->consignee_site.'</option>';
+    //     }
+    //      $output .= '</select>';
 
-        echo $output;
-    }
+    //     echo $output;
+    // }
 
-    public function addExportFormApparelConsigneeAddess(Request $request){
-         $consignee_site = $request->input('site');
+    // public function addExportFormApparelConsigneeAddess(Request $request){
+    //      $consignee_site = $request->input('site');
 
-         $consignee = consignee::where('consignee_site',$consignee_site)->first();
-          $output = '<input readonly type="text" name="consignee_address"
-         class="form-control"  value="'.$consignee->consignee_address.'" />';
+    //      $consignee = consignee::where('consignee_site',$consignee_site)->first();
+    //       $output = '<input readonly type="text" name="consignee_address"
+    //      class="form-control"  value="'.$consignee->consignee_address.'" />';
 
-         //$output='hi';
-       // echo  $consignee->consignee_address;
-        //echo $consignee_site;
-        echo $output;
-    }
+    //      //$output='hi';
+    //    // echo  $consignee->consignee_address;
+    //     //echo $consignee_site;
+    //     echo $output;
+    // }
     //exportFormApparel.addExportFormApparelDstCountryName
 
-    public function addExportFormApparelDstCountryName(Request $request){
-        $country_name = $request->input('dstCountryName');
-        $dst = DestCountry::where('country_name', $country_name)->get();
+    // public function addExportFormApparelDstCountryName(Request $request){
+    //     $country_name = $request->input('dstCountryName');
+    //     $dst = DestCountry::where('country_name', $country_name)->get();
 
-        $output = '<select id="dst_country_port" name="dst_country_port" class="form-control port">';
-        $output .= '<option value="">Select Port : Code</option>';
+    //     $output = '<select id="dst_country_port" name="dst_country_port" class="form-control port">';
+    //     $output .= '<option value="">Select Port : Code</option>';
 
-        foreach ($dst as $row) {
-            $output .= '<option value="' . $row->port . '">' . $row->port . ' : ' . $row->country_code . '</option>';
-        }
+    //     foreach ($dst as $row) {
+    //         $output .= '<option value="' . $row->port . '">' . $row->port . ' : ' . $row->country_code . '</option>';
+    //     }
 
-        $output .= '</select>';
+    //     $output .= '</select>';
 
-        echo $output;
-    }
+    //     echo $output;
+    // }
 
+    //! only use this for tt information
     public function addExportFormApparelTtNo(Request $request){
         $tt_no = $request->input('tt_no');
         $tt = TtInformation::where('tt_no', $tt_no)->first();
@@ -130,6 +140,8 @@ public function storeExportFormApparel(Request $request)
         'consignee_site' => 'required|string|exists:consignees,consignee_site',
         'consignee_country' => 'required|string|exists:consignees,consignee_country',
         'consignee_address' => 'required|string|exists:consignees,consignee_address',
+        'notify_name' => 'nullable|string|exists:notifies,name',
+        'notify_address' => 'nullable|string|exists:notifies,address',
         'dst_country_name' => 'required|string|exists:dest_countries,country_name',
         'dst_country_code' => 'required|string|exists:dest_countries,country_code',
         'dst_country_port' => 'required|string|exists:dest_countries,port',
@@ -138,7 +150,7 @@ public function storeExportFormApparel(Request $request)
         'transport_port' => 'required|string|exists:transports,port',
         'section' => 'required|string',
         'tt_no' => 'required|string|exists:tt_information,tt_no',
-        'tt_site' => 'required|string',
+        'invoice_site' => 'required|string',
         'tt_date' => 'required|date',
         'unit' => 'required|string|in:PCS,SET',
         'quantity' => 'required|integer|min:1',
@@ -178,7 +190,9 @@ public function storeExportFormApparel(Request $request)
     $exportFormApparel->contract_date = $request->input('contract_date');
     $exportFormApparel->consignee_name = $request->input('consignee_name');
     $exportFormApparel->consignee_site = $request->input('consignee_site');
-    $exportFormApparel->consignee_address = $request->input('concignee_address');
+    $exportFormApparel->consignee_address = $request->input('consignee_address');
+    $exportFormApparel->notify_name = $request->input('notify_name');
+    $exportFormApparel->notify_address = $request->input('notify_address');
     $exportFormApparel->dst_country_code = $request->input('dst_country_code');
     $exportFormApparel->dst_country_name = $request->input('dst_country_name');
     $exportFormApparel->dst_country_port = $request->input('dst_country_port');
@@ -187,7 +201,7 @@ public function storeExportFormApparel(Request $request)
     $exportFormApparel->transport_port = $request->input('transport_port');
     $exportFormApparel->section = $request->input('section');
     $exportFormApparel->tt_no = $request->input('tt_no');
-    $exportFormApparel->tt_site = $request->input('tt_site');
+    $exportFormApparel->invoice_site = $request->input('invoice_site');
     $exportFormApparel->tt_date = $request->input('tt_date');
     $exportFormApparel->unit = $request->input('unit');
     $exportFormApparel->quantity = $request->input('quantity');
@@ -269,6 +283,8 @@ public function storeExportFormApparel(Request $request)
             'consignee_name' => 'required|string',
             'consignee_site' => 'required|string',
             'consignee_address' => 'required|string',
+            'notify_name' => 'nullable|string',
+            'notify_address' => 'nullable|string',
             'dst_country_name' => 'required|string',
             'dst_country_port' => 'required|string|exists:dest_countries,port',
 
@@ -334,6 +350,8 @@ public function storeExportFormApparel(Request $request)
         $exportFormApparel->consignee_name = $request->input('consignee_name');
         $exportFormApparel->consignee_site = $request->input('consignee_site');
         $exportFormApparel->consignee_address = $request->input('consignee_address');
+        $exportFormApparel->notify_name = $request->input('notify_name');
+        $exportFormApparel->notify_address = $request->input('notify_address');
         $exportFormApparel->dst_country_name = $request->input('dst_country_name');
         $exportFormApparel->dst_country_port = $request->input('dst_country_port');
 

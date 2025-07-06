@@ -15,7 +15,7 @@
     />
     <meta name="robots" content="noindex,nofollow" />
     <title>Logistics Management System </title>
-    
+
 
     <!-- Favicon icon -->
     <link
@@ -25,7 +25,7 @@
       href="https://www.hoplun.com/storage/app/uploads/public/5ca/4d6/3d4/5ca4d63d4d92b995796472.jpg"
     />
    <!--//////Boostrap 5-->
-   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" 
+   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
    rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 
 
@@ -33,7 +33,7 @@
     @yield('basic_table_css')
     @yield('yajra_datatable_css')
     <!-- /////////////////////////////// -->
-    
+
     <!-- Custom CSS -->
     <link href="{{asset('matrix/assets/libs/flot/css/float-chart.css')}}" rel="stylesheet" />
     <!-- Custom CSS -->
@@ -45,19 +45,19 @@
       <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
       <!-- boostrap 5 links -->
-      <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/5.0.0/css/bootstrap.min.css"> 
+      <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/5.0.0/css/bootstrap.min.css">
       <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
       <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/5.0.0/js/bootstrap.min.js"></script> -->
       <!-- boostrap 5 links -->
-     
-  
+
+
       <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
-      
 
-    
-    
+
+      @stack('styles')
+
   </head>
 
   <body>
@@ -162,7 +162,7 @@
               <!-- ============================================================== -->
               <!-- Search -->
               <!-- ============================================================== -->
-              
+
             </ul>
             <!-- ============================================================== -->
             <!-- Right side toggle and nav items -->
@@ -171,14 +171,14 @@
               <!-- ============================================================== -->
               <!-- Comment -->
               <!-- ============================================================== -->
-              
+
               <!-- ============================================================== -->
               <!-- End Comment -->
               <!-- ============================================================== -->
               <!-- ============================================================== -->
               <!-- Messages -->
               <!-- ============================================================== -->
-              
+
               <!-- ============================================================== -->
               <!-- End Messages -->
               <!-- ============================================================== -->
@@ -209,7 +209,7 @@
                     width="31"
                   />
                 </a>
-                
+
                 <ul
                   class="dropdown-menu dropdown-menu-end user-dd animated"
                   aria-labelledby="navbarDropdown"
@@ -217,13 +217,13 @@
                   <a class="dropdown-item" href="javascript:void(0)"
                     ><i class="mdi mdi-account me-1 ms-1"></i> My Profile</a
                   >
-                  
+
                   <div class="dropdown-divider"></div>
                   <a class="dropdown-item" href="{{route('logout')}}"
                     ><i class="fa fa-power-off me-1 ms-1"></i> Logout</a
                   >
                   <div class="dropdown-divider"></div>
-                  
+
                 </ul>
               </li>
               <!-- ============================================================== -->
@@ -257,7 +257,7 @@
               <!-- //////////////////////// -->
 
               <!-- /////////////////////Forms///////////////////// -->
-              
+
               <li class="sidebar-item">
                 <a
                   class="sidebar-link has-arrow waves-effect waves-dark"
@@ -266,9 +266,9 @@
                   ><i class="mdi mdi-receipt"></i
                   ><span class="hide-menu">Export Forms </span></a
                 >
-                
+
                 <ul aria-expanded="false" class="collapse first-level">
-                  
+
                   @can('policy', [App\Models\User::class, 'exporter_manage'])
                   <li class="sidebar-item">
                     <a href="{{route('export.exporter')}}" class="sidebar-link"
@@ -314,6 +314,13 @@
                   </li>
                   @endcan
 
+                  <li class="sidebar-item">
+                    <a href="{{route('notify.index')}}" class="sidebar-link"
+                      ><i class="mdi ">N</i
+                      ><span class="hide-menu"> Notify </span></a
+                    >
+                  </li>
+
                   {{-- //exportFormApparel.exportFormApparel --}}
                   @can('policy', [App\Models\User::class, 'export_manage'])
                   <li class="sidebar-item">
@@ -324,14 +331,14 @@
                   </li>
                   @endcan
 
-                  
+
                 </ul>
               </li>
             <!-- /////////////////////Forms///////////////////// -->
 
       <!-- shipping shipping.shipping//////////////////// -->
       @can('policy', [App\Models\User::class, 'shipping_manage'])
-     
+
             <li class="sidebar-item">
               <a
                 class="sidebar-link has-arrow waves-effect waves-dark"
@@ -341,14 +348,14 @@
                 <span class="hide-menu">Shipping </span></a
               >
               <ul aria-expanded="false" class="collapse first-level">
-                
+
               <li class="sidebar-item">
                   <a href="{{route('shipping.shipping')}}" class="sidebar-link">
                     <i class="mdi">S</i>
                     <span class="hide-menu"> Shippings </span></a
                   >
                 </li>
-                
+
                 {{-- <li class="sidebar-item">
                   <a href="{{route('shipping.addShippingDetails')}}" class="sidebar-link"
                     ><i class="mdi">S D</i
@@ -358,7 +365,7 @@
               </ul>
             </li>
             @endcan
-             
+
               <!-- /////////////////////Invoice///////////////////// -->
 
               {{-- <li class="sidebar-item">
@@ -370,7 +377,7 @@
                   ><span class="hide-menu">Invoice</span></a
                 >
               </li> --}}
-              
+
               <!-- /////////////////////sales///////////////////// -->
               @can('policy', [App\Models\User::class, 'sales_manage'])
               <li class="sidebar-item">
@@ -382,15 +389,15 @@
                   <span class="hide-menu">Sales </span></a
                 >
                 <ul aria-expanded="false" class="collapse first-level">
-                  
+
                 <li class="sidebar-item">
                     <a href="{{route('sales.index')}}" class="sidebar-link">
                       <i class="mdi">S</i>
                       <span class="hide-menu"> Sales </span></a
                     >
                   </li>
-                  
-                  
+
+
                 </ul>
               </li>
               @endcan
@@ -406,15 +413,15 @@
                   <span class="hide-menu">Audit </span></a
                 >
                 <ul aria-expanded="false" class="collapse first-level">
-                  
+
                 <li class="sidebar-item">
                     <a href="{{route('audit.indexAudit')}}" class="sidebar-link">
                       <i class="mdi">A D</i>
                       <span class="hide-menu"> Audit Details </span></a
                     >
                   </li>
-                  
-                  
+
+
                 </ul>
               </li>
               @endcan
@@ -430,15 +437,15 @@
                   <span class="hide-menu">Billing </span></a
                 >
                 <ul aria-expanded="false" class="collapse first-level">
-                  
+
                 <li class="sidebar-item">
                     <a href="{{route('billing.indexBilling')}}" class="sidebar-link">
                       <i class="mdi">B D</i>
                       <span class="hide-menu"> Billing Details </span></a
                     >
                   </li>
-                  
-                  
+
+
                 </ul>
               </li>
               @endcan
@@ -455,15 +462,15 @@
                   <span class="hide-menu">Reports </span></a
                 >
                 <ul aria-expanded="false" class="collapse first-level">
-                  
+
                 <li class="sidebar-item">
                     <a href="{{route('reports.sales')}}" class="sidebar-link">
                       <i class="mdi">S R</i>
                       <span class="hide-menu"> Sales Reports</span></a
                     >
                   </li>
-                  
-                  
+
+
                 </ul>
               </li>
               {{-- @endcan --}}
@@ -478,15 +485,15 @@
                   <span class="hide-menu">logistics </span></a
                 >
                 <ul aria-expanded="false" class="collapse first-level">
-                  
+
                 <li class="sidebar-item">
                     <a href="{{route('logistics.indexLogistics')}}" class="sidebar-link">
                       <i class="mdi">L D</i>
                       <span class="hide-menu"> logistics Details </span></a
                     >
                   </li>
-                  
-                  
+
+
                 </ul>
               </li>
               @endcan
@@ -503,46 +510,46 @@
                   ><span class="hide-menu">Employees </span></a
                 >
                 <ul aria-expanded="false" class="collapse first-level">
-                  
+
                 <li class="sidebar-item">
                     <a href="{{route('employee.list')}}" class="sidebar-link">
                       <i class="mdi">L</i>
                       <span class="hide-menu"> List </span></a
                     >
                   </li>
-                  
+
                   <li class="sidebar-item">
                     <a href="{{route('employee.register')}}" class="sidebar-link"
                       ><i class="mdi">A N</i
                       ><span class="hide-menu"> Add  New </span></a
                     >
                   </li>
-                  
-                  
+
+
                 </ul>
               </li>
             @endcan
       <!-- Employees//////////////////// -->
-             
+
             <li class="sidebar-item">
-              
+
               <a
                   class="sidebar-link"
                   href="javascript:void(0)"
                   aria-expanded="false"
                   ><i class="mdi mdi-settings"></i>
                   <span class="hide-menu" style="font-size: smaller">Developed By <br>BD-IT: Abu Sufiun</span></a
-                    
+
                 >
             </li>
-      
-              
+
+
             </ul>
-          </li>  
-             
-             
-             
-              
+          </li>
+
+
+
+
             </ul>
           </nav>
           <!-- End Sidebar navigation -->
@@ -567,7 +574,7 @@
     <!-- ============================================================== -->
     <!-- All Jquery -->
     <!--boostrap 5 script-->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" 
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
      integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
     <!-- ============================================================== -->
     <script src="{{asset('matrix/assets/libs/jquery/dist/jquery.min.js')}}"></script>
@@ -592,14 +599,16 @@
     <script src="{{asset('matrix/assets/libs/flot/jquery.flot.crosshair.js')}}"></script>
     <script src="{{asset('matrix/assets/libs/flot.tooltip/js/jquery.flot.tooltip.min.js')}}"></script>
     <script src="{{asset('matrix/dist/js/pages/chart/chart-page-init.js')}}"></script>
-    
+
     @yield('yajra_datatable_js')
     <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script> -->
     <!-- <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/2.4.2/js/dataTables.buttons.min.js"></script>
     <script src="/vendor/datatables/buttons.server-side.js"></script> -->
-    
-    
+
+
     @yield('basic_table')
+
+    @stack('scripts')
   </body>
 </html>

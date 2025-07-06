@@ -1,161 +1,169 @@
 @extends('template.index')
 @section('content')
 
-<div class="card ">
+<div class="card">
     <div class="card-header">
-        <a href="{{route('exportFormApparel.exportFormApparel')}}" class="btn btn-dark btn-sm">Back</a>
-        <a href="{{route('exportFormApparel.exportFormApparelExFactory',$efa->id)}}" class="btn btn-success btn-sm">Ex-Factory</a>
-        <a href="{{route('exportFormApparel.exportFormApparelEdit',$efa->id)}}" class="btn btn-warning btn-sm">Edit</a>
-        <a href="{{route('exportFormApparel.exportFormApparelDelete',$efa->id)}}" class="btn btn-danger btn-sm">Delete</a>
-        <a href="{{route('exportFormApparel.exportFormApparelDetailsPdf',$efa->id)}}" target="_blank" class="btn btn-info btn-sm">PDF</a>
+        <a href="{{ route('exportFormApparel.exportFormApparel') }}" class="btn btn-dark btn-sm">Back</a>
+        <a href="{{ route('exportFormApparel.exportFormApparelExFactory', $efa->id) }}" class="btn btn-success btn-sm">Ex-Factory</a>
+        <a href="{{ route('exportFormApparel.exportFormApparelEdit', $efa->id) }}" class="btn btn-warning btn-sm">Edit</a>
+        <a href="{{ route('exportFormApparel.exportFormApparelDelete', $efa->id) }}" class="btn btn-danger btn-sm">Delete</a>
+        <a href="{{ route('exportFormApparel.exportFormApparelDetailsPdf', $efa->id) }}" target="_blank" class="btn btn-info btn-sm">PDF</a>
     </div>
-    <div class="card-title"><h2>Export Form </h2></div>
+    <div class="card-title"><h2>Export Form</h2></div>
     <hr>
-    
-<div class="card-body">
 
-    <div class="row">
-        <div class="col-md-6">
-            <dl class="row">
-                <dt class="col-sm-4">Item Name:</dt>
-                <dd class="col-sm-8">{{$efa->item_name}}</dd>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-6">
+                <dl class="row">
+                    <dt class="col-sm-4">Item Name:</dt>
+                    <dd class="col-sm-8">{{ $efa->item_name ?? 'N/A' }}</dd>
 
-                <dt class="col-sm-4">HS Code:</dt>
-                <dd class="col-sm-8">{{$efa->hs_code}}</dd>
+                    <dt class="col-sm-4">HS Code:</dt>
+                    <dd class="col-sm-8">{{ $efa->hs_code ?? 'N/A' }}</dd>
 
-                <dt class="col-sm-4">Invoice No:</dt>
-                <dd class="col-sm-8">{{$efa->invoice_no}}</dd>
+                    <dt class="col-sm-4">HS Code Second:</dt>
+                    <dd class="col-sm-8">{{ $efa->hs_code_second ?? 'N/A' }}</dd>
 
-                <dt class="col-sm-4">Invoice Date:</dt>
-                <dd class="col-sm-8">{{$efa->invoice_date}}</dd>
+                    <dt class="col-sm-4">Invoice No:</dt>
+                    <dd class="col-sm-8">{{ $efa->invoice_no }}</dd>
 
-                <dt class="col-sm-4">Contract No:</dt>
-                <dd class="col-sm-8">{{$efa->contract_no}}</dd>
+                    <dt class="col-sm-4">Invoice Date:</dt>
+                    <dd class="col-sm-8">{{ $efa->invoice_date ? \Illuminate\Support\Carbon::parse($efa->invoice_date)->format('Y-m-d') : 'N/A' }}</dd>
 
-                <dt class="col-sm-4">Contract Date:</dt>
-                <dd class="col-sm-8">{{$efa->contract_date}}</dd>
+                    <dt class="col-sm-4">Contract No:</dt>
+                    <dd class="col-sm-8">{{ $efa->contract_no ?? 'N/A' }}</dd>
 
+                    <dt class="col-sm-4">Contract Date:</dt>
+                    <dd class="col-sm-8">{{ $efa->contract_date ? \Illuminate\Support\Carbon::parse($efa->contract_date)->format('Y-m-d') : 'N/A' }}</dd>
+                </dl>
+            </div>
 
-                
+            <div class="col-md-6">
+                <dl class="row">
+                    <dt class="col-sm-4">Consignee Name:</dt>
+                    <dd class="col-sm-8">{{ $efa->consignee_name ?? 'N/A' }}</dd>
 
-            </dl>
-        </div>
+                    <dt class="col-sm-4">Consignee Site:</dt>
+                    <dd class="col-sm-8">{{ $efa->consignee_site ?? 'N/A' }}</dd>
 
-        <div class="col-md-6">
-            <dl class="row">
+                    <dt class="col-sm-4">Consignee Address:</dt>
+                    <dd class="col-sm-8">{{ $efa->consignee_address ?? 'N/A' }}</dd>
 
-                <dt class="col-sm-4">Consignee Name:</dt>
-                <dd class="col-sm-8">{{$efa->consignee_name}}</dd>
+                    <dt class="col-sm-4">DST Country Code:</dt>
+                    <dd class="col-sm-8">{{ $efa->dst_country_code ?? 'N/A' }}</dd>
 
-                <dt class="col-sm-4">Consignee Site:</dt>
-                <dd class="col-sm-8">{{$efa->consignee_site}}</dd>
+                    <dt class="col-sm-4">DST Country Name:</dt>
+                    <dd class="col-sm-8">{{ $efa->dst_country_name ?? 'N/A' }}</dd>
 
-                <dt class="col-sm-4">Consignee Address:</dt>
-                <dd class="col-sm-8">{{$efa->consignee_address}}</dd>
+                    <dt class="col-sm-4">DST Country Port:</dt>
+                    <dd class="col-sm-8">{{ $efa->dst_country_port ?? 'N/A' }}</dd>
 
-                <dt class="col-sm-4">DST Country:</dt>
-                <dd class="col-sm-8">{{$efa->dst_country_name}}</dd>
+                    <dt class="col-sm-4">Section:</dt>
+                    <dd class="col-sm-8">{{ $efa->section ?? 'N/A' }}</dd>
 
-                <dt class="col-sm-4">DST Country Port:</dt>
-                <dd class="col-sm-8">{{$efa->dst_country_port}}</dd>
+                    <dt class="col-sm-4">TT No:</dt>
+                    <dd class="col-sm-8">{{ $efa->tt_no ?? 'N/A' }}</dd>
 
-                <dt class="col-sm-4">Section:</dt>
-                <dd class="col-sm-8">{{$efa->section}}</dd>
+                    <dt class="col-sm-4">TT Date:</dt>
+                    <dd class="col-sm-8">{{ $efa->tt_date ? \Illuminate\Support\Carbon::parse($efa->tt_date)->format('Y-m-d') : 'N/A' }}</dd>
 
-                <dt class="col-sm-4">TT No:</dt>
-                <dd class="col-sm-8">{{$efa->tt_no}}</dd>
-
-                <dt class="col-sm-4">Local Transport:</dt>
-                <dd class="col-sm-8">{{$efa->local_transport}}</dd>
-
-                <dt class="col-sm-4">Site:</dt>
-                <dd class="col-sm-8">{{$efa->site}}</dd>
-
-                <dt class="col-sm-4">TT Date:</dt>
-                <dd class="col-sm-8">{{$efa->tt_date}}</dd>
-
-                <!-- Add more details as needed -->
-
-            </dl>
+                    <dt class="col-sm-4">Invoice Site:</dt>
+                    <dd class="col-sm-8">{{ $efa->invoice_site ?? 'N/A' }}</dd>
+                </dl>
+            </div>
         </div>
 
         <div class="row">
             <div class="col-md-6">
-                <div class="row">
-                <h4>Quantity & Value </h4>
+                <h4>Quantity & Value</h4>
                 <hr>
-                <dt class="col-sm-4">Unit:</dt>
-                <dd class="col-sm-8">{{$efa->unit}}</dd>
+                <dl class="row">
+                    <dt class="col-sm-4">Unit:</dt>
+                    <dd class="col-sm-8">{{ $efa->unit ?? 'N/A' }}</dd>
 
-                <dt class="col-sm-4">Quantity:</dt>
-                <dd class="col-sm-8">{{$efa->quantity}}</dd>
+                    <dt class="col-sm-4">Quantity:</dt>
+                    <dd class="col-sm-8">{{ $efa->quantity ?? 'N/A' }}</dd>
 
-                <dt class="col-sm-4">Currency:</dt>
-                <dd class="col-sm-8">{{$efa->currency}}</dd>
+                    <dt class="col-sm-4">Currency:</dt>
+                    <dd class="col-sm-8">{{ $efa->currency ?? 'N/A' }}</dd>
 
-                <dt class="col-sm-4">Amount:</dt>
-                <dd class="col-sm-8">{{$efa->amount}}</dd>
+                    <dt class="col-sm-4">Amount:</dt>
+                    <dd class="col-sm-8">{{ isset($efa->amount) ? number_format($efa->amount, 4) : 'N/A' }}</dd>
 
-                <dt class="col-sm-4">CM Percentage:</dt>
-                <dd class="col-sm-8">{{$efa->cm_percentage}}</dd>
+                    <dt class="col-sm-4">CM Percentage:</dt>
+                    <dd class="col-sm-8">{{ isset($efa->cm_percentage) ? number_format($efa->cm_percentage, 4) : 'N/A' }}</dd>
 
-                <dt class="col-sm-4">Incoterm:</dt>
-                <dd class="col-sm-8">{{$efa->incoterm}}</dd>
+                    <dt class="col-sm-4">Incoterm:</dt>
+                    <dd class="col-sm-8">{{ $efa->incoterm ?? 'N/A' }}</dd>
 
-                <dt class="col-sm-4">CM Amount:</dt>
-                <dd class="col-sm-8">{{$efa->cm_amount}}</dd>
+                    <dt class="col-sm-4">CM Amount:</dt>
+                    <dd class="col-sm-8">{{ isset($efa->cm_amount) ? number_format($efa->cm_amount, 4) : 'N/A' }}</dd>
 
-                <dt class="col-sm-4">Freight Value:</dt>
-                <dd class="col-sm-8">{{$efa->freight_value}}</dd>
-
-               
-
-                </div>
+                    <dt class="col-sm-4">Freight Value:</dt>
+                    <dd class="col-sm-8">{{ isset($efa->freight_value) ? number_format($efa->freight_value, 4) : 'N/A' }}</dd>
+                </dl>
             </div>
-            <div class="col-md-6">
-                <div class="row">
-                    <h4>Ex-Factory Information</h4>
-                    <hr>
-                    <dt class="col-sm-4">Exp No:</dt>
-                    <dd class="col-sm-8">{{$efa->exp_no}}</dd>
-    
-                    <dt class="col-sm-4">Exp Date:</dt>
-                    <dd class="col-sm-8">{{$efa->exp_date}}</dd>
-    
-                    <dt class="col-sm-4">Exp Permit No:</dt>
-                    <dd class="col-sm-8">{{$efa->exp_permit_no}}</dd>
-    
-                    <dt class="col-sm-4">BL No:</dt>
-                    <dd class="col-sm-8">{{$efa->bl_no}}</dd>
-    
-                    <dt class="col-sm-4">BL Date:</dt>
-                    <dd class="col-sm-8">{{$efa->bl_date}}</dd>
-    
-                    <dt class="col-sm-4">Ex Factory Date:</dt>
-                    <dd class="col-sm-8">{{$efa->ex_factory_date}}</dd>
 
-                    <hr>
-    
+            <div class="col-md-6">
+                <h4>Transport & Notify Information</h4>
+                <hr>
+                <dl class="row">
+                    <dt class="col-sm-4">Transport Name:</dt>
+                    <dd class="col-sm-8">{{ $efa->transport_name ?? 'N/A' }}</dd>
+
+                    <dt class="col-sm-4">Transport Address:</dt>
+                    <dd class="col-sm-8">{{ $efa->transport_address ?? 'N/A' }}</dd>
+
+                    <dt class="col-sm-4">Transport Port:</dt>
+                    <dd class="col-sm-8">{{ $efa->transport_port ?? 'N/A' }}</dd>
+
+                    <dt class="col-sm-4">Notify Name:</dt>
+                    <dd class="col-sm-8">{{ $efa->notify_name ?? 'N/A' }}</dd>
+
+                    <dt class="col-sm-4">Notify Address:</dt>
+                    <dd class="col-sm-8">{{ $efa->notify_address ?? 'N/A' }}</dd>
+                </dl>
+
+                <h4>Ex-Factory Information</h4>
+                <hr>
+                <dl class="row">
+                    <dt class="col-sm-4">Exp No:</dt>
+                    <dd class="col-sm-8">{{ $efa->exp_no ?? 'N/A' }}</dd>
+
+                    <dt class="col-sm-4">Exp Date:</dt>
+                    <dd class="col-sm-8">{{ $efa->exp_date ? \Illuminate\Support\Carbon::parse($efa->exp_date)->format('Y-m-d') : 'N/A' }}</dd>
+
+                    <dt class="col-sm-4">Exp Permit No:</dt>
+                    <dd class="col-sm-8">{{ $efa->exp_permit_no ?? 'N/A' }}</dd>
+
+                    <dt class="col-sm-4">BL No:</dt>
+                    <dd class="col-sm-8">{{ $efa->bl_no ?? 'N/A' }}</dd>
+
+                    <dt class="col-sm-4">BL Date:</dt>
+                    <dd class="col-sm-8">{{ $efa->bl_date ? \Illuminate\Support\Carbon::parse($efa->bl_date)->format('Y-m-d') : 'N/A' }}</dd>
+
+                    <dt class="col-sm-4">Ex Factory Date:</dt>
+                    <dd class="col-sm-8">{{ $efa->ex_factory_date ? \Illuminate\Support\Carbon::parse($efa->ex_factory_date)->format('Y-m-d') : 'N/A' }}</dd>
+                </dl>
+
+                <h4>Audit Information</h4>
+                <hr>
+                <dl class="row">
                     <dt class="col-sm-4">Created By:</dt>
-                    <dd class="col-sm-8">{{$efa->create_by}}</dd>
+                    <dd class="col-sm-8">{{ $efa->create_by ?? 'N/A' }}</dd>
 
                     <dt class="col-sm-4">Created At:</dt>
-                    <dd class="col-sm-8">{{$efa->created_at}}</dd>
+                    <dd class="col-sm-8">{{ $efa->created_at ? \Illuminate\Support\Carbon::parse($efa->created_at)->format('Y-m-d H:i:s') : 'N/A' }}</dd>
 
                     <dt class="col-sm-4">Updated By:</dt>
-                    <dd class="col-sm-8">{{$efa->update_by}}</dd>
+                    <dd class="col-sm-8">{{ $efa->update_by ?? 'N/A' }}</dd>
 
                     <dt class="col-sm-4">Updated At:</dt>
-                    <dd class="col-sm-8">{{$efa->updated_at}}</dd>
-                </div>
+                    <dd class="col-sm-8">{{ $efa->updated_at ? \Illuminate\Support\Carbon::parse($efa->updated_at)->format('Y-m-d H:i:s') : 'N/A' }}</dd>
+                </dl>
             </div>
-
         </div>
-
     </div>
-
-    <!-- Add more sections and styling as needed -->
-
-</div>
 </div>
 @endsection

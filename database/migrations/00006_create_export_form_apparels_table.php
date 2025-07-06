@@ -58,6 +58,11 @@ return new class extends Migration
             $table->string('transport_port')->nullable();//foreign key
 
 
+            // notify_name
+            // notify_address
+            $table->string('notify_name')->nullable();//foreign key
+            $table->string('notify_address')->nullable();//foreign key
+
 
             // section
             // tt_no
@@ -66,9 +71,9 @@ return new class extends Migration
 
             $table->string('tt_no');//foreign key
             $table->foreign('tt_no')->references('tt_no')->on('tt_information');
-
-            $table->string('tt_site')->nullable();
             $table->date('tt_date')->nullable();
+
+            $table->string('invoice_site')->nullable();
 
             // unit
             // quantity

@@ -199,3 +199,16 @@ use App\Http\Controllers\ReportController;
 Route::prefix('reports')->middleware('auth')->group(function(){
     Route::get('sales', [ReportController::class, 'sales'])->name('reports.sales');
 });
+
+
+
+use App\Http\Controllers\NotifyController;
+Route::prefix('notify')->middleware('auth')->group(function(){
+    Route::get('index', [NotifyController::class, 'index'])->name('notify.index');
+    Route::get('create', [NotifyController::class, 'create'])->name('notify.create');
+    Route::post('store', [NotifyController::class, 'store'])->name('notify.store');
+    Route::get('show/{notify}', [NotifyController::class, 'show'])->name('notify.show');
+    Route::get('edit/{notify}', [NotifyController::class, 'edit'])->name('notify.edit');
+    Route::post('update/{notify}', [NotifyController::class, 'update'])->name('notify.update');
+    Route::post('delete/{notify}', [NotifyController::class, 'destroy'])->name('notify.destroy');
+});
