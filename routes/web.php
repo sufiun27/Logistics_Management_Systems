@@ -89,6 +89,23 @@ Route::prefix('transport')->middleware('authorization:transport_manage')->group(
     Route::post('updateTransport/{id}', [TransportController::class, 'updateTransport'])->name('transport.updateTransport');
     Route::get('deleteTransport/{id}', [TransportController::class, 'deleteTransport'])->name('transport.deleteTransport');
 });
+
+use App\Http\Controllers\NotifyController;
+Route::prefix('notify')->middleware('authorization:export_manage')->group(function(){
+    Route::get('index', [NotifyController::class, 'index'])->name('notify.index');
+    Route::get('create', [NotifyController::class, 'create'])->name('notify.create');
+    Route::post('store', [NotifyController::class, 'store'])->name('notify.store');
+    Route::get('show/{notify}', [NotifyController::class, 'show'])->name('notify.show');
+    Route::get('edit/{notify}', [NotifyController::class, 'edit'])->name('notify.edit');
+    Route::post('update/{notify}', [NotifyController::class, 'update'])->name('notify.update');
+    Route::post('delete/{notify}', [NotifyController::class, 'destroy'])->name('notify.destroy');
+});
+
+use App\Http\Controllers\CmValueController;
+Route::prefix('cmValue')->middleware('authorization:tt_manage')->group(function(){
+    Route::get('index', [CmValueController::class, 'index'])->name('cmValue.index');
+    Route::post('update/{id}', [CmValueController::class, 'update'])->name('cmValue.update');
+});
 ////////TtInformation/////////////////////
 Route::prefix('ttInformation')->middleware('authorization:tt_manage')->group(function(){
     Route::get('ttDetails/{id}', [TtInformationController::class, 'ttDetails'])->name('ttInformation.ttDetails');
@@ -202,13 +219,4 @@ Route::prefix('reports')->middleware('auth')->group(function(){
 
 
 
-use App\Http\Controllers\NotifyController;
-Route::prefix('notify')->middleware('auth')->group(function(){
-    Route::get('index', [NotifyController::class, 'index'])->name('notify.index');
-    Route::get('create', [NotifyController::class, 'create'])->name('notify.create');
-    Route::post('store', [NotifyController::class, 'store'])->name('notify.store');
-    Route::get('show/{notify}', [NotifyController::class, 'show'])->name('notify.show');
-    Route::get('edit/{notify}', [NotifyController::class, 'edit'])->name('notify.edit');
-    Route::post('update/{notify}', [NotifyController::class, 'update'])->name('notify.update');
-    Route::post('delete/{notify}', [NotifyController::class, 'destroy'])->name('notify.destroy');
-});
+

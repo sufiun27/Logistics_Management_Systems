@@ -14,7 +14,7 @@ use App\Models\ExportFormApparel;
 use Illuminate\Support\Facades\DB;
 use Yajra\DataTables\Facades\DataTables;
 use App\DataTables\ExportFormApparelDataTable;
-
+use App\Models\CmValue;
 
 class ExportFormApparelController extends Controller
 {
@@ -57,6 +57,7 @@ class ExportFormApparelController extends Controller
         $transports = Transport::all(['id', 'name', 'address', 'port']);
         $exporters = Export::all(['id', 'ExpoterNo', 'ExpoterName', 'ExpoterAddress', 'RegDetails', 'EPBReg']);
         $notifies = Notify::all(['id', 'name', 'address']);
+        $cmValue = CmValue::first();
 
         // return response()->json([
             // 'consignees' => $consignees,
@@ -66,53 +67,10 @@ class ExportFormApparelController extends Controller
         //     'notifies' => $notifies,
         // ]);
 
-        return view('exportFormApparel.addExportFormApparel', compact('consignees', 'dest_countries', 'transports', 'exporters', 'notifies'));
+        return view('exportFormApparel.addExportFormApparel', compact('consignees', 'dest_countries', 'transports', 'exporters', 'notifies', 'cmValue'));
     }
 
 
-    // public function addExportFormApparelConsigneeSite(Request $request){
-    //     $consignee_name = $request->input('selectedOption');
-    //     $consignee_site = consignee::where('consignee_name',$consignee_name)->get();
-
-    //     $output = ' <select id="consignee_site" name="consignee_site" class="form-control site">';
-    //         $output .= '<option value="">Select Site</option>';
-    //     foreach($consignee_site as $row){
-    //         $output .= '<option value="'.$row->consignee_site.'">'.$row->consignee_site.'</option>';
-    //     }
-    //      $output .= '</select>';
-
-    //     echo $output;
-    // }
-
-    // public function addExportFormApparelConsigneeAddess(Request $request){
-    //      $consignee_site = $request->input('site');
-
-    //      $consignee = consignee::where('consignee_site',$consignee_site)->first();
-    //       $output = '<input readonly type="text" name="consignee_address"
-    //      class="form-control"  value="'.$consignee->consignee_address.'" />';
-
-    //      //$output='hi';
-    //    // echo  $consignee->consignee_address;
-    //     //echo $consignee_site;
-    //     echo $output;
-    // }
-    //exportFormApparel.addExportFormApparelDstCountryName
-
-    // public function addExportFormApparelDstCountryName(Request $request){
-    //     $country_name = $request->input('dstCountryName');
-    //     $dst = DestCountry::where('country_name', $country_name)->get();
-
-    //     $output = '<select id="dst_country_port" name="dst_country_port" class="form-control port">';
-    //     $output .= '<option value="">Select Port : Code</option>';
-
-    //     foreach ($dst as $row) {
-    //         $output .= '<option value="' . $row->port . '">' . $row->port . ' : ' . $row->country_code . '</option>';
-    //     }
-
-    //     $output .= '</select>';
-
-    //     echo $output;
-    // }
 
     //! only use this for tt information
     public function addExportFormApparelTtNo(Request $request){
@@ -273,9 +231,10 @@ class ExportFormApparelController extends Controller
     $transports = Transport::all(['id', 'name', 'address', 'port']);
     $exporters = Export::all(['id', 'ExpoterNo', 'ExpoterName', 'ExpoterAddress', 'RegDetails', 'EPBReg']);
     $notifies = Notify::all(['id', 'name', 'address']);
+    $cmValue = CmValue::first();
 
     return view('exportFormApparel.exportFormApparelEdit', compact(
-        'exportForm', 'consignees', 'dest_countries', 'transports', 'exporters', 'notifies'
+        'exportForm', 'consignees', 'dest_countries', 'transports', 'exporters', 'notifies', 'cmValue'
     ));
     }
 

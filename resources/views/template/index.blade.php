@@ -305,6 +305,24 @@
                   </li>
                   @endcan
 
+                  @can('policy', [App\Models\User::class, 'export_manage'])
+                  <li class="sidebar-item">
+                    <a href="{{route('notify.index')}}" class="sidebar-link"
+                      ><i class="mdi ">N</i
+                      ><span class="hide-menu"> Notify </span></a
+                    >
+                  </li>
+                 @endcan
+
+                  @can('policy', [App\Models\User::class, 'tt_manage'])
+                  <li class="sidebar-item">
+                    <a href="{{route('cmValue.index')}}" class="sidebar-link"
+                      ><i class="mdi ">C M</i
+                      ><span class="hide-menu"> Cm Value </span></a
+                    >
+                  </li>
+                  @endcan
+
                   @can('policy', [App\Models\User::class, 'tt_manage'])
                   <li class="sidebar-item">
                     <a href="{{route('ttInformation.ttInformation')}}" class="sidebar-link"
@@ -314,12 +332,9 @@
                   </li>
                   @endcan
 
-                  <li class="sidebar-item">
-                    <a href="{{route('notify.index')}}" class="sidebar-link"
-                      ><i class="mdi ">N</i
-                      ><span class="hide-menu"> Notify </span></a
-                    >
-                  </li>
+
+
+
 
                   {{-- //exportFormApparel.exportFormApparel --}}
                   @can('policy', [App\Models\User::class, 'export_manage'])
