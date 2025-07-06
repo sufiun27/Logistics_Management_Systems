@@ -10,7 +10,7 @@ return new class extends Migration
         DB::statement("
             CREATE VIEW sales_reports_view AS
             SELECT
-                ef.tt_site,
+                ef.invoice_site,
                 sd.invoice_no,
                 ef.invoice_date,
                 ef.consignee_name,

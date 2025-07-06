@@ -41,7 +41,7 @@ return new class extends Migration
             'designation' => 'Officer',
             'department' => 'IT',
             'site' => 'HLFS',
-            'phone' => '01878000675',
+            'phone' => '01324724642',
             'address' => 'Dhaka',
             'remarks' => 'Developer',
             'status' => true,
