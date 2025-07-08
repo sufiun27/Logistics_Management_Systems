@@ -41,7 +41,7 @@ class TtInformationDataTable extends DataTable
             $query->whereBetween('created_at', [$this->start_date, $this->end_date]);
         }
 
-        return $query;
+        return $query->orderByDesc('created_at');
     }
 
     public function html(): HtmlBuilder

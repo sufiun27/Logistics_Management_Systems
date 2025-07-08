@@ -28,6 +28,13 @@ class ExportFormApparelDataTable extends DataTable
             ';
         })
 
+        ->addColumn('created_at', function ($row) {
+            return optional($row->created_at)->format('d-m-Y');
+        })
+        ->addColumn('updated_at', function ($row) {
+            return optional($row->created_at)->format('d-m-Y');
+        })
+
         ->setRowId('id');
     }
 
@@ -48,7 +55,7 @@ class ExportFormApparelDataTable extends DataTable
 
 
 
-        return $query;
+        return $query->orderByDesc('created_at');
     }
 
 
