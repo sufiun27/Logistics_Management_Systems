@@ -15,6 +15,7 @@ class TtInformationDataTable extends DataTable
     public function dataTable(QueryBuilder $query): EloquentDataTable
     {
         return (new EloquentDataTable($query))
+
             ->addColumn('action', function ($row) {
                 return '<a class="btn btn-sm btn-outline-info" href="' . route('ttInformation.ttDetails', $row->id) . '"><b>' . e($row->tt_no) . '</b></a>';
             })
@@ -61,11 +62,12 @@ class TtInformationDataTable extends DataTable
     {
         return [
             Column::computed('action')
-                ->title('TT No')
+                ->title('Select')
                 ->exportable(false)
                 ->printable(false)
                 ->width(60)
                 ->addClass('text-center'),
+            Column::make('tt_no')->title('TT No'),
 
             Column::make('tt_amount')->title('Amount'),
             Column::make('tt_currency')->title('Currency'),

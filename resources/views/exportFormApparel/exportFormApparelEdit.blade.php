@@ -147,12 +147,28 @@
                             <span id="tt_validation" class="text-danger"></span>
                         </div>
                     </div>
-                    <div class="form-group row">
+
+                    {{-- <div class="form-group row">
                         <label for="invoice_site" class="col-sm-3 text-end control-label col-form-label">Create By Site:</label>
                         <div class="col-sm-9">
                             <input type="text" name="invoice_site" id="invoice_site" class="form-control" value="{{ old('invoice_site', $exportForm->invoice_site) }}" placeholder="Put Origin Site">
                         </div>
+                    </div> --}}
+
+                    <div class="form-group row">
+                        <label for="invoice_site" class="col-sm-3 text-end control-label col-form-label">Create By Site:</label>
+                        <div class="col-sm-9">
+                            <select name="invoice_site" id="invoice_site" class="form-control">
+                                @foreach($exrter as $exrter)
+                                    <option value="{{ $exrter->ExpoterName }}" {{ $exportForm->invoice_site == $exrter->ExpoterName ? 'selected' : '' }}>
+                                        {{ $exrter->ExpoterName }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
                     </div>
+
+
                     <div class="form-group row">
                         <label for="tt_date" class="col-sm-3 text-end control-label col-form-label">TT Date:</label>
                         <div class="col-sm-9">

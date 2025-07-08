@@ -58,6 +58,7 @@ class ExportFormApparelController extends Controller
         $exporters = Export::all(['id', 'ExpoterNo', 'ExpoterName', 'ExpoterAddress', 'RegDetails', 'EPBReg']);
         $notifies = Notify::all(['id', 'name', 'address']);
         $cmValue = CmValue::first();
+        $exrter=Export::select('ExpoterName')->get();
 
         // return response()->json([
             // 'consignees' => $consignees,
@@ -67,7 +68,7 @@ class ExportFormApparelController extends Controller
         //     'notifies' => $notifies,
         // ]);
 
-        return view('exportFormApparel.addExportFormApparel', compact('consignees', 'dest_countries', 'transports', 'exporters', 'notifies', 'cmValue'));
+        return view('exportFormApparel.addExportFormApparel', compact('consignees', 'dest_countries', 'transports', 'exporters', 'notifies', 'cmValue', 'exrter'));
     }
 
     // In your controller (e.g., ExportFormApparelController.php)
@@ -251,9 +252,10 @@ public function fetchInvoiceData(Request $request)
     $exporters = Export::all(['id', 'ExpoterNo', 'ExpoterName', 'ExpoterAddress', 'RegDetails', 'EPBReg']);
     $notifies = Notify::all(['id', 'name', 'address']);
     $cmValue = CmValue::first();
+    $exrter=Export::select('ExpoterName')->get();
 
     return view('exportFormApparel.exportFormApparelEdit', compact(
-        'exportForm', 'consignees', 'dest_countries', 'transports', 'exporters', 'notifies', 'cmValue'
+        'exportForm', 'consignees', 'dest_countries', 'transports', 'exporters', 'notifies', 'cmValue', 'exrter'
     ));
     }
 

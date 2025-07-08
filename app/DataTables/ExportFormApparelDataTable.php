@@ -81,18 +81,22 @@ class ExportFormApparelDataTable extends DataTable
     {
         return [
 
+            Column::computed('action')
+            ->title('Select')
+                  ->exportable(false)
+                  ->printable(false)
+                  ->width(60)
+                  ->addClass('text-center'),
+
+                Column::make('invoice_no')->title('Invoice No'),
+
 
 
                   Column::make('id')->title('ID'),
                   Column::make('item_name')->title('Item Name'),
                   Column::make('hs_code')->title('HS Code'),
                   Column::make('hs_code_second')->title('HS Code 2'),
-                  Column::computed('action')
-                  ->exportable(false)
-                  ->printable(false)
-                  ->width(60)
-                  ->addClass('text-center')
-                  ->title('invoice_no'),
+
                   Column::make('invoice_date')->title('Invoice Date'),
                   Column::make('contract_no')->title('Contract No'),
                   Column::make('contract_date')->title('Contract Date'),
