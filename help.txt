@@ -1,0 +1,10 @@
+<div class="form-group row">
+                <label for="tt_site" class="col-sm-3 text-end control-label col-form-label">TT Site</label>
+                <div class="col-sm-9">
+                    <select name="tt_site" id="tt_site" class="form-control">
+                        @foreach($exrter as $exrter)
+                        <option value="{{$exrter->ExpoterName}}" {{ old('tt_site') == $exrter->ExpoterName ? 'selected' : '' }}>{{$exrter->ExpoterName}}</option>
+                        @endforeach
+                    </select>
+                </div>
+            </div>

@@ -16,7 +16,7 @@ return new class extends Migration
             $table->id();
             $table->string('tt_no')->unique();//! this is use as foreign key in export_form_apparels table
 
-            $table->decimal('tt_amount', 10, 4)->default(0.00);//cm value
+            $table->decimal('tt_amount', 16, 4)->default(0.00);//cm value
 
             $table->decimal('tt_used_amount', 10, 4)->default(0);//cm value
 
@@ -25,6 +25,8 @@ return new class extends Migration
 
 
             $table->string('tt_site'); //HLFS
+
+            $table->dateTime('tt_date')->nullable();
 
             $table->string('tt_created_by')->nullable();
             $table->string('Modified_by')->nullable();

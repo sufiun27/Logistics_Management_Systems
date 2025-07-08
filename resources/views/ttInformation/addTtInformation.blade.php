@@ -10,7 +10,7 @@
         <div class="card-body">
             <h4 class="card-title">Add TT information</h4>
             <x-message/>
-    
+
             <!-- Add fields for tt_information table -->
             <div class="form-group row">
                 <label for="tt_no" class="col-sm-3 text-end control-label col-form-label">TT Number</label>
@@ -37,23 +37,30 @@
                     </select>
                 </div>
             </div>
-            
-            
+
+
             <div class="form-group row">
                 <label for="bank_name" class="col-sm-3 text-end control-label col-form-label">Bank Name</label>
                 <div class="col-sm-9">
                     <input type="text" name="bank_name" class="form-control" id="bank_name" placeholder="Bank Name" value="{{ old('bank_name') }}" />
                 </div>
             </div>
-            
+
             <div class="form-group row">
                 <label for="tt_site" class="col-sm-3 text-end control-label col-form-label">TT Site</label>
                 <div class="col-sm-9">
                     <select name="tt_site" id="tt_site" class="form-control">
-                        @foreach($exrter as $exrter)  
+                        @foreach($exrter as $exrter)
                         <option value="{{$exrter->ExpoterName}}" {{ old('tt_site') == $exrter->ExpoterName ? 'selected' : '' }}>{{$exrter->ExpoterName}}</option>
                         @endforeach
                     </select>
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <label for="tt_date" class="col-sm-3 text-end control-label col-form-label">TT Date</label>
+                <div class="col-sm-9">
+                    <input type="date" name="tt_date" class="form-control" id="tt_date" placeholder="TT Date" value="{{ old('tt_date') }}" />
                 </div>
             </div>
 

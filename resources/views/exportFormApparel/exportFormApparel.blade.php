@@ -8,11 +8,20 @@
 @endsection
 
 @section('content')
-    
+
+<style>
+    table.dataTable td {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 200px; /* You can adjust width as needed */
+    }
+</style>
+
 <div class="card">
   <div class="card-title">
       <x-message/>
-      
+
   </div>
   <div class="card-header">
       <form action="" method="GET">
@@ -57,7 +66,7 @@
 
     {{-- {{ $dataTable->scripts(attributes: ['type' => 'module']) }} --}}
 @endsection
- 
+
 @section('yajra_datatable_js')
     <!-- Yajra Datatables Scripts -->
     <!--  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script> -->

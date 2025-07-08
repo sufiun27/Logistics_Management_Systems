@@ -11,9 +11,9 @@ use Illuminate\Http\Request;
 
 class TtInformationController extends Controller
 {
-    
+
     public function ttInformation(TtInformationDataTable $dataTable, Request $request)
-    
+
     {
        if (isset($request->start_date)&&isset($request->end_date)) {
            $start_date = $request->start_date;
@@ -39,6 +39,7 @@ class TtInformationController extends Controller
             'tt_currency'=>'required',
             'bank_name'=>'required',
             'tt_site'=>'required',
+            'tt_date'=>'required',
         ]);
         $ttinformation = new TtInformation;
         $ttinformation->tt_no = $request->tt_no;
@@ -46,6 +47,7 @@ class TtInformationController extends Controller
         $ttinformation->tt_currency = $request->tt_currency;
         $ttinformation->bank_name = $request->bank_name;
         $ttinformation->tt_site = $request->tt_site;
+        $ttinformation->tt_date = $request->tt_date;
         $ttinformation->tt_remarks= $request->tt_remarks;
         $ttinformation->tt_created_by = auth()->user()->emp_id;
         $ttinformation->save();
@@ -60,7 +62,8 @@ class TtInformationController extends Controller
 
     public function editTtInformation($id){
         $tt = TtInformation::find($id);
-        return view('ttInformation.editTtInformation', compact('tt'));
+        $exrter=Export::select('ExpoterName')->get();
+        return view('ttInformation.editTtInformation', compact('tt','exrter'));
     }
 
     public function updateTtInformation(Request $request, $id){
@@ -70,6 +73,7 @@ class TtInformationController extends Controller
             'tt_currency'=>'required',
             'bank_name'=>'required',
             'tt_site'=>'required',
+            'tt_date'=>'required',
         ]);
         $ttinformation = TtInformation::find($id);
         $ttinformation->tt_no = $request->tt_no;
@@ -77,6 +81,7 @@ class TtInformationController extends Controller
         $ttinformation->tt_currency = $request->tt_currency;
         $ttinformation->bank_name = $request->bank_name;
         $ttinformation->tt_site = $request->tt_site;
+        $ttinformation->tt_date = $request->tt_date;
         $ttinformation->tt_remarks= $request->tt_remarks;
         $ttinformation->Modified_by = auth()->user()->emp_id;
         $ttinformation->save();
@@ -99,16 +104,16 @@ class TtInformationController extends Controller
 
     public function deleteTtInformation($id){
         $ttinformation = TtInformation::find($id);
-    
+
         if (!$ttinformation) {
             return redirect()->route('ttInformation.ttInformation')->with('error', 'TT Information not found');
         }
-    
+
         $ttinformation->delete();
-    
+
         return redirect()->route('ttInformation.ttInformation')->with('success', 'TT Information Deleted Successfully');
     }
-    
+
 }
 
 
