@@ -85,7 +85,7 @@ return new class extends Migration
             $table->string('unit');
             $table->integer('quantity');
             $table->string('currency');
-            $table->decimal('amount', 10, 4)->default(0.00);//cm value
+            $table->decimal('amount', 20, 4)->default(0.00);//cm value
             $table->decimal('cm_percentage', 10, 4)->default(0.00);//cm value
             $table->string('incoterm');
 
@@ -100,12 +100,16 @@ return new class extends Migration
             // bl_no
             // bl_date
             // ex_factory_date
+            //net_wet
+            //gross_wet
             $table->string('exp_no')->nullable();
             $table->date('exp_date')->nullable();
             $table->string('exp_permit_no')->nullable();
             $table->string('bl_no')->nullable();
             $table->date('bl_date')->nullable();
             $table->date('ex_factory_date')->nullable();
+            $table->decimal('net_wet')->nullable();
+            $table->decimal('gross_wet')->nullable();
 
             //create_by
             //update_by

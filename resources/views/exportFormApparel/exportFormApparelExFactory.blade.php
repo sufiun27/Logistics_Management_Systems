@@ -55,6 +55,20 @@
                     </div>
                    </div>
 
+                   <div class="form-group row">
+                    <label for="net_wet" class="col-sm-3 text-end control-label col-form-label">Net Wet: </label>
+                    <div class="col-sm-9">
+                        <input name="net_wet" id="net_wet" type="number" step="0.0001" class="form-control" value="{{ $efa->net_wet }}" placeholder="Net Wet"/>
+                    </div>
+                   </div>
+
+                   <div class="form-group row">
+                    <label for="gross_wet" class="col-sm-3 text-end control-label col-form-label">Gross Wet: </label>
+                    <div class="col-sm-9">
+                        <input name="gross_wet" id="gross_wet" type="number" step="0.0001" class="form-control" value="{{ $efa->gross_wet }}" placeholder="Gross Wet"/>
+                    </div>
+                   </div>
+
 
             </div>{{---- col2 end--}}
 

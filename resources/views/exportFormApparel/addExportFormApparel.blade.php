@@ -230,7 +230,7 @@
                     <div class="form-group row">
                         <label for="amount" class="col-sm-3 text-end control-label col-form-label">Amount:</label>
                         <div class="col-sm-9">
-                            <input required name="amount" id="amount" type="number" class="form-control" value="{{ old('amount') }}" placeholder="Amount"/>
+                            <input required name="amount" id="amount" type="number" step="0.0001" class="form-control" value="{{ old('amount') }}" placeholder="Amount"/>
                         </div>
                     </div>
                     <div class="form-group row">
@@ -259,7 +259,7 @@
                     <div id="freight_value"></div>
                 </div>
 
-                <!-- Ex-Factory Information Entry -->
+                <!--TODO: from making formate : Ex-Factory Information Entry -->
                 <div class="col-6">
                     <h4>Ex-Factory Information Entry</h4>
                     <hr>
@@ -269,15 +269,26 @@
                         ['exp_permit_no', 'Exp Permit No', 'text'],
                         ['bl_no', 'B/L No', 'text'],
                         ['bl_date', 'B/L Date', 'date'],
-                        ['ex_factory_date', 'EX-Factory Date', 'date']
+                        ['ex_factory_date', 'EX-Factory Date', 'date'],
+                        ['net_wet', 'Net Wet', 'number'],
+                        ['gross_wet', 'Gross Wet', 'number'],
                     ] as [$name, $label, $type])
-                    <div class="form-group row">
-                        <label for="{{ $name }}" class="col-sm-3 text-end control-label col-form-label">{{ $label }}:</label>
-                        <div class="col-sm-9">
-                            <input name="{{ $name }}" id="{{ $name }}" type="{{ $type }}" class="form-control" value="{{ old($name) }}" placeholder="{{ $label }}"/>
+                        <div class="form-group row">
+                            <label for="{{ $name }}" class="col-sm-3 text-end control-label col-form-label">{{ $label }}:</label>
+                            <div class="col-sm-9">
+                                <input
+                                    name="{{ $name }}"
+                                    id="{{ $name }}"
+                                    type="{{ $type }}"
+                                    class="form-control"
+                                    value="{{ old($name) }}"
+                                    placeholder="{{ $label }}"
+                                    @if($type === 'number') step="0.0001" @endif
+                                />
+                            </div>
                         </div>
-                    </div>
                     @endforeach
+
                 </div>
             </div>
             <button type="submit" class="btn btn-primary">Submit</button>

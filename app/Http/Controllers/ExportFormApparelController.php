@@ -143,6 +143,8 @@ public function fetchInvoiceData(Request $request)
             'bl_no' => 'nullable|string',
             'bl_date' => 'nullable|date',
             'ex_factory_date' => 'nullable|date',
+            'net_wet' => 'nullable|numeric|min:0',
+            'gross_wet' => 'nullable|numeric|min:0',
         ]);
 
         try {
@@ -197,6 +199,8 @@ public function fetchInvoiceData(Request $request)
                 $exportFormApparel->bl_no = $request->input('bl_no');
                 $exportFormApparel->bl_date = $request->input('bl_date');
                 $exportFormApparel->ex_factory_date = $request->input('ex_factory_date');
+                $exportFormApparel->net_wet = $request->input('net_wet');
+                $exportFormApparel->gross_wet = $request->input('gross_wet');
                 $exportFormApparel->create_by = auth()->user()->emp_id;
                 $exportFormApparel->update_by = auth()->user()->emp_id;
 
@@ -224,6 +228,8 @@ public function fetchInvoiceData(Request $request)
             'bl_no' => 'required|string',
             'bl_date' => 'required|date',
             'ex_factory_date' => 'required|date',
+            'net_wet' => 'required|string',
+            'gross_wet' => 'required|string',
         ]);
 
         $efa = ExportFormApparel::find($id);
@@ -234,6 +240,8 @@ public function fetchInvoiceData(Request $request)
         $efa->bl_no = $request->input('bl_no');
         $efa->bl_date = $request->input('bl_date');
         $efa->ex_factory_date = $request->input('ex_factory_date');
+        $efa->net_wet = $request->input('net_wet');
+        $efa->gross_wet = $request->input('gross_wet');
         $efa->update_by = auth()->user()->emp_id;
         $efa->save();
 
@@ -307,6 +315,8 @@ public function exportFormApparelUpdate(Request $request, $id)
         'bl_no' => 'nullable|string',
         'bl_date' => 'nullable|date',
         'ex_factory_date' => 'nullable|date',
+        'net_wet' => 'nullable|numeric|min:0',
+        'gross_wet' => 'nullable|numeric|min:0',
     ]);
 
     DB::beginTransaction();
@@ -386,6 +396,8 @@ public function exportFormApparelUpdate(Request $request, $id)
         $efa->bl_no = $request->input('bl_no');
         $efa->bl_date = $request->input('bl_date');
         $efa->ex_factory_date = $request->input('ex_factory_date');
+        $efa->net_wet = $request->input('net_wet');
+        $efa->gross_wet = $request->input('gross_wet');
         $efa->update_by = auth()->user()->emp_id;
 
         $efa->save();

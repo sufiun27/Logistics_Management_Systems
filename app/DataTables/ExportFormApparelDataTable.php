@@ -136,6 +136,8 @@ class ExportFormApparelDataTable extends DataTable
                   Column::make('bl_no')->title('BL No'),
                   Column::make('bl_date')->title('BL Date'),
                   Column::make('ex_factory_date')->title('Ex Factory Date'),
+                  Column::make('net_wet')->title('Net Wet'),
+                  Column::make('gross_wet')->title('Gross Wet'),
                   Column::make('create_by')->title('Created By'),
                   Column::make('update_by')->title('Updated By'),
                   Column::make('created_at')->title('Created At'),

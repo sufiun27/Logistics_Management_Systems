@@ -219,6 +219,14 @@
                     <td>{{ $efa->ex_factory_date ? \Illuminate\Support\Carbon::parse($efa->ex_factory_date)->format('Y-m-d') : ' ' }}</td>
                   </tr>
                   <tr>
+                    <td class="font-weight-bold">Net Wet:</td>
+                    <td>{{ $efa->net_wet ?? ' ' }}</td>
+                  </tr>
+                  <tr>
+                    <td class="font-weight-bold">Gross Wet:</td>
+                    <td>{{ $efa->gross_wet ?? ' ' }}</td>
+                  </tr>
+                  <tr>
                     <th colspan="2" class="section-heading">Track Record</th>
                   </tr>
                   <tr>

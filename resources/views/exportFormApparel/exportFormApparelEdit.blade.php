@@ -248,12 +248,21 @@
                         ['exp_permit_no', 'Exp Permit No', 'text'],
                         ['bl_no', 'B/L No', 'text'],
                         ['bl_date', 'B/L Date', 'date'],
-                        ['ex_factory_date', 'EX-Factory Date', 'date']
+                        ['ex_factory_date', 'EX-Factory Date', 'date'],
+                        ['net_wet', 'Net Wet', 'number'],
+                        ['gross_wet', 'Gross Wet', 'number'],
                     ] as [$name, $label, $type])
                     <div class="form-group row">
                         <label for="{{ $name }}" class="col-sm-3 text-end control-label col-form-label">{{ $label }}:</label>
                         <div class="col-sm-9">
-                            <input name="{{ $name }}" id="{{ $name }}" type="{{ $type }}" class="form-control" value="{{ old($name, $exportForm->$name) }}" placeholder="{{ $label }}"/>
+                            <input
+                            name="{{ $name }}"
+                            id="{{ $name }}" type="{{ $type }}"
+                            class="form-control"
+                            value="{{ old($name, $exportForm->$name) }}"
+                            placeholder="{{ $label }}"
+                            @if($type === 'number') step="0.0001" @endif
+                            />
                         </div>
                     </div>
                     @endforeach

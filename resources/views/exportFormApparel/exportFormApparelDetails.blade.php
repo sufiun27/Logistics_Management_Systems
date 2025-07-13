@@ -147,6 +147,13 @@
 
                     <dt class="col-sm-4">Ex Factory Date:</dt>
                     <dd class="col-sm-8 copyable" data-bs-toggle="tooltip" data-bs-placement="top" title="Click to copy">{{ $efa->ex_factory_date ? \Illuminate\Support\Carbon::parse($efa->ex_factory_date)->format('Y-m-d') : 'N/A' }}</dd>
+
+                    <dt class="col-sm-4">Net Wet:</dt>
+                    <dd class="col-sm-8 copyable" data-bs-toggle="tooltip" data-bs-placement="top" title="Click to copy">{{ $efa->net_wet ? number_format($efa->net_wet, 4) : 'N/A' }}</dd>
+
+                    <dt class="col-sm-4">Gross Wet:</dt>
+                    <dd class="col-sm-8 copyable" data-bs-toggle="tooltip" data-bs-placement="top" title="Click to copy">{{ $efa->gross_wet ? number_format($efa->gross_wet, 4) : 'N/A' }}</dd>
+
                 </dl>
 
                 <h4>Audit Information</h4>
