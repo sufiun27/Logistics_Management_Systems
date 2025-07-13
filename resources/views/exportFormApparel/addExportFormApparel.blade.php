@@ -345,6 +345,8 @@ $(document).ready(function() {
                         $('#bl_no').val(response.data.bl_no || '');
                         $('#bl_date').val(response.data.bl_date || '');
                         $('#ex_factory_date').val(response.data.ex_factory_date || '');
+                        $('#net_wet').val(response.data.net_wet || '');
+                        $('#gross_wet').val(response.data.gross_wet || '');
 
                         // Trigger cascades for dependent fields
                         setTimeout(function() {
