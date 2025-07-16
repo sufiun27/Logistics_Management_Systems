@@ -474,7 +474,7 @@ $(document).ready(function() {
     });
 
     // TT No Validation (AJAX)
-    $('#tt_no').on('input', function() {
+    $('#tt_no').on('input', function () {
         var tt_no = $(this).val();
         if (tt_no.length > 0) {
             $.ajax({
@@ -484,14 +484,23 @@ $(document).ready(function() {
                     "_token": "{{ csrf_token() }}",
                     "tt_no": tt_no
                 },
-                success: function(response) {
-                    $('#tt_validation').html(response);
+                success: function (response) {
+                    $('#tt_validation').html(response.html);
+
+                    if (response.tt_date) {
+                        $('#tt_date').val(response.tt_date);
+                        console.log(response.tt_date)
+                    } else {
+                        $('#tt_date').val('');
+                    }
                 }
             });
         } else {
             $('#tt_validation').html('');
+            $('#tt_date').val('');
         }
     });
+
 
     // Incoterm Calculation
     function updateIncotermCalculation() {

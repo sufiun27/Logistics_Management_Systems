@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\DB;
 use Yajra\DataTables\Facades\DataTables;
 use App\DataTables\ExportFormApparelDataTable;
 use App\Models\CmValue;
+use Carbon\Carbon;
 
 class ExportFormApparelController extends Controller
 {
@@ -93,14 +94,28 @@ public function fetchInvoiceData(Request $request)
 
 
     //! only use this for tt information
-    public function addExportFormApparelTtNo(Request $request){
-        $tt_no = $request->input('tt_no');
-        $tt = TtInformation::where('tt_no', $tt_no)->first();
+    public function addExportFormApparelTtNo(Request $request)
+{
+    $tt_no = $request->input('tt_no');
+    $tt = TtInformation::where('tt_no', $tt_no)->first();
 
-        $output = '<input readonly type="text" name="site" class="form-control" value="'.$tt->tt_site.'" />';
-        $output .= '<div class="text-primary">Total Amount:'.$tt->tt_amount.' Balance : '.$tt->tt_amount - $tt->tt_used_amount . '</div>';
-        echo $output;
+    if (!$tt) {
+        return response()->json([
+            'html' => '<div class="text-danger">TT No not found.</div>',
+            'tt_date' => null,
+        ]);
     }
+
+    $output = '<input readonly type="text" name="site" class="form-control" value="' . $tt->tt_site . '" />';
+    $output .= '<div class="text-primary">Total Amount: ' . $tt->tt_amount . ' | Balance: ' . ($tt->tt_amount - $tt->tt_used_amount) . '</div>';
+
+    return response()->json([
+        'html' => $output,
+        'tt_date' => Carbon::parse($tt->tt_date)->format('Y-m-d'), 
+        
+    ]);
+}
+
 
 
     public function storeExportFormApparel(Request $request)
