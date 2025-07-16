@@ -33,9 +33,10 @@ class SaleDetailDataTable extends DataTable
     /**
      * Get the query source of dataTable.
      */
-    public function query(SaleDetail $model): QueryBuilder
+    public function query(SaleDetail $model)
     {
-        return $model->newQuery();
+        $query = SaleDetail::query();
+        return $query->orderByDesc('created_at');
     }
 
     /**
@@ -47,15 +48,12 @@ class SaleDetailDataTable extends DataTable
                     ->setTableId('saledetail-table')
                     ->columns($this->getColumns())
                     ->minifiedAjax()
-                    //->dom('Bfrtip')
+                    ->dom('Bfrtip')
                     ->orderBy(1)
                     ->selectStyleSingle()
                     ->buttons([
                         Button::make('excel'),
-                        Button::make('csv'),
-                        Button::make('pdf'),
-                        Button::make('print'),
-                        Button::make('reset'),
+
                         Button::make('reload')
                     ]);
     }
@@ -71,17 +69,29 @@ class SaleDetailDataTable extends DataTable
                   ->printable(false)
                   ->width(60)
                   ->addClass('text-center'),
-            Column::make('invoice_no'),
-            Column::make('order_no'),
-            Column::make('style_no'),
-            Column::make('shipped_qty'),
-            Column::make('shipped_fob_value'),
-            Column::make('shipped_cm_value'),
-            Column::make('bl_no'),
-            Column::make('bl_date'),
-            Column::make('shipbording_date'),
-            Column::make('vessel_name'),
-            Column::make('created_at'),
+
+                Column::make('invoice_no'),
+                Column::make('order_no'),
+                Column::make('style_no'),
+                Column::make('product_type'),
+                Column::make('shipped_qty'),
+                Column::make('carton_qty'),
+                Column::make('shipped_fob_value'),
+                Column::make('shipped_cm_value'),
+                Column::make('cbm_value'),
+                Column::make('eta_date'),
+                Column::make('vessel_name'),
+                Column::make('shipbording_date'),
+                Column::make('bl_no'),
+                Column::make('bl_date'),
+                Column::make('final_qty'),
+                Column::make('final_fob'),
+                Column::make('final_cm'),
+                Column::make('remarks'),
+                Column::make('created_by'),
+                Column::make('updated_by'),
+                Column::make('created_at'),
+                Column::make('updated_at'),
         ];
     }
 

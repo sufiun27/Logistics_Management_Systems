@@ -9,12 +9,20 @@
 
 @section('content')
 
+<style>
+    table.dataTable td {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 200px; /* You can adjust width as needed */
+    }
+</style>
             <div class="card">
                 <div class="card-header">
                     <a href="{{route('sales.add')}}" class="btn btn-success">Add New</a>
                     <x-message/>
                 </div>
-                <div class="card-body">
+                <div class="card-body table-responsive">
                     {{ $dataTable->table() }}
                 </div>
             </div>
