@@ -177,6 +177,7 @@ use App\Http\Controllers\SaleDetailController;
 
 Route::prefix('sales')->middleware('authorization:sales_manage')->group(function(){
     Route::get('index', [SaleDetailController::class, 'index'])->name('sales.index');
+    Route::post('get_invoice', [SaleDetailController::class, 'getInvoice'])->name('sales.get_invoice');
     Route::get('add', [SaleDetailController::class, 'add'])->name('sales.add');
     Route::post('store', [SaleDetailController::class, 'store'])->name('sales.store');
     Route::get('details/{id}', [SaleDetailController::class, 'details'])->name('sales.details');
