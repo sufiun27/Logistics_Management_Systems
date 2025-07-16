@@ -187,9 +187,7 @@
         </div>
     </div>
 </div>
-@endsection
 
-@section('scripts')
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         // Check if Bootstrap is available
@@ -216,6 +214,7 @@
 
         // Use event delegation for dynamically added elements
         document.body.addEventListener('click', function (event) {
+            console.log('click done');
             const element = event.target.closest('.copyable');
             if (!element) return;
 
@@ -279,6 +278,10 @@
         }
     });
 </script>
+@endsection
+
+@section('scripts')
+
 @endsection
 
 @push('styles')
