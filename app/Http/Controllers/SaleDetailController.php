@@ -22,6 +22,10 @@ class SaleDetailController extends Controller
         if(!ExportFormApparel::where('invoice_no', $request->invoice_no)->exists()){
             return redirect()->route('shipping.shipping')->with('error', 'Invoice not found in Export Form');
         }
+        if (SaleDetail::where('invoice_no', $request->invoice_no)->exists()) {
+            return redirect()->route('shipping.shipping')->with('error', 'Invoice already added');
+        }
+
         $sd= new SaleDetail();
         $sd->invoice_no = $request->invoice_no;
         $sd->buyer_contract = $request->buyer_contract;
