@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('invoice_no')->unique();
             $table->foreign('invoice_no')->references('invoice_no')->on('export_form_apparels');
 
+            $table->string('buyer_contract')->nullable();
             $table->string('order_no')->nullable();
             $table->string('style_no')->nullable();
             $table->string('product_type')->nullable();
@@ -25,6 +26,8 @@ return new class extends Migration
             $table->float('shipped_fob_value')->nullable();
             $table->float('shipped_cm_value')->nullable();
             $table->float('cbm_value')->nullable();
+            $table->decimal('gross_wet')->nullable();
+            $table->decimal('net_wet')->nullable();
 
             $table->date('eta_date')->nullable();
             $table->string('vessel_name')->nullable();

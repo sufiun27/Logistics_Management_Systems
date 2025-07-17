@@ -29,6 +29,13 @@
                                 'wrapper' => 'displayDiv'
                             ],
                             [
+                                'label' => 'Buyer Contract',
+                                'name' => 'buyer_contract',
+                                'type' => 'text',
+                                'placeholder' => 'Buyer Contract',
+                                'required' => false
+                            ],
+                            [
                                 'label' => 'Order No',
                                 'name' => 'order_no',
                                 'type' => 'text',
@@ -80,6 +87,7 @@
                                 'name' => 'shipped_cm_value',
                                 'type' => 'number',
                                 'placeholder' => 'Shipped CM Value',
+                                'value' => 20,
                                 'required' => false
                             ],
                             [
@@ -87,6 +95,20 @@
                                 'name' => 'cbm_value',
                                 'type' => 'number',
                                 'placeholder' => 'Shipped CBM Value',
+                                'required' => false
+                            ],
+                            [
+                                'label' => 'Gross Wet',
+                                'name' => 'gross_wet',
+                                'type' => 'number',
+                                'placeholder' => 'Gross Wet',
+                                'required' => false
+                            ],
+                            [
+                                'label' => 'Net Wet',
+                                'name' => 'net_wet',
+                                'type' => 'number',
+                                'placeholder' => 'Net Wet',
                                 'required' => false
                             ]
                         ]
@@ -195,7 +217,7 @@
                                             class="form-control"
                                             id="{{ $field['name'] }}"
                                             placeholder="{{ $field['placeholder'] }}"
-                                            value="{{ old($field['name']) }}"
+                                            value="{{ isset($field['value']) ? $field['value'] : old($field['name']) }}"
                                             {{ $field['required'] ? 'required' : '' }}
                                         />
                                     @endif

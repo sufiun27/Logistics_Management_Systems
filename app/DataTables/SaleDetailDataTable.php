@@ -71,6 +71,7 @@ class SaleDetailDataTable extends DataTable
                   ->addClass('text-center'),
 
                 Column::make('invoice_no'),
+                Column::make('buyer_contract'),
                 Column::make('order_no'),
                 Column::make('style_no'),
                 Column::make('product_type'),
@@ -79,6 +80,8 @@ class SaleDetailDataTable extends DataTable
                 Column::make('shipped_fob_value'),
                 Column::make('shipped_cm_value'),
                 Column::make('cbm_value'),
+                Column::make('gross_wet'),
+                Column::make('net_wet'),
                 Column::make('eta_date'),
                 Column::make('vessel_name'),
                 Column::make('shipbording_date'),

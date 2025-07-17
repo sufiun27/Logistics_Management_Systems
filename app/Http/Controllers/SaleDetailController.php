@@ -24,6 +24,7 @@ class SaleDetailController extends Controller
         }
         $sd= new SaleDetail();
         $sd->invoice_no = $request->invoice_no;
+        $sd->buyer_contract = $request->buyer_contract;
         $sd->order_no = $request->order_no;
         $sd->style_no = $request->style_no;
         $sd->product_type = $request->product_type;
@@ -32,6 +33,8 @@ class SaleDetailController extends Controller
         $sd->shipped_fob_value = $request->shipped_fob_value;
         $sd->shipped_cm_value = $request->shipped_cm_value;
         $sd->cbm_value = $request->cbm_value;
+        $sd->gross_wet = $request->gross_wet;
+        $sd->net_wet = $request->net_wet;
         $sd->eta_date = $request->eta_date;
         $sd->vessel_name = $request->vessel_name;
         $sd->shipbording_date = $request->shipbording_date;
@@ -53,26 +56,28 @@ public function details($id)
 }
 public function update(Request $request, $id){
     $sd = SaleDetail::find($id);
-    $sd->invoice_no = $request->invoice_no;
-        $sd->order_no = $request->order_no;
-        $sd->style_no = $request->style_no;
-        $sd->product_type = $request->product_type;
-        $sd->shipped_qty = $request->shipped_qty;
-        $sd->carton_qty = $request->carton_qty;
-        $sd->shipped_fob_value = $request->shipped_fob_value;
-        $sd->shipped_cm_value = $request->shipped_cm_value;
-        $sd->cbm_value = $request->cbm_value;
-        $sd->eta_date = $request->eta_date;
-        $sd->vessel_name = $request->vessel_name;
-        $sd->shipbording_date = $request->shipbording_date;
-        $sd->bl_no = $request->bl_no;
-        $sd->bl_date = $request->bl_date;
-        $sd->final_qty = $request->final_qty;
-        $sd->final_fob = $request->final_fob;
-        $sd->final_cm = $request->final_cm;
-        $sd->remarks = $request->remarks;
-        $sd->updated_by = auth()->user()->emp_id;
-        $sd->save();
+    $sd->buyer_contract = $request->buyer_contract;
+    $sd->order_no = $request->order_no;
+    $sd->style_no = $request->style_no;
+    $sd->product_type = $request->product_type;
+    $sd->shipped_qty = $request->shipped_qty;
+    $sd->carton_qty = $request->carton_qty;
+    $sd->shipped_fob_value = $request->shipped_fob_value;
+    $sd->shipped_cm_value = $request->shipped_cm_value;
+    $sd->cbm_value = $request->cbm_value;
+    $sd->gross_wet = $request->gross_wet;
+    $sd->net_wet = $request->net_wet;
+    $sd->eta_date = $request->eta_date;
+    $sd->vessel_name = $request->vessel_name;
+    $sd->shipbording_date = $request->shipbording_date;
+    $sd->bl_no = $request->bl_no;
+    $sd->bl_date = $request->bl_date;
+    $sd->final_qty = $request->final_qty;
+    $sd->final_fob = $request->final_fob;
+    $sd->final_cm = $request->final_cm;
+    $sd->remarks = $request->remarks;
+    $sd->created_by = auth()->user()->emp_id;
+    $sd->save();
         $s=$sd;
         return view('sales.details', compact('s'))->with('success', 'Successfully Updated');
 }
