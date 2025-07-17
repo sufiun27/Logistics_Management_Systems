@@ -219,6 +219,7 @@
                                             value="{{ $field['value'] }}"
                                             @if (isset($field['readonly']) && $field['readonly']) readonly @endif
                                             @if (isset($field['required']) && $field['required']) required @endif
+                                            @if ($field['type'] === 'number') step="0.01" @endif
                                         />
                                     @endif
                                     @if (isset($field['wrapper']))
