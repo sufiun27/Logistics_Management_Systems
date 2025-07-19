@@ -15,19 +15,19 @@ class ExportFormApparel extends Model
 
     public function saleDetail()
     {
-        return $this->belongsTo(SaleDetail::class);
+        return $this->belongsTo(SaleDetail::class, 'invoice_no', 'invoice_no');
     }
     public function shipping()
     {
-        return $this->belongsTo(Shipping::class);
+        return $this->belongsTo(Shipping::class, 'invoice_no', 'invoice_no');
     }
     public function billingDetail()
     {
-        return $this->belongsTo(BillingDetail::class);
+        return $this->belongsTo(BillingDetail::class, 'invoice_no', 'invoice_no');
     }
     public function logisticsDetail()
     {
-        return $this->belongsTo(LogisticsDetail::class);
+        return $this->belongsTo(LogisticsDetail::class, 'invoice_no', 'invoice_no');
     }
 
 }
