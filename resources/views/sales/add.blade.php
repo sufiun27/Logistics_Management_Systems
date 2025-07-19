@@ -87,7 +87,7 @@
                                 'name' => 'shipped_cm_value',
                                 'type' => 'number',
                                 'placeholder' => 'Shipped CM Value',
-                                'value' => 20,
+                                'value' => '',
                                 'required' => false
                             ],
                             [
@@ -218,7 +218,8 @@
                                             id="{{ $field['name'] }}"
                                             placeholder="{{ $field['placeholder'] }}"
                                             value="{{ isset($field['value']) ? $field['value'] : old($field['name']) }}"
-                                            {{ $field['required'] ? 'required' : '' }}
+                                            @if (!empty($field['required'])) required @endif
+                                            @if ($field['type'] === 'number') step="0.01" @endif
                                         />
                                     @endif
                                     @if (isset($field['wrapper']))
