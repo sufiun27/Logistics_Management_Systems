@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use App\DataTables\ShippingDataTable;
-use App\Models\ExportFormApparel;
 use App\Models\Shipping;
 use App\Models\Transport;
+use App\Models\SaleDetail;
+use Illuminate\Http\Request;
+use App\Models\ExportFormApparel;
+use App\DataTables\ShippingDataTable;
 
 class ShippingController extends Controller
 {
@@ -28,7 +29,7 @@ class ShippingController extends Controller
         $invoice = $request->invoice_no;
       // $efa = ExportFormApparel::where('invoice_no', $invoice)->first();  invoice_no like '%$invoice%' select first 10 record
         $efa = ExportFormApparel::where('invoice_no', 'like', '%'.$invoice.'%')->take(10)->get();
-        
+
         $data = '<table id="dynamicTable" class="table table-striped table-sm m-0 p-0">
         <thead class="table-info">
             <tr>
@@ -68,7 +69,7 @@ class ShippingController extends Controller
         $data .= '</tbody>
             </table>';
         echo $data;
-        
+
     }
 
     public function storeShipmentStatusInfo(Request $request)
@@ -86,6 +87,10 @@ class ShippingController extends Controller
 
         if(!ExportFormApparel::where('invoice_no', $request->invoice_no)->exists()){
             return redirect()->route('shipping.shipping')->with('error', 'Invoice not found in Export Form');
+        }
+
+        if (Shipping::where('invoice_no', $request->invoice_no)->exists()) {
+            return redirect()->route('shipping.addShipping')->with('error', 'Invoice already added');
         }
 
         $ssi= new Shipping();
@@ -111,19 +116,19 @@ class ShippingController extends Controller
 
         $ssi->created_by = auth()->user()->emp_id;
         $ssi->save();
-        
+
         return redirect()->route('shipping.addShipping')->with('success', 'Shipment Information Updated Successfully');
     }
 
 
     //ShippingDetails
     public function ShippingDetails($id){
-        
+
         $shipping = Shipping::find($id);
         return view('shipping.ShippingDetails',compact('shipping'));
     }
     //storeShipmentOtherInfo
-    
+
 
     public function addShipmentOtherInfo($id){
 
@@ -136,10 +141,10 @@ class ShippingController extends Controller
     public function storeShipmentOtherInfo(Request $request){
         //dd($request->all());
         $request->validate([
-           'transport_port'=>'required', 
+           'transport_port'=>'required',
         ]);
         $invoice_no = $request->invoice_no;
-        
+
         $soi= Shipping::where('invoice_no',$request->invoice_no)->first();
         $soi->transport_port = $request->transport_port;
         $soi->cnf_agent = $request->cnf_agent;
@@ -186,7 +191,7 @@ class ShippingController extends Controller
         $shipping->updated_by = auth()->user()->emp_id;
         $shipping->save();
         return redirect()->route('shipping.updateShipping',$shipping->id)->with('success', 'Other Information Updated Successfully');
-        
+
     }
 
     public function updateRemarks(Request $request, $id){

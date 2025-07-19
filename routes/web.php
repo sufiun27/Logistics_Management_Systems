@@ -221,6 +221,7 @@ Route::prefix('reports')->middleware('auth')->group(function(){
     Route::get('sales', [ReportController::class, 'sales'])->name('reports.sales');
 });
 
-
+use App\Http\Controllers\GetInvoiceController;
+Route::post('/getInvoice', [GetInvoiceController::class, 'getInvoice'])->name('getInvoice');
 
 

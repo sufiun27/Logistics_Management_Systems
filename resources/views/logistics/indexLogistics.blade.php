@@ -12,7 +12,8 @@
 @section('content')
 
             <div class="card">
-                <div class="card-header">
+                <div class="card-header d-flex">
+                    <h3>Logistics : </h3>
                     <a href="{{route('logistics.addLogistics')}}" class="btn btn-success">Add New</a>
                     <x-message/>
                 </div>
@@ -21,10 +22,10 @@
                     <div class="table-responsive">
                         {{ $dataTable->table() }}
                     </div>
-                    
+
                 </div>
             </div>
-            
+
 
 @endsection
 

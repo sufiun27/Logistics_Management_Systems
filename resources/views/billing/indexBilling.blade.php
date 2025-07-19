@@ -7,15 +7,16 @@
 @endsection
 
 @section('content')
-    
+
 <div class="card">
   <div class="card-title">
       <x-message/>
-      
+
   </div>
-  <div class="card-header">
+  <div class="card-header d-flex  align-items-center">
+    <h3>Billing : </h3>
     <a href="{{route('billing.addBilling')}}" class="btn btn-success">Add New</a>
-      
+
   </div>
 
   <div class="card-body table-responsive">
@@ -25,7 +26,7 @@
 
     {{-- {{ $dataTable->scripts(attributes: ['type' => 'module']) }} --}}
 @endsection
- 
+
 @section('yajra_datatable_js')
     <!-- Yajra Datatables Scripts -->
     <!--  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script> -->

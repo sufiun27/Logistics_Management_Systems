@@ -47,15 +47,15 @@ class BillingDetailDataTable extends DataTable
                     ->setTableId('billingdetail-table')
                     ->columns($this->getColumns())
                     ->minifiedAjax()
-                    //->dom('Bfrtip')
+                    ->dom('Bfrtip')
                     ->orderBy(1)
                     ->selectStyleSingle()
                     ->buttons([
                         Button::make('excel'),
-                        Button::make('csv'),
-                        Button::make('pdf'),
-                        Button::make('print'),
-                        Button::make('reset'),
+                        // Button::make('csv'),
+                        // Button::make('pdf'),
+                        // Button::make('print'),
+                        // Button::make('reset'),
                         Button::make('reload')
                     ]);
     }
@@ -72,7 +72,8 @@ class BillingDetailDataTable extends DataTable
                   ->width(60)
                   ->addClass('text-center')
                   ->title('Invoice No'),
-            
+            //Invoice No
+            Column::make('invoice_no'),
             Column::make('sb_no'),
             Column::make('sb_date'),
             Column::make('doc_submit_date'),
@@ -84,8 +85,11 @@ class BillingDetailDataTable extends DataTable
             Column::make('bank_submit_date'),
             Column::make('mode'),
             Column::make('bd_thc'),
+            Column::make('created_by'),
+            Column::make('updated_by'),
             Column::make('created_at'),
-            
+            Column::make('updated_at'),
+
         ];
     }
 

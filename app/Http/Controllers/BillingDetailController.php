@@ -2,23 +2,27 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\SaleDetail;
 use Illuminate\Http\Request;
 use App\Models\BillingDetail;
-use App\Models\ExportFormApparel;
 //datatable
+use App\Models\ExportFormApparel;
 use App\DataTables\BillingDetailDataTable;
 
 class BillingDetailController extends Controller
 {
     public function indexBilling(BillingDetailDataTable $dataTable){
-        return $dataTable->render('billing.indexBilling');      
-    }    
+        return $dataTable->render('billing.indexBilling');
+    }
     public function addBilling(){
         return view('billing.addBilling');
     }
     public function storeBilling(Request $request){
         if(!ExportFormApparel::where('invoice_no', $request->invoice_no)->exists()){
             return redirect()->back()->with('error', 'Invoice not found in Export Form');
+        }
+        if (SaleDetail::where('invoice_no', $request->invoice_no)->exists()) {
+            return redirect()->route('sales.add')->with('error', 'Invoice already added');
         }
         $b= new BillingDetail();
         $b->invoice_no = $request->invoice_no;
@@ -43,7 +47,6 @@ class BillingDetailController extends Controller
     }
     public function updateBilling(Request $request, $id){
         $b= BillingDetail::find($id);
-        $b->invoice_no = $request->invoice_no;
         $b->sb_no = $request->sb_no;
         $b->sb_date = $request->sb_date;
         $b->doc_submit_date = $request->doc_submit_date;

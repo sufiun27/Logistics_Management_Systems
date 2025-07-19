@@ -20,6 +20,7 @@ return new class extends Migration
             $table->date('ep_date')->nullable();
             $table->string('ex_pNo')->nullable();
             $table->date('exp_date')->nullable();
+            $table->string('exp_no')->nullable();
             $table->date('ex_factory_date')->nullable();
             $table->string('cnf_agent')->nullable();
             $table->string('transport_port')->nullable();

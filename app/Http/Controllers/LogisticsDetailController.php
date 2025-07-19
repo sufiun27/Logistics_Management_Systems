@@ -11,7 +11,7 @@ class LogisticsDetailController extends Controller
 {
     public function indexLogistics(LogisticsDetailDataTable $dataTable)
     {
-        return $dataTable->render('logistics.indexLogistics'); 
+        return $dataTable->render('logistics.indexLogistics');
     }
     public function addLogistics()
     {
@@ -20,6 +20,9 @@ class LogisticsDetailController extends Controller
     public function storeLogistics(Request $request){
         if(!ExportFormApparel::where('invoice_no', $request->invoice_no)->exists()){
             return redirect()->route('logistics.addLogistics')->with('error', 'Invoice not found in Export Form');
+        }
+        if (LogisticsDetail::where('invoice_no', $request->invoice_no)->exists()) {
+            return redirect()->route('logistics.addLogistics')->with('error', 'Invoice already added');
         }
         $ld= new LogisticsDetail();
         $ld->invoice_no = $request->invoice_no;

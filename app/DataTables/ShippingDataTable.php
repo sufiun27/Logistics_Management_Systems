@@ -47,15 +47,15 @@ class ShippingDataTable extends DataTable
                     ->setTableId('shipping-table')
                     ->columns($this->getColumns())
                     ->minifiedAjax()
-                    //->dom('Bfrtip')
+                    ->dom('Bfrtip')
                     ->orderBy(1)
                     ->selectStyleSingle()
                     ->buttons([
                         Button::make('excel'),
-                        Button::make('csv'),
-                        Button::make('pdf'),
-                        Button::make('print'),
-                        Button::make('reset'),
+                        // Button::make('csv'),
+                        // Button::make('pdf'),
+                        // Button::make('print'),
+                        // Button::make('reset'),
                         Button::make('reload')
                     ]);
     }
@@ -76,16 +76,26 @@ class ShippingDataTable extends DataTable
             Column::make('ep_date'),
             Column::make('exp_no'),
             Column::make('exp_date'),
-            
-            Column::make('vessel_no'),
-            Column::make('cnf_agent'),
+
+            Column::make('exp_no'),
             Column::make('ex_factory_date'),
-           
-            Column::make('cargorpt_date'),
-            
+            Column::make('cnf_agent'),
             Column::make('transport_port'),
+            Column::make('sb_no'),
+            Column::make('sb_date'),
+            Column::make('vessel_no'),
+            Column::make('cargorpt_date'),
+            Column::make('bring_back'),
+            Column::make('shipped_out'),
+            Column::make('shipped_cancel'),
+            Column::make('shipped_back'),
+            Column::make('unshipped'),
+
+            Column::make('created_by'),
+            Column::make('updated_by'),
             Column::make('created_at'),
-            
+            Column::make('updated_at'),
+
         ];
     }
 

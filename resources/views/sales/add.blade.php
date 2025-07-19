@@ -261,7 +261,7 @@
 
                 if (invoice_no.length > 0) {
                     $.ajax({
-                        url: "{{ route('sales.get_invoice') }}",
+                        url: "{{ route('getInvoice') }}",
                         method: "POST",
                         data: {
                             invoice_no: invoice_no,
