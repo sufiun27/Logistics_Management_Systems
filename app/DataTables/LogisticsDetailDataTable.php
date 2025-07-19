@@ -47,15 +47,15 @@ class LogisticsDetailDataTable extends DataTable
                     ->setTableId('logisticsdetail-table')
                     ->columns($this->getColumns())
                     ->minifiedAjax()
-                    //->dom('Bfrtip')
+                    ->dom('Bfrtip')
                     ->orderBy(1)
                     ->selectStyleSingle()
                     ->buttons([
                         Button::make('excel'),
-                        Button::make('csv'),
-                        Button::make('pdf'),
-                        Button::make('print'),
-                        Button::make('reset'),
+                        // Button::make('csv'),
+                        // Button::make('pdf'),
+                        // Button::make('print'),
+                        // Button::make('reset'),
                         Button::make('reload')
                     ]);
     }
@@ -71,19 +71,31 @@ class LogisticsDetailDataTable extends DataTable
                   ->printable(false)
                   ->width(60)
                   ->addClass('text-center'),
-                  
-            
-            Column::make('receivable_amount'),
-            Column::make('doc_process_fee'),
-            Column::make('short_shipment_certificate_fee'),
-            Column::make('seal_lock_charge'),
-            Column::make('agency_commission'),
-            Column::make('documentation_charge'),
-            Column::make('transportation_charge'),
-            Column::make('factory_loading_fee'),
-            Column::make('total_charges'),
-            Column::make('cargo_ho_date'),
-            
+
+                Column::make('receivable_amount'),
+                Column::make('doc_process_fee'),
+                Column::make('seal_lock_charge'),
+                Column::make('agency_commission'),
+                Column::make('documentation_charge'),
+                Column::make('transportation_charge'),
+                Column::make('short_shipment_certificate_fee'),
+                Column::make('factory_loading_fee'),
+                Column::make('uploading_fee_forwarder_wh'),
+                Column::make('truck_demurrage_fee_delay_at_depot'),
+                Column::make('cfs_depot_mixed_cargo_loading_fee'),
+                Column::make('customs_misc_remark_reasons_charge'),
+                Column::make('customs_remark_charge_misc_reasons'),
+                Column::make('cargo_ho_date'),
+                Column::make('deadline_bill_submission'),
+                Column::make('bill_received_date'),
+                Column::make('status'),
+                Column::make('forwarder_name'),
+                Column::make('total_charges'),
+                Column::make('created_by'),
+                Column::make('updated_by'),
+                Column::make('created_at'),
+                Column::make('updated_at'),
+
         ];
     }
 
