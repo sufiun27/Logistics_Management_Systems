@@ -219,6 +219,7 @@ Route::prefix('logistics')->middleware('authorization:logistics_manage')->group(
 use App\Http\Controllers\ReportController;
 Route::prefix('reports')->middleware('auth')->group(function(){
     Route::get('sales', [ReportController::class, 'sales'])->name('reports.sales');
+    Route::get('report', [ReportController::class, 'report'])->name('reports.report');
 });
 
 use App\Http\Controllers\GetInvoiceController;

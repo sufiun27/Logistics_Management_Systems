@@ -74,16 +74,16 @@ class ShippingController extends Controller
 
     public function storeShipmentStatusInfo(Request $request)
     {
-        $request->validate([
-            'invoice_no' => 'required|unique:shippings',
-            'ep_no' => 'required',
-            'ep_date' => 'required',
-            'exp_no' => 'required',
-            'exp_date' => 'required',
-            'ex_factory_date' => 'required',
-            'sb_no' => 'required',
-            'sb_date' => 'required',
-        ]);
+        // $request->validate([
+        //     'invoice_no' => 'required|unique:shippings',
+        //     'ep_no' => 'required',
+        //     'ep_date' => 'required',
+        //     'exp_no' => 'required',
+        //     'exp_date' => 'required',
+        //     'ex_factory_date' => 'required',
+        //     'sb_no' => 'required',
+        //     'sb_date' => 'required',
+        // ]);
 
         if(!ExportFormApparel::where('invoice_no', $request->invoice_no)->exists()){
             return redirect()->route('shipping.shipping')->with('error', 'Invoice not found in Export Form');
@@ -95,6 +95,7 @@ class ShippingController extends Controller
 
         $ssi= new Shipping();
         $ssi->invoice_no = $request->invoice_no;
+        $ssi->factory = $request->factory;
         $ssi->ep_no = $request->ep_no;
         $ssi->ep_date = $request->ep_date;
         $ssi->exp_no = $request->exp_no;
@@ -170,6 +171,7 @@ class ShippingController extends Controller
 
     public function updateShippingStatusInfo(Request $request, $id){
         $shipping = Shipping::find($id);
+        $shipping->factory = $request->factory;
         $shipping->ep_no = $request->ep_no;
         $shipping->ep_date = $request->ep_date;
         $shipping->exp_no = $request->exp_no;

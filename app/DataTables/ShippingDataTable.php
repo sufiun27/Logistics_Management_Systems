@@ -24,7 +24,7 @@ class ShippingDataTable extends DataTable
         return (new EloquentDataTable($query))
         ->addColumn('action', function ($query) {
             return '
-                <a class="btn-outline-info btn-sm" href="' . route('shipping.ShippingDetails', $query->id) . '"><b>'.$query->invoice_no.'</b></a>
+                <a class="btn-outline-info btn-sm" href="' . route('shipping.updateShipping', $query->id) . '"><b>'.$query->invoice_no.'</b></a>
             ';
         })
             ->setRowId('id');
@@ -72,6 +72,7 @@ class ShippingDataTable extends DataTable
                   ->width(60)
                   ->addClass('text-center'),
             Column::make('invoice_no'),
+            Column::make('factory'),
             Column::make('ep_no'),
             Column::make('ep_date'),
             Column::make('exp_no'),

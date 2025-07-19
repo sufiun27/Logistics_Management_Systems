@@ -2,10 +2,16 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\ExportFormApparel;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class SaleDetail extends Model
 {
     use HasFactory;
+
+    public function exportFormApparel()
+    {
+        return $this->belongsTo(ExportFormApparel::class);
+    }
 }
