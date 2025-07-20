@@ -271,48 +271,51 @@ isset($data)?: $data = [];
 <div class="container-fluid py-4">
     <h2 class="mb-4">Sale Detail Master Report</h2>
 
-    @if (empty($data) || count($data) === 0)
-        <div class="alert alert-info">No data available for the selected filters.</div>
-    @else
-        <div class="table-container">
-            <table class="table table-bordered table-hover text-nowrap">
-                <thead class="table-dark">
-                    <tr>
-                        @foreach($excelHeaders as $section => $fields)
-                            @foreach($fields as $field)
-                                <th>{{ $section }}</th>
-                            @endforeach
+    @if ($data->isEmpty())
+    <div class="alert alert-info">No data available for the selected filters.</div>
+@else
+    <div class="table-container">
+        <table class="table table-bordered table-hover text-nowrap">
+            <thead class="table-dark">
+                <tr>
+                    @foreach($excelHeaders as $section => $fields)
+                        @foreach($fields as $field)
+                            <th>{{ $section }}</th>
                         @endforeach
-                    </tr>
-                    <tr>
-                        @foreach($excelHeaders as $section => $fields)
-                            @foreach($fields as $field)
-                                <th>{{ $field['title'] }}</th>
-                            @endforeach
-                        @endforeach
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach($data as $row)
-                        <tr>
-                            @foreach($excelHeaders as $section => $fields)
-                                @foreach($fields as $field)
-                                    @php
-                                        $value = $row[$section][$field['column']] ?? '-';
-                                        // Optional: format dates
-                                        if (str_contains($field['column'], 'date')) {
-                                            $value = formatDate($value);
-                                        }
-                                    @endphp
-                                    <td>{{ $value }}</td>
-                                @endforeach
-                            @endforeach
-                        </tr>
                     @endforeach
-                </tbody>
-            </table>
-        </div>
-    @endif
+                </tr>
+                <tr>
+                    @foreach($excelHeaders as $section => $fields)
+                        @foreach($fields as $field)
+                            <th>{{ $field['title'] }}</th>
+                        @endforeach
+                    @endforeach
+                </tr>
+            </thead>
+            <tbody>
+                @foreach($data as $row)
+                    <tr>
+                        @foreach($excelHeaders as $section => $fields)
+                            @foreach($fields as $field)
+                                @php
+                                    $value = $row[$section][$field['column']] ?? '-';
+                                    if (str_contains($field['column'], 'date')) {
+                                        $value = formatDate($value);
+                                    }
+                                @endphp
+                                <td>{{ $value }}</td>
+                            @endforeach
+                        @endforeach
+                    </tr>
+                @endforeach
+            </tbody>
+        </table>
+    </div>
+    <!-- Pagination links -->
+    <div class="mt-3">
+        {{ $data->appends(request()->except('page'))->links() }}
+    </div>
+@endif
 </div>
 
 {{-- <pre>{{ json_encode($data, JSON_PRETTY_PRINT) }}</pre> --}}
