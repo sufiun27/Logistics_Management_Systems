@@ -221,6 +221,8 @@ Route::prefix('reports')->middleware('auth')->group(function(){
     Route::get('sales', [ReportController::class, 'sales'])->name('reports.sales');
     Route::get('master/report', [ReportController::class, 'masterReport'])->name('reports.master');
     Route::get('report', [ReportController::class, 'report'])->name('reports.report');
+
+    Route::get('export/master/report', [ReportController::class, 'masterReportExport'])->name('reports.masterReportExport');
 });
 
 use App\Http\Controllers\GetInvoiceController;
