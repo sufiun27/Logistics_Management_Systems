@@ -33,44 +33,41 @@ class ReportController extends Controller
     }
 
     public function report(Request $request)
-    {
-        $validated = $request->validate([
-            'invoice_no' => 'nullable|string',
-            'start_date' => 'nullable|date',
-            'end_date' => 'nullable|date|after_or_equal:start_date',
-        ]);
+{
+    $validated = $request->validate([
+        'invoice_no' => 'nullable|string',
+        'start_date' => 'nullable|date',
+        'end_date'   => 'nullable|date|after_or_equal:start_date',
+    ]);
 
-        $query = ExportFormApparel::with('saleDetail', 'shipping', 'billingDetail', 'logisticsDetail');
+    $query = ExportFormApparel::with('saleDetail', 'shipping', 'billingDetail', 'logisticsDetail');
 
-        if (isset($request->invoice_no) && $request->invoice_no !== '') {
-            $query->where('invoice_no', $request->invoice_no);
-        }
-
-        if (isset($request->start_date) && $request->start_date !== '') {
-            $query->whereDate('created_at', '>=', $request->start_date);
-        }
-
-        if (isset($request->end_date) && $request->end_date !== '') {
-            $query->whereDate('created_at', '<=', $request->end_date);
-        }
-
-        $data = $query->get();
-
-        $transformed = $data->map(function ($item) {
-            return [
-                'export' => collect($item)->except(['sale_detail', 'shipping', 'billing_detail', 'logistics_detail']),
-                'sales' => $item->saleDetail,
-                'shipping' => $item->shipping,
-                'billing' => $item->billingDetail,
-                'logistics' => $item->logisticsDetail,
-            ];
-        });
-
-        $data = $transformed;
-      //  return Excel::download(new ReportExport($data, $table), 'master_report.xlsx');
-
-        return view('reports.master', compact('data'));
+    if (!empty($request->invoice_no)) {
+        $query->where('invoice_no', $request->invoice_no);
     }
+    if (!empty($request->start_date)) {
+        $query->whereDate('created_at', '>=', $request->start_date);
+    }
+    if (!empty($request->end_date)) {
+        $query->whereDate('created_at', '<=', $request->end_date);
+    }
+
+    $data = $query->paginate(20);
+
+    // Transform and retain paginator
+    $transformed = $data->getCollection()->map(function ($item) {
+        return [
+            'export'    => collect($item)->except(['sale_detail', 'shipping', 'billing_detail', 'logistics_detail']),
+            'sales'     => $item->saleDetail,
+            'shipping'  => $item->shipping,
+            'billing'   => $item->billingDetail,
+            'logistics' => $item->logisticsDetail,
+        ];
+    });
+    $data->setCollection($transformed);
+
+    return view('reports.master', compact('data'));
+}
 
     public function masterReportExport(Request $request) {
         $export = [
