@@ -12,6 +12,6 @@ class Shipping extends Model
 
     public function exportFormApparel()
     {
-        return $this->belongsTo(ExportFormApparel::class);
+        return $this->belongsTo(ExportFormApparel::class , 'invoice_no', 'invoice_no');
     }
 }

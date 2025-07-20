@@ -479,10 +479,17 @@
                 >
                 <ul aria-expanded="false" class="collapse first-level">
 
-                <li class="sidebar-item">
+                {{-- <li class="sidebar-item">
                     <a href="{{route('reports.sales')}}" class="sidebar-link">
                       <i class="mdi">S R</i>
                       <span class="hide-menu"> Sales Reports</span></a
+                    >
+                  </li> --}}
+
+                  <li class="sidebar-item">
+                    <a href="{{route('reports.master')}}" class="sidebar-link">
+                      <i class="mdi">M R</i>
+                      <span class="hide-menu"> Master Report</span></a
                     >
                   </li>
 
