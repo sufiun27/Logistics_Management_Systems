@@ -38,7 +38,7 @@
         overflow-x: auto;
         max-width: 100%;
         border-radius: 0.5rem;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
         background-color: #fff;
     }
 
@@ -52,7 +52,7 @@
     .table th, .table td {
         vertical-align: middle;
         white-space: nowrap;
-        padding: 0.75rem 1rem;
+        padding: 0.25rem 1rem;
         border: 1px solid #dee2e6;
     }
 
@@ -72,7 +72,7 @@
     }
 
     .table tbody tr:hover {
-        background-color: #e2ecf7;
+        background-color: #adcef1;
         transition: background-color 0.2s ease-in-out;
     }
 

@@ -351,6 +351,30 @@
               </li>
             <!-- /////////////////////Forms///////////////////// -->
 
+            <!-- /////////////////////sales///////////////////// -->
+            @can('policy', [App\Models\User::class, 'sales_manage'])
+            <li class="sidebar-item">
+              <a
+                class="sidebar-link has-arrow waves-effect waves-dark"
+                href="javascript:void(0)"
+                aria-expanded="false"
+                ><i class="fa-solid fa-scale-unbalanced-flip"></i>
+                <span class="hide-menu">Sales </span></a
+              >
+              <ul aria-expanded="false" class="collapse first-level">
+
+              <li class="sidebar-item">
+                  <a href="{{route('sales.index')}}" class="sidebar-link">
+                    <i class="mdi">S</i>
+                    <span class="hide-menu"> Sales </span></a
+                  >
+                </li>
+
+
+              </ul>
+            </li>
+            @endcan
+
       <!-- shipping shipping.shipping//////////////////// -->
       @can('policy', [App\Models\User::class, 'shipping_manage'])
 
@@ -393,29 +417,7 @@
                 >
               </li> --}}
 
-              <!-- /////////////////////sales///////////////////// -->
-              @can('policy', [App\Models\User::class, 'sales_manage'])
-              <li class="sidebar-item">
-                <a
-                  class="sidebar-link has-arrow waves-effect waves-dark"
-                  href="javascript:void(0)"
-                  aria-expanded="false"
-                  ><i class="fa-solid fa-scale-unbalanced-flip"></i>
-                  <span class="hide-menu">Sales </span></a
-                >
-                <ul aria-expanded="false" class="collapse first-level">
-
-                <li class="sidebar-item">
-                    <a href="{{route('sales.index')}}" class="sidebar-link">
-                      <i class="mdi">S</i>
-                      <span class="hide-menu"> Sales </span></a
-                    >
-                  </li>
-
-
-                </ul>
-              </li>
-              @endcan
+              
 
               <!-- /////////////////////Audit/////////////////////  -->
               @can('policy', [App\Models\User::class, 'audit_manage'])
@@ -465,11 +467,38 @@
               </li>
               @endcan
 
+              
+              {{-- @endcan --}}
+              <!-- /////////////////////logistics.indexLogistics///////////////////// audit.indexAudit -->
+              @can('policy', [App\Models\User::class, 'logistics_manage'])
+              <li class="sidebar-item">
+                <a
+                  class="sidebar-link has-arrow waves-effect waves-dark"
+                  href="javascript:void(0)"
+                  aria-expanded="false"
+                  ><i class="fa-solid fa-cart-flatbed"></i>
+                  <span class="hide-menu">logistics </span></a
+                >
+                <ul aria-expanded="false" class="collapse first-level">
+
+                <li class="sidebar-item">
+                    <a href="{{route('logistics.indexLogistics')}}" class="sidebar-link">
+                      <i class="mdi">L D</i>
+                      <span class="hide-menu"> logistics Details </span></a
+                    >
+                  </li>
+
+
+                </ul>
+              </li>
+              @endcan
+
               <!-- /////////////////////Reports/////////////////////  -->
               <!-- /////////////////////billing.indexBilling///////////////////// audit.indexAudit -->
               {{-- @can('policy', [App\Models\User::class, 'billing_manage']) --}}
 
-              {{--! <li class="sidebar-item">
+              {{--! --}}
+              <li class="sidebar-item">
                 <a
                   class="sidebar-link has-arrow waves-effect waves-dark"
                   href="javascript:void(0)"
@@ -495,31 +524,7 @@
 
 
                 </ul>
-              </li> --}}
-              {{-- @endcan --}}
-              <!-- /////////////////////logistics.indexLogistics///////////////////// audit.indexAudit -->
-              @can('policy', [App\Models\User::class, 'logistics_manage'])
-              <li class="sidebar-item">
-                <a
-                  class="sidebar-link has-arrow waves-effect waves-dark"
-                  href="javascript:void(0)"
-                  aria-expanded="false"
-                  ><i class="fa-solid fa-cart-flatbed"></i>
-                  <span class="hide-menu">logistics </span></a
-                >
-                <ul aria-expanded="false" class="collapse first-level">
-
-                <li class="sidebar-item">
-                    <a href="{{route('logistics.indexLogistics')}}" class="sidebar-link">
-                      <i class="mdi">L D</i>
-                      <span class="hide-menu"> logistics Details </span></a
-                    >
-                  </li>
-
-
-                </ul>
-              </li>
-              @endcan
+              </li> 
 
 
                <!-- Employees//////////////////// -->
