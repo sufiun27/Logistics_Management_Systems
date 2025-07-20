@@ -468,7 +468,8 @@
               <!-- /////////////////////Reports/////////////////////  -->
               <!-- /////////////////////billing.indexBilling///////////////////// audit.indexAudit -->
               {{-- @can('policy', [App\Models\User::class, 'billing_manage']) --}}
-              <li class="sidebar-item">
+
+              {{--! <li class="sidebar-item">
                 <a
                   class="sidebar-link has-arrow waves-effect waves-dark"
                   href="javascript:void(0)"
@@ -487,7 +488,7 @@
 
 
                 </ul>
-              </li>
+              </li> --}}
               {{-- @endcan --}}
               <!-- /////////////////////logistics.indexLogistics///////////////////// audit.indexAudit -->
               @can('policy', [App\Models\User::class, 'logistics_manage'])
