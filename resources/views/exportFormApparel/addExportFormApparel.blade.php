@@ -189,14 +189,19 @@
                         <label for="invoice_site" class="col-sm-3 text-end control-label col-form-label">Create By Site:</label>
                         <div class="col-sm-9">
                             <select name="invoice_site" id="invoice_site" class="form-control">
-                                @foreach($exrter as $exrter)
-                                    <option value="{{ $exrter->ExpoterName }}" {{ old('invoice_site') == $exrter->ExpoterName ? 'selected' : '' }}>
-                                        {{ $exrter->ExpoterName }}
+                                <option value="">Select Exporter</option>
+                                @php
+                                    $selectedSite = old('invoice_site', $user->site);
+                                @endphp
+                                @foreach($exporters as $exporter)
+                                    <option value="{{ $exporter->ExpoterName }}" {{ $selectedSite == $exporter->ExpoterName ? 'selected' : '' }}>
+                                        {{ $exporter->ExpoterName }}
                                     </option>
                                 @endforeach
                             </select>
                         </div>
                     </div>
+                    
 
 
                     <div class="form-group row">

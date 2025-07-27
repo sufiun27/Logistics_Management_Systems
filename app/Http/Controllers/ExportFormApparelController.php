@@ -60,6 +60,7 @@ class ExportFormApparelController extends Controller
         $notifies = Notify::all(['id', 'name', 'address']);
         $cmValue = CmValue::first();
         $exrter=Export::select('ExpoterName')->get();
+        $user= auth()->user();
 
         // return response()->json([
             // 'consignees' => $consignees,
@@ -69,7 +70,7 @@ class ExportFormApparelController extends Controller
         //     'notifies' => $notifies,
         // ]);
 
-        return view('exportFormApparel.addExportFormApparel', compact('consignees', 'dest_countries', 'transports', 'exporters', 'notifies', 'cmValue', 'exrter'));
+        return view('exportFormApparel.addExportFormApparel', compact('consignees', 'dest_countries', 'transports', 'exporters', 'notifies', 'cmValue', 'exrter', 'user'));
     }
 
     // In your controller (e.g., ExportFormApparelController.php)
