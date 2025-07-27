@@ -17,9 +17,22 @@ class DestCountryController extends Controller
         $request->validate([
             'country_name' => 'required',
             'country_code' => 'required',
-            'port' => 'required|unique:dest_countries',
+            'port' => 'required',
 
         ]);
+
+        // Check if combination already exists
+        $exists = DestCountry::where('country_name', $request->country_name)
+        ->where('port', $request->port)
+        ->exists();
+
+        if ($exists) {
+        return redirect()->back()
+        ->withInput()
+        ->withErrors(['country_name' => 'This Country & Port combination already exists.']);
+        }
+
+// Save new destination country
         $destcountry = new DestCountry();
         $destcountry->country_name = $request->country_name;
         $destcountry->country_code = $request->country_code;
@@ -37,7 +50,7 @@ class DestCountryController extends Controller
         $request->validate([
             'country_name' => 'required',
             'country_code' => 'required',
-            'port' => 'required|unique:dest_countries,port,'.$id,
+            'port' => 'required',
 
         ]);
         $destcountry = DestCountry::find($id);

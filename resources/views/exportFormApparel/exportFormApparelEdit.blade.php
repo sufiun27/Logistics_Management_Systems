@@ -216,7 +216,7 @@
                     <div class="form-group row">
                         <label for="cm_percentage" class="col-sm-3 text-end control-label col-form-label">CM Percentage:</label>
                         <div class="col-sm-9">
-                            <input required readonly name="cm_percentage" id="cm_percentage" type="number" class="form-control" value="{{ $cmValue->cm_value }}" placeholder="..%"/>
+                            <input required readonly name="cm_percentage" id="cm_percentage" type="number" class="form-control" value="{{ $exportForm->cm_percentage }}" placeholder="..%"/>
                         </div>
                     </div>
                     <div class="form-group row">

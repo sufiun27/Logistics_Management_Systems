@@ -15,7 +15,7 @@
                     @foreach([
                         ['item_name', 'Item Name', 'text', false],
                         ['hs_code', 'HS Code', 'text', false],
-                        ['hs_code_second', 'HS Code Second', 'text', false],
+                        //['hs_code_second', 'HS Code Second', 'text', false],
                         ['invoice_no', 'Invoice No', 'text', true],
                         ['invoice_date', 'Invoice Date', 'date', false],
                         ['contract_no', 'Contract No', 'text', false],
@@ -32,6 +32,18 @@
                     </div>
                     @endforeach
                 </div>
+
+                <style>
+                    /* Ensure dropdowns have sufficient width and allow text wrapping */
+                    .form-control.consignee-address {
+                        white-space: normal !important;
+                        min-width: 300px;
+                        height: auto;
+                        max-height: 200px; /* Prevent overly long dropdowns */
+                        overflow-y: auto; /* Add scrollbar if needed */
+                    }
+                </style>
+
 
                 {{-- Right Side --}}
                 <div class="col-6">
@@ -68,7 +80,7 @@
                     <div class="form-group row">
                         <label for="notify_name" class="col-sm-3 text-end control-label col-form-label">Notify:</label>
                         <div class="col-sm-9">
-                            <select id="notify_name" required name="notify_name" class="form-control">
+                            <select id="notify_name"  name="notify_name" class="form-control">
                                 <option value="">Select Notify</option>
                                 @foreach($notifies as $notify)
                                 <option value="{{ $notify->name }}" {{ old('notify_name') == $notify->name ? 'selected' : '' }}>{{ $notify->name }}</option>
@@ -220,7 +232,7 @@
                         <label for="currency" class="col-sm-3 text-end control-label col-form-label">Currency:</label>
                         <div class="col-sm-9">
                             <select required id="currency" name="currency" class="form-control">
-                                <option value="">Select Currency</option>
+                                {{-- <option value="">Select Currency</option> --}}
                                 <option value="USDollers" {{ old('currency') == 'USDollers' ? 'selected' : '' }}>USDollers</option>
                                 <option value="EUros" {{ old('currency') == 'EUros' ? 'selected' : '' }}>EUros</option>
                                 <option value="Pound" {{ old('currency') == 'Pound' ? 'selected' : '' }}>Pound</option>
@@ -323,7 +335,7 @@ $(document).ready(function() {
                         // Populate form fields
                         $('#item_name').val(response.data.item_name || '');
                         $('#hs_code').val(response.data.hs_code || '');
-                        $('#hs_code_second').val(response.data.hs_code_second || '');
+                       // $('#hs_code_second').val(response.data.hs_code_second || '');
                         $('#invoice_date').val(response.data.invoice_date || '');
                         $('#contract_no').val(response.data.contract_no || '');
                         $('#contract_date').val(response.data.contract_date || '');

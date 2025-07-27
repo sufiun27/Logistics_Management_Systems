@@ -15,8 +15,11 @@ return new class () extends Migration {
             $table->id();
             $table->string('country_code');
             $table->string('country_name');
-            $table->string('port')->unique();
+            $table->string('port');
             $table->timestamps();
+
+            //unique constraint for country_name and port
+            $table->unique(['country_name', 'port'], 'unique_country_port');
         });
 
 
