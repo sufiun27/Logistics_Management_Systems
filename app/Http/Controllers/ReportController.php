@@ -257,7 +257,7 @@ class ReportController extends Controller
 
         $billing = [
             ['column' => 'id', 'title' => 'ID'],
-            ['column' => 'invoice_no', 'title' => 'Invoice No'],
+            // ['column' => 'invoice_no', 'title' => 'Invoice No'],
 
             ['column' => 'sb_no', 'title' => 'SB No'],
             ['column' => 'sb_date', 'title' => 'SB Date'],
@@ -282,7 +282,7 @@ class ReportController extends Controller
 
         $logistics = [
             ['column' => 'id', 'title' => 'ID'],
-            ['column' => 'invoice_no', 'title' => 'Invoice No'],
+            // ['column' => 'invoice_no', 'title' => 'Invoice No'],
 
             ['column' => 'receivable_amount', 'title' => 'Receivable Amount'],
             ['column' => 'doc_process_fee', 'title' => 'Document Processing Fee'],

@@ -231,3 +231,8 @@ use App\Http\Controllers\GetInvoiceController;
 Route::post('/getInvoice', [GetInvoiceController::class, 'getInvoice'])->name('getInvoice');
 
 
+use App\Http\Controllers\ReportIndivisualController;
+
+Route::get('/reports/individual', [ReportIndivisualController::class, 'index'])->name('reports.individual');
+Route::get('/reports/individual/report', [ReportIndivisualController::class, 'report'])->name('reports.individual.report');
+Route::get('/reports/individual/export', [ReportIndivisualController::class, 'moduleReportExport'])->name('reports.individual.export');
