@@ -10,13 +10,17 @@ class GetInvoiceController extends Controller
     public function getInvoice(Request $request)
     {
         $invoice = $request->invoice_no;
+        $user= auth()->user();
       // $efa = ExportFormApparel::where('invoice_no', $invoice)->first();  invoice_no like '%$invoice%' select first 10 record
-        $efa = ExportFormApparel::where('invoice_no', 'like', '%'.$invoice.'%')->take(10)->get();
+        $efa = ExportFormApparel::where('invoice_no', 'like', '%'.$invoice.'%')
+        ->where('invoice_site', $user->site)
+        ->take(10)->get();
 
         $data = '<table id="dynamicTable" class="table table-striped table-sm m-0 p-0">
         <thead class="table-info">
             <tr>
                 <th class="m-0 p-0 fw-bold " >Invoice No</th>
+                <th class="m-0 p-0 fw-bold " >Site</th>
                 <th class="m-0 p-0 fw-bold " >Invoice Date</th>
                 <th class="m-0 p-0 fw-bold " >Contract No</th>
                 <th class="m-0 p-0 fw-bold " >Contract Date</th>
@@ -35,6 +39,7 @@ class GetInvoiceController extends Controller
         foreach ($efa as $row) {
             $data .= '<tr>
                         <td class="invoiceCell btn-success btn-sm m-0 p-1">' . $row->invoice_no . '</td>
+                        <td class="m-0 p-0">' . $row->invoice_site . '</td>
                         <td class="m-0 p-0">' . $row->invoice_date . '</td>
                         <td class="m-0 p-0">' . $row->contract_no . '</td>
                         <td class="m-0 p-0">' . $row->contract_date . '</td>

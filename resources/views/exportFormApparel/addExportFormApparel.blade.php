@@ -31,7 +31,97 @@
                         </div>
                     </div>
                     @endforeach
+
+
+                    <br>
+                    <hr>
+                    <br>
+  
+                    <div>
+                        <h4>Quantity & Value Entry</h4>
+                        <hr>
+                        <div class="form-group row">
+                            <label for="unit" class="col-sm-3 text-end control-label col-form-label">Unit:</label>
+                            <div class="col-sm-9">
+                                <select id="unit" required name="unit" class="form-control">
+                                    <option value="">Select Unit</option>
+                                    <option value="PCS" {{ old('unit') == 'PCS' ? 'selected' : '' }}>PCS</option>
+                                    <option value="SET" {{ old('unit') == 'SET' ? 'selected' : '' }}>SET</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="quantity" class="col-sm-3 text-end control-label col-form-label">Quantity:</label>
+                            <div class="col-sm-9">
+                                <input required name="quantity" id="quantity" type="number" class="form-control" value="{{ old('quantity') }}" placeholder="Quantity"/>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="currency" class="col-sm-3 text-end control-label col-form-label">Currency:</label>
+                            <div class="col-sm-9">
+                                <select required id="currency" name="currency" class="form-control">
+                                    {{-- <option value="">Select Currency</option> --}}
+                                    <option value="USDollers" {{ old('currency') == 'USDollers' ? 'selected' : '' }}>USDollers</option>
+                                    <option value="EUros" {{ old('currency') == 'EUros' ? 'selected' : '' }}>EUros</option>
+                                    <option value="Pound" {{ old('currency') == 'Pound' ? 'selected' : '' }}>Pound</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="incoterm" class="col-sm-3 text-end control-label col-form-label">Incoterm:</label>
+                            <div class="col-sm-9">
+                                <select id="incoterm" required name="incoterm" class="form-control">
+                                    <option value="">Select Incoterm</option>
+                                    @foreach(['FOB','CPT','CFR','DDP','FCA','CIF','DAP','EXW','CnF'] as $incoterm)
+                                    <option value="{{ $incoterm }}" {{ old('incoterm') == $incoterm ? 'selected' : '' }}>{{ $incoterm }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="amount" class="col-sm-3 text-end control-label col-form-label">Amount:</label>
+                            <div class="col-sm-9">
+                                <input required name="amount" id="amount" type="number" step="0.0001" class="form-control" value="{{ old('amount') }}" placeholder="Amount"/>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="cm_percentage" class="col-sm-3 text-end control-label col-form-label">CM Percentage:</label>
+                            <div class="col-sm-9">
+                                <input required readonly name="cm_percentage" id="cm_percentage" type="number" class="form-control" value="{{ $cmValue->cm_value ?? '' }}" placeholder="..%"/>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group row">
+                            <label for="cm_amount" class="col-sm-3 text-end control-label col-form-label">CM Amount:</label>
+                            <div class="col-sm-9">
+                                <div id="incoterm_calculation">Calculate Automatically</div>
+                            </div>
+                        </div>
+                        <div id="freight_value"></div>
+                        <div id="fob_value"></div>
+                    </div>
+
+                    {{-- //FOB Value: --}}
+                    
+
+
                 </div>
+
+                <script>
+                    const cmInput = document.getElementById('cm_amount');
+                    const freightInput = document.getElementById('freight_input');
+                    const fobDiv = document.getElementById('fob_value');
+                
+                    function calculateFOB() {
+                        let cmAmount = parseFloat(cmInput.value) || 0;
+                        let freightValue = parseFloat(freightInput.value) || 0;
+                        let fob = cmAmount - freightValue;
+                        fobDiv.innerText = "FOB Value: " + fob.toFixed(2);
+                    }
+                
+                    cmInput.addEventListener('input', calculateFOB);
+                    freightInput.addEventListener('input', calculateFOB);
+                </script>
 
                 <style>
                     /* Ensure dropdowns have sufficient width and allow text wrapping */
@@ -185,7 +275,9 @@
                             <input type="text" name="invoice_site" id="invoice_site" class="form-control" value="{{ old('invoice_site') }}" placeholder="Put Origin Site">
                         </div>
                     </div> --}}
-                    <div class="form-group row">
+
+                    {{-- multiple site controll --}}
+                    {{-- <div class="form-group row">
                         <label for="invoice_site" class="col-sm-3 text-end control-label col-form-label">Create By Site:</label>
                         <div class="col-sm-9">
                             <select name="invoice_site" id="invoice_site" class="form-control">
@@ -200,7 +292,16 @@
                                 @endforeach
                             </select>
                         </div>
+                    </div> --}}
+
+                    <div class="form-group row">
+                        <label class="col-sm-3 text-end control-label col-form-label">Created By Site:</label>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control" value="{{ $user->site }}" readonly>
+                            <input type="hidden" name="invoice_site" value="{{ $user->site }}">
+                        </div>
                     </div>
+                    
                     
 
 
@@ -212,68 +313,13 @@
                     </div>
                 </div>
             </div>
+
+
+
             <div class="row">
                 <!-- Quantity & Value Entry -->
                 <div class="col-6">
-                    <h4>Quantity & Value Entry</h4>
-                    <hr>
-                    <div class="form-group row">
-                        <label for="unit" class="col-sm-3 text-end control-label col-form-label">Unit:</label>
-                        <div class="col-sm-9">
-                            <select id="unit" required name="unit" class="form-control">
-                                <option value="">Select Unit</option>
-                                <option value="PCS" {{ old('unit') == 'PCS' ? 'selected' : '' }}>PCS</option>
-                                <option value="SET" {{ old('unit') == 'SET' ? 'selected' : '' }}>SET</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="form-group row">
-                        <label for="quantity" class="col-sm-3 text-end control-label col-form-label">Quantity:</label>
-                        <div class="col-sm-9">
-                            <input required name="quantity" id="quantity" type="number" class="form-control" value="{{ old('quantity') }}" placeholder="Quantity"/>
-                        </div>
-                    </div>
-                    <div class="form-group row">
-                        <label for="currency" class="col-sm-3 text-end control-label col-form-label">Currency:</label>
-                        <div class="col-sm-9">
-                            <select required id="currency" name="currency" class="form-control">
-                                {{-- <option value="">Select Currency</option> --}}
-                                <option value="USDollers" {{ old('currency') == 'USDollers' ? 'selected' : '' }}>USDollers</option>
-                                <option value="EUros" {{ old('currency') == 'EUros' ? 'selected' : '' }}>EUros</option>
-                                <option value="Pound" {{ old('currency') == 'Pound' ? 'selected' : '' }}>Pound</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="form-group row">
-                        <label for="amount" class="col-sm-3 text-end control-label col-form-label">Amount:</label>
-                        <div class="col-sm-9">
-                            <input required name="amount" id="amount" type="number" step="0.0001" class="form-control" value="{{ old('amount') }}" placeholder="Amount"/>
-                        </div>
-                    </div>
-                    <div class="form-group row">
-                        <label for="cm_percentage" class="col-sm-3 text-end control-label col-form-label">CM Percentage:</label>
-                        <div class="col-sm-9">
-                            <input required readonly name="cm_percentage" id="cm_percentage" type="number" class="form-control" value="{{ $cmValue->cm_value ?? '' }}" placeholder="..%"/>
-                        </div>
-                    </div>
-                    <div class="form-group row">
-                        <label for="incoterm" class="col-sm-3 text-end control-label col-form-label">Incoterm:</label>
-                        <div class="col-sm-9">
-                            <select id="incoterm" required name="incoterm" class="form-control">
-                                <option value="">Select Incoterm</option>
-                                @foreach(['FOB','CPT','CFR','DDP','FCA','CIF','DAP','EXW','CnF'] as $incoterm)
-                                <option value="{{ $incoterm }}" {{ old('incoterm') == $incoterm ? 'selected' : '' }}>{{ $incoterm }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                    </div>
-                    <div class="form-group row">
-                        <label for="cm_amount" class="col-sm-3 text-end control-label col-form-label">CM Amount:</label>
-                        <div class="col-sm-9">
-                            <div id="incoterm_calculation">Calculate Automatically</div>
-                        </div>
-                    </div>
-                    <div id="freight_value"></div>
+                   
                 </div>
 
                 <!--TODO: from making formate : Ex-Factory Information Entry -->
@@ -284,11 +330,11 @@
                         ['exp_no', 'Exp No', 'text'],
                         ['exp_date', 'Exp Date', 'date'],
                         ['exp_permit_no', 'Exp Permit No', 'text'],
-                        ['bl_no', 'B/L No', 'text'],
-                        ['bl_date', 'B/L Date', 'date'],
-                        ['ex_factory_date', 'EX-Factory Date', 'date'],
-                        ['net_wet', 'Net Wet', 'number'],
-                        ['gross_wet', 'Gross Wet', 'number'],
+                        // ['bl_no', 'B/L No', 'text'],
+                        // ['bl_date', 'B/L Date', 'date'],
+                        // ['ex_factory_date', 'EX-Factory Date', 'date'],
+                        // ['net_wet', 'Net Wet', 'number'],
+                        // ['gross_wet', 'Gross Wet', 'number'],
                     ] as [$name, $label, $type])
                         <div class="form-group row">
                             <label for="{{ $name }}" class="col-sm-3 text-end control-label col-form-label">{{ $label }}:</label>
@@ -520,39 +566,57 @@ $(document).ready(function() {
 
 
     // Incoterm Calculation
-    function updateIncotermCalculation() {
-        var cm_percentage = parseFloat($('#cm_percentage').val());
-        var amount = parseFloat($('#amount').val());
-        var incoterm = $('#incoterm').val();
+function updateIncotermCalculation() {
+    var cm_percentage = parseFloat($('#cm_percentage').val());
+    var amount = parseFloat($('#amount').val());
+    var incoterm = $('#incoterm').val();
 
-        if (!isNaN(cm_percentage) && !isNaN(amount) && incoterm) {
-            if (['FOB', 'CFR', 'FCA', 'EXW', 'CnF'].includes(incoterm)) {
-                var incoterm_calculation = (amount / 100) * cm_percentage;
-                var output = '<input readonly name="cm_amount" id="cm_amount" type="text" class="form-control" value="' + incoterm_calculation.toFixed(2) + '" placeholder="' + incoterm_calculation.toFixed(2) + '"/>';
-                $('#incoterm_calculation').html(output);
-                $('#freight_value').html('');
-            } else if (['CPT', 'CIF', 'DAP', 'DDP'].includes(incoterm)) {
-                var incoterm_calculation = (amount / 100) * cm_percentage;
-                var output = '<input readonly name="cm_amount" id="cm_amount" type="text" class="form-control" value="' + incoterm_calculation.toFixed(2) + '" placeholder="' + incoterm_calculation.toFixed(2) + '"/>';
-                var output1 = '<div class="form-group row">' +
-                             '<label for="freight_value_input" class="col-sm-3 text-end control-label col-form-label">Freight Value:</label>' +
-                             '<div class="col-sm-9">' +
-                             '<input name="freight_value" id="freight_value_input" type="text" class="form-control" placeholder="Freight Value"/>' +
-                             '</div></div>';
-                $('#incoterm_calculation').html(output);
-                $('#freight_value').html(output1);
-            } else {
-                $('#incoterm_calculation').html('Calculate Automatically');
-                $('#freight_value').html('');
-            }
-        } else {
+    if (!isNaN(cm_percentage) && !isNaN(amount) && incoterm) {
+        var incoterm_calculation = (amount / 100) * cm_percentage;
+        var cmOutput = '<input readonly name="cm_amount" id="cm_amount" type="text" class="form-control" ' +
+                       'value="' + incoterm_calculation.toFixed(2) + '" placeholder="' + incoterm_calculation.toFixed(2) + '"/>';
+
+        if (['FOB', 'CFR', 'FCA', 'EXW', 'CnF'].includes(incoterm)) {
+            $('#incoterm_calculation').html(cmOutput);
+            $('#freight_value').html('');
+            $('#fob_value').text('FOB Value: ' + incoterm_calculation.toFixed(2)); // FOB = CM amount (no freight)
+        } 
+        else if (['CPT', 'CIF', 'DAP', 'DDP'].includes(incoterm)) {
+            var freightOutput = '<div class="form-group row">' +
+                                '<label for="freight_value_input" class="col-sm-3 text-end control-label col-form-label">Freight Value:</label>' +
+                                '<div class="col-sm-9">' +
+                                '<input name="freight_value" id="freight_value_input" type="number" class="form-control" placeholder="Freight Value"/>' +
+                                '</div></div>';
+            $('#incoterm_calculation').html(cmOutput);
+            $('#freight_value').html(freightOutput);
+
+            // Attach event dynamically to new freight input
+            $('#freight_value_input').on('input', calculateFOB);
+        } 
+        else {
             $('#incoterm_calculation').html('Calculate Automatically');
             $('#freight_value').html('');
+            $('#fob_value').text('');
         }
+    } else {
+        $('#incoterm_calculation').html('Calculate Automatically');
+        $('#freight_value').html('');
+        $('#fob_value').text('');
     }
+}
 
-    $('#cm_percentage, #amount').on('input', updateIncotermCalculation);
-    $('#incoterm').on('change', updateIncotermCalculation);
+// FOB Calculation
+function calculateFOB() {
+    var amount = parseFloat($('#amount').val()) || 0;
+    var freightValue = parseFloat($('#freight_value_input').val()) || 0;
+    var fob = amount - freightValue;
+    $('#fob_value').text('FOB Value: ' + fob.toFixed(2));
+}
+
+// Event bindings
+$('#cm_percentage, #amount').on('input', updateIncotermCalculation);
+$('#incoterm').on('change', updateIncotermCalculation);
+
 
     // Trigger calculations and cascades for old input
     if ($('#consignee_name').val()) {

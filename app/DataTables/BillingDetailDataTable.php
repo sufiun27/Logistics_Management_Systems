@@ -33,9 +33,17 @@ class BillingDetailDataTable extends DataTable
     /**
      * Get the query source of dataTable.
      */
-    public function query(BillingDetail $model): QueryBuilder
+    public function query(BillingDetail $model)
     {
-        return $model->newQuery();
+        $user = auth()->user();
+
+        return BillingDetail::query()
+            ->whereHas('exportFormApparel', function ($q) use ($user) {
+                $q->where('invoice_site', $user->site);
+            })
+            ->orderByDesc('created_at');
+
+       // return $model->newQuery();
     }
 
     /**

@@ -35,7 +35,13 @@ class ShippingDataTable extends DataTable
      */
     public function query(Shipping $model): QueryBuilder
     {
-        return $model->newQuery();
+        $user = auth()->user();
+
+        return Shipping::query()
+            ->whereHas('exportFormApparel', function ($q) use ($user) {
+                $q->where('invoice_site', $user->site);
+            })
+            ->orderByDesc('created_at');
     }
 
     /**

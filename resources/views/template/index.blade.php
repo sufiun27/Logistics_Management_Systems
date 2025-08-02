@@ -314,7 +314,7 @@
                   </li>
                  @endcan
 
-                  @can('policy', [App\Models\User::class, 'tt_manage'])
+                  @can('policy', [App\Models\User::class, 'cm_percentage'])
                   <li class="sidebar-item">
                     <a href="{{route('cmValue.index')}}" class="sidebar-link"
                       ><i class="mdi ">C M</i
@@ -351,6 +351,37 @@
               </li>
             <!-- /////////////////////Forms///////////////////// -->
 
+
+            <!-- shipping shipping.shipping//////////////////// -->
+      @can('policy', [App\Models\User::class, 'shipping_manage'])
+
+      <li class="sidebar-item">
+        <a
+          class="sidebar-link has-arrow waves-effect waves-dark"
+          href="javascript:void(0)"
+          aria-expanded="false"
+          ><i class="fa-solid fa-ship"></i>
+          <span class="hide-menu">Shipping </span></a
+        >
+        <ul aria-expanded="false" class="collapse first-level">
+
+        <li class="sidebar-item">
+            <a href="{{route('shipping.shipping')}}" class="sidebar-link">
+              <i class="mdi">S</i>
+              <span class="hide-menu"> Shippings </span></a
+            >
+          </li>
+
+          {{-- <li class="sidebar-item">
+            <a href="{{route('shipping.addShippingDetails')}}" class="sidebar-link"
+              ><i class="mdi">S D</i
+              ><span class="hide-menu"> Add  Shipping Details </span></a
+            >
+          </li> --}}
+        </ul>
+      </li>
+      @endcan
+
             <!-- /////////////////////sales///////////////////// -->
             @can('policy', [App\Models\User::class, 'sales_manage'])
             <li class="sidebar-item">
@@ -375,35 +406,7 @@
             </li>
             @endcan
 
-      <!-- shipping shipping.shipping//////////////////// -->
-      @can('policy', [App\Models\User::class, 'shipping_manage'])
-
-            <li class="sidebar-item">
-              <a
-                class="sidebar-link has-arrow waves-effect waves-dark"
-                href="javascript:void(0)"
-                aria-expanded="false"
-                ><i class="fa-solid fa-ship"></i>
-                <span class="hide-menu">Shipping </span></a
-              >
-              <ul aria-expanded="false" class="collapse first-level">
-
-              <li class="sidebar-item">
-                  <a href="{{route('shipping.shipping')}}" class="sidebar-link">
-                    <i class="mdi">S</i>
-                    <span class="hide-menu"> Shippings </span></a
-                  >
-                </li>
-
-                {{-- <li class="sidebar-item">
-                  <a href="{{route('shipping.addShippingDetails')}}" class="sidebar-link"
-                    ><i class="mdi">S D</i
-                    ><span class="hide-menu"> Add  Shipping Details </span></a
-                  >
-                </li> --}}
-              </ul>
-            </li>
-            @endcan
+      
 
               <!-- /////////////////////Invoice///////////////////// -->
 

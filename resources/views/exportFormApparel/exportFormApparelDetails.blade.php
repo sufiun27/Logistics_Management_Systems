@@ -94,7 +94,7 @@
                     <dd class="col-sm-8 copyable" data-bs-toggle="tooltip" data-bs-placement="top" title="Click to copy">{{ isset($efa->amount) ? number_format($efa->amount, 4) : 'N/A' }}</dd>
 
                     <dt class="col-sm-4">CM Percentage:</dt>
-                    <dd class="col-sm-8 copyable" data-bs-toggle="tooltip" data-bs-placement="top" title="Click to copy">{{ isset($efa->cm_percentage) ? number_format($efa->cm_percentage, 4) : 'N/A' }}</dd>
+                    <dd class="col-sm-8 copyable" data-bs-toggle="tooltip" data-bs-placement="top" title="Click to copy">{{ isset($efa->cm_percentage) ? number_format($efa->cm_percentage, 2) : 'N/A' }}%</dd>
 
                     <dt class="col-sm-4">Incoterm:</dt>
                     <dd class="col-sm-8 copyable" data-bs-toggle="tooltip" data-bs-placement="top" title="Click to copy">{{ $efa->incoterm ?? 'N/A' }}</dd>
@@ -104,6 +104,9 @@
 
                     <dt class="col-sm-4">Freight Value:</dt>
                     <dd class="col-sm-8 copyable" data-bs-toggle="tooltip" data-bs-placement="top" title="Click to copy">{{ isset($efa->freight_value) ? number_format($efa->freight_value, 4) : 'N/A' }}</dd>
+
+                    <dt class="col-sm-4">FOB Value:</dt>
+                    <dd class="col-sm-8 copyable" data-bs-toggle="tooltip" data-bs-placement="top" title="Click to copy">{{ isset($efa->amount) && isset($efa->freight_value) ? number_format($efa->amount - $efa->freight_value, 4) : 'N/A' }}</dd>
                 </dl>
             </div>
 

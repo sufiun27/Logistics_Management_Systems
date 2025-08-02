@@ -8,4 +8,5 @@ use Illuminate\Database\Eloquent\Model;
 class DestCountry extends Model
 {
     use HasFactory;
+    
 }

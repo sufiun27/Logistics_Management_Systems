@@ -15,12 +15,9 @@ return new class extends Migration
         Schema::create('cm_values', function (Blueprint $table) {
             $table->id();
             $table->decimal('cm_value', 5, 2); // Corrected precision
+            $table->string('site')->unique(); // Added description column
             $table->timestamps();
         });
-
-        DB::table('cm_values')->insert([
-            ['cm_value' => 20.00],
-        ]);
     }
 
     /**

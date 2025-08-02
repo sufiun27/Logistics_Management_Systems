@@ -32,53 +32,137 @@ class ReportController extends Controller
         return view('reports.master');
     }
 
+    // //multiple
+    // public function report(Request $request)
+    // {
+    //     // dd($request->all());
+    //     // ✅ Validate incoming data
+    //     $validated = $request->validate([
+    //         'site'       => 'required|array',
+    //         'invoice_no' => 'nullable|string',
+    //         'start_date' => 'nullable|date',
+    //         'end_date'   => 'nullable|date|after_or_equal:start_date',
+    //     ]);
+
+
+    //     // dd($validated);
+    
+    //     // ✅ Start query with eager loading
+    //     $query = ExportFormApparel::with([
+    //         'saleDetail',
+    //         'shipping',
+    //         'billingDetail',
+    //         'logisticsDetail'
+    //     ])->whereIn('invoice_site', $validated['site']);
+    
+    //     // ✅ Apply optional filters
+    //     if (!empty($validated['invoice_no'])) {
+    //         $query->where('invoice_no', $validated['invoice_no']);
+    //     }
+    
+    //     if (!empty($validated['start_date'])) {
+    //         $query->whereDate('created_at', '>=', $validated['start_date']);
+    //     }
+    
+    //     if (!empty($validated['end_date'])) {
+    //         $query->whereDate('created_at', '<=', $validated['end_date']);
+    //     }
+    
+    //     // ✅ Paginate results
+    //     $data = $query->orderBy('created_at', 'desc')->paginate(20);
+    
+    //     // ✅ Transform but keep paginator
+    //     $data->getCollection()->transform(function ($item) {
+    //         return [
+    //             'export'    => collect($item)->except([
+    //                 'sale_detail',
+    //                 'shipping',
+    //                 'billing_detail',
+    //                 'logistics_detail'
+    //             ]),
+    //             'sales'     => $item->saleDetail,
+    //             'shipping'  => $item->shipping,
+    //             'billing'   => $item->billingDetail,
+    //             'logistics' => $item->logisticsDetail,
+    //         ];
+    //     });
+    
+    //     return view('reports.master', compact('data'));
+    // }
+
+    //single
     public function report(Request $request)
 {
     $validated = $request->validate([
+        'site'       => 'required|string',
         'invoice_no' => 'nullable|string',
         'start_date' => 'nullable|date',
         'end_date'   => 'nullable|date|after_or_equal:start_date',
     ]);
 
-    $query = ExportFormApparel::with('saleDetail', 'shipping', 'billingDetail', 'logisticsDetail');
+    $query = ExportFormApparel::with([
+        'saleDetail',
+        'shipping',
+        'billingDetail',
+        'logisticsDetail'
+    ])->where('invoice_site', $validated['site']);
 
-    if (!empty($request->invoice_no)) {
-        $query->where('invoice_no', $request->invoice_no);
-    }
-    if (!empty($request->start_date)) {
-        $query->whereDate('created_at', '>=', $request->start_date);
-    }
-    if (!empty($request->end_date)) {
-        $query->whereDate('created_at', '<=', $request->end_date);
+    // ✅ Filter by invoice number
+    if (!empty($validated['invoice_no'])) {
+        $query->where('invoice_no', $validated['invoice_no']);
     }
 
-    $data = $query->paginate(20);
+    // ✅ Filter by shipping->exp_date
+    if (!empty($validated['start_date'])) {
+        $query->whereHas('shipping', function ($q) use ($validated) {
+            $q->whereDate('ex_factory_date', '>=', $validated['start_date']);
+        });
+    }
 
-    // Transform and retain paginator
-    $transformed = $data->getCollection()->map(function ($item) {
+    if (!empty($validated['end_date'])) {
+        $query->whereHas('shipping', function ($q) use ($validated) {
+            $q->whereDate('ex_factory_date', '<=', $validated['end_date']);
+        });
+    }
+
+    $data = $query->orderBy('created_at', 'desc')->paginate(20);
+
+    $data->getCollection()->transform(function ($item) {
         return [
-            'export'    => collect($item)->except(['sale_detail', 'shipping', 'billing_detail', 'logistics_detail']),
+            'export'    => collect($item)->except([
+                'sale_detail',
+                'shipping',
+                'billing_detail',
+                'logistics_detail'
+            ]),
             'sales'     => $item->saleDetail,
             'shipping'  => $item->shipping,
             'billing'   => $item->billingDetail,
             'logistics' => $item->logisticsDetail,
         ];
     });
-    $data->setCollection($transformed);
 
     return view('reports.master', compact('data'));
 }
 
+    
+
     public function masterReportExport(Request $request) {
         $export = [
+            ['column' => 'invoice_no', 'title' => 'Invoice No'],
+            ['column' => 'invoice_date', 'title' => 'Invoice Date'],
+            
+            ['column' => 'consignee_name', 'title' => 'Consignee Name'],
+            ['column' => 'invoice_site', 'title' => 'Invoice Site'],
+            
+
             ['column' => 'item_name', 'title' => 'Item Name'],
             ['column' => 'hs_code', 'title' => 'HS Code'],
             ['column' => 'hs_code_second', 'title' => 'HS Code (Second)'],
-            ['column' => 'invoice_no', 'title' => 'Invoice No'],
-            ['column' => 'invoice_date', 'title' => 'Invoice Date'],
+            
             ['column' => 'contract_no', 'title' => 'Contract No'],
             ['column' => 'contract_date', 'title' => 'Contract Date'],
-            ['column' => 'consignee_name', 'title' => 'Consignee Name'],
+            
             ['column' => 'consignee_site', 'title' => 'Consignee Site'],
             ['column' => 'consignee_country', 'title' => 'Consignee Country'],
             ['column' => 'consignee_address', 'title' => 'Consignee Address'],
@@ -93,7 +177,7 @@ class ReportController extends Controller
             ['column' => 'section', 'title' => 'Section'],
             ['column' => 'tt_no', 'title' => 'TT No'],
             ['column' => 'tt_date', 'title' => 'TT Date'],
-            ['column' => 'invoice_site', 'title' => 'Invoice Site'],
+            
             ['column' => 'unit', 'title' => 'Unit'],
             ['column' => 'quantity', 'title' => 'Quantity'],
             ['column' => 'currency', 'title' => 'Currency'],
@@ -115,23 +199,22 @@ class ReportController extends Controller
         ];
 
         $sales = [
-            ['column' => 'invoice_no', 'title' => 'Invoice No'],
-            ['column' => 'buyer_contract', 'title' => 'Buyer Contract'],
             ['column' => 'order_no', 'title' => 'Order No'],
-            ['column' => 'style_no', 'title' => 'Style No'],
-            ['column' => 'product_type', 'title' => 'Product Type'],
+            ['column' => 'buyer_contract', 'title' => 'Buyer Contract'],
+          ['column' => 'style_no', 'title' => 'Style No'],
+          ['column' => 'product_type', 'title' => 'Product Type'],
             ['column' => 'shipped_qty', 'title' => 'Shipped Quantity'],
-            ['column' => 'carton_qty', 'title' => 'Carton Quantity'],
-            ['column' => 'shipped_fob_value', 'title' => 'Shipped FOB Value'],
+           ['column' => 'shipped_fob_value', 'title' => 'Shipped FOB Value'],
             ['column' => 'shipped_cm_value', 'title' => 'Shipped CM Value'],
-            ['column' => 'cbm_value', 'title' => 'CBM Value'],
+           ['column' => 'carton_qty', 'title' => 'Carton Quantity'],
+           ['column' => 'cbm_value', 'title' => 'CBM Value'],
             ['column' => 'gross_wet', 'title' => 'Gross Weight'],
             ['column' => 'net_wet', 'title' => 'Net Weight'],
-            ['column' => 'eta_date', 'title' => 'ETA Date'],
-            ['column' => 'vessel_name', 'title' => 'Vessel Name'],
             ['column' => 'shipbording_date', 'title' => 'Shipboarding Date'],
             ['column' => 'bl_no', 'title' => 'BL No'],
             ['column' => 'bl_date', 'title' => 'BL Date'],
+            ['column' => 'eta_date', 'title' => 'ETA Date'],
+            ['column' => 'vessel_name', 'title' => 'Vessel Name'],
             ['column' => 'final_qty', 'title' => 'Final Quantity'],
             ['column' => 'final_fob', 'title' => 'Final FOB'],
             ['column' => 'final_cm', 'title' => 'Final CM'],
@@ -143,30 +226,29 @@ class ReportController extends Controller
         ];
 
         $shipping = [
-            ['column' => 'id', 'title' => 'ID'],
-            ['column' => 'invoice_no', 'title' => 'Invoice No'],
             ['column' => 'factory', 'title' => 'Factory'],
-
+            ['column' => 'ex_factory_date', 'title' => 'Ex-Factory Date'],
+           ['column' => 'cargorpt_date', 'title' => 'Cargo Report Date'],
+      
+            ['column' => 'cnf_agent', 'title' => 'CNF Agent'],
+            ['column' => 'vessel_no', 'title' => 'Vessel No'],
             ['column' => 'ep_no', 'title' => 'EP No'],
             ['column' => 'ep_date', 'title' => 'EP Date'],
             ['column' => 'ex_pNo', 'title' => 'Export Permit No'], // Assuming ex_pNo means Export Permit No
-            ['column' => 'exp_date', 'title' => 'Export Date'],
-            ['column' => 'exp_no', 'title' => 'Export No'],
-            ['column' => 'ex_factory_date', 'title' => 'Ex-Factory Date'],
-
-            ['column' => 'cnf_agent', 'title' => 'CNF Agent'],
-            ['column' => 'transport_port', 'title' => 'Transport Port'],
+           
+          ['column' => 'exp_no', 'title' => 'Export No'],
+          ['column' => 'exp_date', 'title' => 'Export Date'],
+          ['column' => 'transport_port', 'title' => 'Transport Port'],
+      
             ['column' => 'sb_no', 'title' => 'SB No'],
             ['column' => 'sb_date', 'title' => 'SB Date'],
-            ['column' => 'vessel_no', 'title' => 'Vessel No'],
-            ['column' => 'cargorpt_date', 'title' => 'Cargo Report Date'],
-
+            
             ['column' => 'bring_back', 'title' => 'Bring Back'],
             ['column' => 'shipped_out', 'title' => 'Shipped Out'],
             ['column' => 'shipped_cancel', 'title' => 'Shipped Cancelled'],
             ['column' => 'shipped_back', 'title' => 'Shipped Back'],
             ['column' => 'unshipped', 'title' => 'Unshipped'],
-
+      
             ['column' => 'created_by', 'title' => 'Created By'],
             ['column' => 'updated_by', 'title' => 'Updated By'],
             ['column' => 'created_at', 'title' => 'Created At'],
@@ -239,24 +321,34 @@ class ReportController extends Controller
             'logistics' => $logistics
         ];
             $validated = $request->validate([
+                // 'site' => 'required|array', //multiple
+                'site' => 'required|string', //single
                 'invoice_no' => 'nullable|string',
                 'start_date' => 'nullable|date',
                 'end_date' => 'nullable|date|after_or_equal:start_date',
             ]);
 
-            $query = ExportFormApparel::with('saleDetail', 'shipping', 'billingDetail', 'logisticsDetail');
+            // dd($validated);
+
+            $query = ExportFormApparel::with('saleDetail', 'shipping', 'billingDetail', 'logisticsDetail')->where('invoice_site', $validated['site']);
 
             if (isset($request->invoice_no) && $request->invoice_no !== '') {
                 $query->where('invoice_no', $request->invoice_no);
             }
 
-            if (isset($request->start_date) && $request->start_date !== '') {
-                $query->whereDate('created_at', '>=', $request->start_date);
+            // ✅ Filter by shipping->exp_date
+            if (!empty($validated['start_date'])) {
+                $query->whereHas('shipping', function ($q) use ($validated) {
+                    $q->whereDate('ex_factory_date', '>=', $validated['start_date']);
+                });
             }
 
-            if (isset($request->end_date) && $request->end_date !== '') {
-                $query->whereDate('created_at', '<=', $request->end_date);
+            if (!empty($validated['end_date'])) {
+                $query->whereHas('shipping', function ($q) use ($validated) {
+                    $q->whereDate('ex_factory_date', '<=', $validated['end_date']);
+                });
             }
+           // $data = $query->orderBy('created_at', 'desc');
 
             $data = $query->get();
 

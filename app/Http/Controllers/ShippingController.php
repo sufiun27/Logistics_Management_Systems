@@ -4,207 +4,204 @@ namespace App\Http\Controllers;
 
 use App\Models\Shipping;
 use App\Models\Transport;
-use App\Models\SaleDetail;
-use Illuminate\Http\Request;
 use App\Models\ExportFormApparel;
+use Illuminate\Http\Request;
 use App\DataTables\ShippingDataTable;
 
 class ShippingController extends Controller
 {
-    //shipping.shipping
     public function shipping(ShippingDataTable $dataTable)
     {
         return $dataTable->render('shipping.shipping');
     }
 
-    //addShipping
     public function addShipping()
     {
         $transports = Transport::all();
-        return view('shipping.addShipping',compact('transports'));
-    }
-
-    public function getInvoice(Request $request)
-    {
-        $invoice = $request->invoice_no;
-      // $efa = ExportFormApparel::where('invoice_no', $invoice)->first();  invoice_no like '%$invoice%' select first 10 record
-        $efa = ExportFormApparel::where('invoice_no', 'like', '%'.$invoice.'%')->take(10)->get();
-
-        $data = '<table id="dynamicTable" class="table table-striped table-sm m-0 p-0">
-        <thead class="table-info">
-            <tr>
-                <th class="m-0 p-0 fw-bold " >Invoice No</th>
-                <th class="m-0 p-0 fw-bold " >Invoice Date</th>
-                <th class="m-0 p-0 fw-bold " >Contract No</th>
-                <th class="m-0 p-0 fw-bold " >Contract Date</th>
-                <th class="m-0 p-0 fw-bold " >Exporter</th>
-                <th class="m-0 p-0 fw-bold " >Consignee No</th>
-                <th class="m-0 p-0 fw-bold " >Local Port</th>
-                <th class="m-0 p-0 fw-bold " >Quantity</th>
-                <th class="m-0 p-0 fw-bold " >Amount</th>
-                <th class="m-0 p-0 fw-bold " >CM Amount</th>
-                <th class="m-0 p-0 fw-bold " >Freight Value</th>
-                <th class="m-0 p-0 fw-bold " >FOB</th>
-            </tr>
-        </thead>
-        <tbody>';
-
-        foreach ($efa as $row) {
-            $data .= '<tr>
-                        <td class="invoiceCell btn-success btn-sm m-0 p-1">' . $row->invoice_no . '</td>
-                        <td class="m-0 p-0">' . $row->invoice_date . '</td>
-                        <td class="m-0 p-0">' . $row->contract_no . '</td>
-                        <td class="m-0 p-0">' . $row->contract_date . '</td>
-                        <td class="m-0 p-0">' . $row->site . '</td>
-                        <td class="m-0 p-0">' . $row->consignee_name . '</td>
-                        <td class="m-0 p-0">' . $row->local_transport . '</td>
-                        <td class="m-0 p-0">' . $row->quantity . '</td>
-                        <td class="m-0 p-0">' . $row->amount . '</td>
-                        <td class="m-0 p-0">' . $row->cm_amount . '</td>
-                        <td class="m-0 p-0">' . $row->freight_value . '</td>
-                        <td class="m-0 p-0">' . ($row->amount - $row->freight_value) . '</td>
-                    </tr>';
-        }
-
-        $data .= '</tbody>
-            </table>';
-        echo $data;
-
+        return view('shipping.addShipping', compact('transports'));
     }
 
     public function storeShipmentStatusInfo(Request $request)
     {
-        // $request->validate([
-        //     'invoice_no' => 'required|unique:shippings',
-        //     'ep_no' => 'required',
-        //     'ep_date' => 'required',
-        //     'exp_no' => 'required',
-        //     'exp_date' => 'required',
-        //     'ex_factory_date' => 'required',
-        //     'sb_no' => 'required',
-        //     'sb_date' => 'required',
-        // ]);
+        $request->validate([
+            'invoice_no'       => 'required|string',
+            'factory'          => 'required|string',
+            'ep_no'            => 'required|string',
+            'ep_date'          => 'required|date',
+            'exp_no'           => 'required|string',
+            'exp_date'         => 'required|date',
+            'ex_factory_date'  => 'required|date',
+            'sb_no'            => 'required|string',
+            'sb_date'          => 'required|date',
+        ]);
 
-        if(!ExportFormApparel::where('invoice_no', $request->invoice_no)->exists()){
+        // Check invoice exists in ExportFormApparel
+        $exportFormApparel = ExportFormApparel::where('invoice_no', $request->invoice_no)->first();
+        if (!$exportFormApparel) {
             return redirect()->route('shipping.shipping')->with('error', 'Invoice not found in Export Form');
         }
 
+        // Prevent duplicate shipping entry
         if (Shipping::where('invoice_no', $request->invoice_no)->exists()) {
             return redirect()->route('shipping.addShipping')->with('error', 'Invoice already added');
         }
 
-        $ssi= new Shipping();
-        $ssi->invoice_no = $request->invoice_no;
-        $ssi->factory = $request->factory;
-        $ssi->ep_no = $request->ep_no;
-        $ssi->ep_date = $request->ep_date;
-        $ssi->exp_no = $request->exp_no;
-        $ssi->exp_date = $request->exp_date;
-        $ssi->ex_factory_date = $request->ex_factory_date;
-        $ssi->sb_no = $request->sb_no;
-        $ssi->sb_date = $request->sb_date;
+        // ✅ Check site access
+        if (!$this->checkUserAccess($exportFormApparel)) {
+            return redirect()->back()->with('error', 'You only have access to your own site.');
+        }
 
-        $ssi->transport_port = $request->transport_port;
-        $ssi->cnf_agent = $request->cnf_agent;
-        $ssi->vessel_no = $request->vessel_no;
-        $ssi->cargorpt_date = $request->cargorpt_date;
-
-        $ssi->bring_back = $request->bring_back;
-        $ssi->shipped_out = $request->shipped_out;
-        $ssi->shipped_cancel = $request->shipped_cancel;
-        $ssi->shipped_back = $request->shipped_back;
-        $ssi->unshipped = $request->unshipped;
-
+        $ssi = new Shipping();
+        $ssi->fill($request->only([
+            'invoice_no','factory','ep_no','ep_date','exp_no','exp_date',
+            'ex_factory_date','sb_no','sb_date','transport_port','cnf_agent',
+            'vessel_no','cargorpt_date','bring_back','shipped_out','shipped_cancel',
+            'shipped_back','unshipped'
+        ]));
         $ssi->created_by = auth()->user()->emp_id;
         $ssi->save();
 
-        return redirect()->route('shipping.addShipping')->with('success', 'Shipment Information Updated Successfully');
+        return redirect()->route('shipping.shipping')->with('success', 'Shipment Information Added Successfully');
     }
 
-
-    //ShippingDetails
-    public function ShippingDetails($id){
-
+    public function ShippingDetails($id)
+    {
         $shipping = Shipping::find($id);
-        return view('shipping.ShippingDetails',compact('shipping'));
+        if (!$shipping) {
+            return redirect()->back()->with('error', 'Shipping record not found.');
+        }
+
+        $exportFormApparel = ExportFormApparel::where('invoice_no', $shipping->invoice_no)->first();
+        if (!$exportFormApparel || !$this->checkUserAccess($exportFormApparel)) {
+            return redirect()->back()->with('error', 'You only have access to your own site.');
+        }
+
+        return view('shipping.ShippingDetails', compact('shipping'));
     }
-    //storeShipmentOtherInfo
 
-
-    public function addShipmentOtherInfo($id){
-
+    public function addShipmentOtherInfo($id)
+    {
         $invoice_no = $id;
         $transports = Transport::all();
-        return view('shipping.addShipmentOtherInfo',compact('invoice_no','transports'));
-       // return route('shipping.storeShipmentOtherInfo',compact('invoice_no'));
+        return view('shipping.addShipmentOtherInfo', compact('invoice_no','transports'));
     }
-    //storeShipmentOtherInfo
-    public function storeShipmentOtherInfo(Request $request){
-        //dd($request->all());
+
+    public function storeShipmentOtherInfo(Request $request)
+    {
         $request->validate([
-           'transport_port'=>'required',
+            'invoice_no'     => 'required|string',
+            'transport_port' => 'required|string',
         ]);
-        $invoice_no = $request->invoice_no;
 
-        $soi= Shipping::where('invoice_no',$request->invoice_no)->first();
-        $soi->transport_port = $request->transport_port;
-        $soi->cnf_agent = $request->cnf_agent;
-        $soi->vessel_no = $request->vessel_no;
-        $soi->cargorpt_date = $request->cargorpt_date;
+        $soi = Shipping::where('invoice_no', $request->invoice_no)->first();
+        if (!$soi) {
+            return redirect()->back()->with('error', 'Shipping record not found.');
+        }
+
+        $exportFormApparel = ExportFormApparel::where('invoice_no', $soi->invoice_no)->first();
+        if (!$exportFormApparel || !$this->checkUserAccess($exportFormApparel)) {
+            return redirect()->back()->with('error', 'You only have access to your own site.');
+        }
+
+        $soi->fill($request->only(['transport_port','cnf_agent','vessel_no','cargorpt_date']));
+        $soi->updated_by = auth()->user()->emp_id;
         $soi->save();
-        return redirect()->route('shipping.addShipmentOtherInfo1',$invoice_no)->with('success', 'Other Information Updated Successfully');
+
+        return redirect()->route('shipping.addShipmentOtherInfo1', $request->invoice_no)
+                         ->with('success', 'Other Information Updated Successfully');
     }
 
-
-    //addInvoiceRemarks
-    public function addInvoiceRemarks($id){
-        $invoice_no = $id;
-        return view('shipping.addInvoiceRemarks',compact('invoice_no'));
+    public function addInvoiceRemarks($id)
+    {
+        return view('shipping.addInvoiceRemarks', ['invoice_no' => $id]);
     }
 
-    //updateShipping
-    public function updateShipping($id){
+    public function updateShipping($id)
+    {
         $shipping = Shipping::find($id);
+        if (!$shipping) {
+            return redirect()->back()->with('error', 'Shipping record not found.');
+        }
+
+        $exportFormApparel = ExportFormApparel::where('invoice_no', $shipping->invoice_no)->first();
+        if (!$exportFormApparel || !$this->checkUserAccess($exportFormApparel)) {
+            return redirect()->back()->with('error', 'You only have access to your own site.');
+        }
+
         $transports = Transport::all();
-        return view('shipping.updateShipping',compact('shipping','transports'));
+        return view('shipping.updateShipping', compact('shipping','transports'));
     }
 
-    public function updateShippingStatusInfo(Request $request, $id){
+    public function updateShippingStatusInfo(Request $request, $id)
+    {
+        $request->validate([
+            'factory'         => 'required|string',
+            'ep_no'           => 'required|string',
+            'ep_date'         => 'required|date',
+            'exp_no'          => 'required|string',
+            'exp_date'        => 'required|date',
+            'ex_factory_date' => 'required|date',
+            'sb_no'           => 'required|string',
+            'sb_date'         => 'required|date',
+        ]);
+
         $shipping = Shipping::find($id);
-        $shipping->factory = $request->factory;
-        $shipping->ep_no = $request->ep_no;
-        $shipping->ep_date = $request->ep_date;
-        $shipping->exp_no = $request->exp_no;
-        $shipping->exp_date = $request->exp_date;
-        $shipping->ex_factory_date = $request->ex_factory_date;
-        $shipping->sb_no = $request->sb_no;
-        $shipping->sb_date = $request->sb_date;
+        if (!$shipping) {
+            return redirect()->back()->with('error', 'Shipping record not found.');
+        }
+
+        $exportFormApparel = ExportFormApparel::where('invoice_no', $shipping->invoice_no)->first();
+        if (!$exportFormApparel || !$this->checkUserAccess($exportFormApparel)) {
+            return redirect()->back()->with('error', 'You only have access to your own site.');
+        }
+
+        $shipping->fill($request->only([
+            'factory','ep_no','ep_date','exp_no','exp_date',
+            'ex_factory_date','sb_no','sb_date'
+        ]));
         $shipping->updated_by = auth()->user()->emp_id;
         $shipping->save();
-        return redirect()->route('shipping.updateShipping',$shipping->id)->with('success', 'Shipment Status Information Updated Successfully');
+
+        return redirect()->route('shipping.updateShipping', $shipping->id)
+                         ->with('success', 'Shipment Status Information Updated Successfully');
     }
 
-    public function updateOtherInformation(Request $request, $id){
+    public function updateOtherInformation(Request $request, $id)
+    {
         $shipping = Shipping::find($id);
-        $shipping->transport_port = $request->transport_port;
-        $shipping->cnf_agent = $request->cnf_agent;
-        $shipping->vessel_no = $request->vessel_no;
-        $shipping->cargorpt_date = $request->cargorpt_date;
+        if (!$shipping) {
+            return redirect()->back()->with('error', 'Shipping record not found.');
+        }
+
+        $shipping->fill($request->only(['transport_port','cnf_agent','vessel_no','cargorpt_date']));
         $shipping->updated_by = auth()->user()->emp_id;
         $shipping->save();
-        return redirect()->route('shipping.updateShipping',$shipping->id)->with('success', 'Other Information Updated Successfully');
 
+        return redirect()->route('shipping.updateShipping', $shipping->id)
+                         ->with('success', 'Other Information Updated Successfully');
     }
 
-    public function updateRemarks(Request $request, $id){
+    public function updateRemarks(Request $request, $id)
+    {
         $shipping = Shipping::find($id);
-        $shipping->bring_back = $request->bring_back;
-        $shipping->shipped_out = $request->shipped_out;
-        $shipping->shipped_cancel = $request->shipped_cancel;
-        $shipping->shipped_back = $request->shipped_back;
-        $shipping->unshipped = $request->unshipped;
+        if (!$shipping) {
+            return redirect()->back()->with('error', 'Shipping record not found.');
+        }
+
+        $shipping->fill($request->only(['bring_back','shipped_out','shipped_cancel','shipped_back','unshipped']));
         $shipping->updated_by = auth()->user()->emp_id;
         $shipping->save();
-        return redirect()->route('shipping.updateShipping',$shipping->id)->with('success', 'Remarks Updated Successfully');
+
+        return redirect()->route('shipping.updateShipping', $shipping->id)
+                         ->with('success', 'Remarks Updated Successfully');
+    }
+
+    /**
+     * ✅ Centralized site access check
+     */
+    private function checkUserAccess($exportFormApparel)
+    {
+        $user = auth()->user();
+        return $exportFormApparel->invoice_site === $user->site;
     }
 }

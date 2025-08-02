@@ -36,6 +36,7 @@ class TtInformationDataTable extends DataTable
     public function query(): QueryBuilder
     {
         $query = TtInformation::query();
+        $query = $query->where('tt_site', auth()->user()->site);
 
         if (!empty($this->start_date) && !empty($this->end_date)) {
             $query->whereBetween('created_at', [$this->start_date, $this->end_date]);

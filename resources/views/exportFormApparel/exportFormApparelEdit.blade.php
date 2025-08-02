@@ -155,7 +155,7 @@
                         </div>
                     </div> --}}
 
-                    <div class="form-group row">
+                    {{-- <div class="form-group row">
                         <label for="invoice_site" class="col-sm-3 text-end control-label col-form-label">Create By Site:</label>
                         <div class="col-sm-9">
                             <select name="invoice_site" id="invoice_site" class="form-control">
@@ -165,6 +165,17 @@
                                     </option>
                                 @endforeach
                             </select>
+                        </div>
+                    </div> --}}
+                    @php
+                        $user = auth()->user();
+                    @endphp
+
+                    <div class="form-group row">
+                        <label class="col-sm-3 text-end control-label col-form-label">Created By Site:</label>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control" value="{{ $user->site }}" readonly>
+                            <input type="hidden" name="invoice_site" value="{{ $user->site }}">
                         </div>
                     </div>
 

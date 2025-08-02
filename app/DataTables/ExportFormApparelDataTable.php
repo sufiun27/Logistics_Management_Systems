@@ -45,15 +45,12 @@ class ExportFormApparelDataTable extends DataTable
     {
         $query = ExportFormApparel::query();
 
-        if($this->site != NULL){
-        $query->where('site', $this->site);
-        }
+        $user = auth()->user();
+        $query->where('invoice_site', $user->site);
+        
         if ($this->start_date != NULL && $this->end_date != NULL) {
             $query->whereBetween('created_at', [$this->start_date, $this->end_date]);
         }
-
-
-
 
         return $query->orderByDesc('created_at');
     }
@@ -96,52 +93,73 @@ class ExportFormApparelDataTable extends DataTable
                   ->addClass('text-center'),
 
                 Column::make('invoice_no')->title('Invoice No'),
-
-
-
-                  Column::make('id')->title('ID'),
-                  Column::make('item_name')->title('Item Name'),
-                  Column::make('hs_code')->title('HS Code'),
-                  Column::make('hs_code_second')->title('HS Code 2'),
-
-                  Column::make('invoice_date')->title('Invoice Date'),
+                Column::make('invoice_date')->title('Invoice Date'),
+                Column::make('exp_no')->title('EXP No'),
+                Column::make('consignee_name')->title('Consignee Name'),
+                Column::make('dst_country_port')->title('Destination Country Port'),
+                Column::make('item_name')->title('Item Name'),
+                Column::make('hs_code')->title('HS Code'),
+                Column::make('quantity')->title('Quantity'),
+                Column::make('incoterm')->title('Incoterm'),
+                Column::make('cm_percentage')->title('CM %'),
+                Column::make('cm_amount')->title('CM Amount'),
+                  Column::make('freight_value')->title('Freight Value'),
                   Column::make('contract_no')->title('Contract No'),
                   Column::make('contract_date')->title('Contract Date'),
-                  Column::make('consignee_name')->title('Consignee Name'),
-                  Column::make('consignee_site')->title('Consignee Site'),
-                  Column::make('consignee_address')->title('Consignee Address'),
-                  Column::make('dst_country_code')->title('Destination Country Code'),
-                  Column::make('dst_country_name')->title('Destination Country Name'),
-                  Column::make('dst_country_port')->title('Destination Country Port'),
-                  Column::make('transport_name')->title('Transport Name'),
-                  Column::make('transport_address')->title('Transport Address'),
-                  Column::make('transport_port')->title('Transport Port'),
-                  Column::make('notify_name')->title('Notify Name'),
-                  Column::make('notify_address')->title('Notify Address'),
-                  Column::make('section')->title('Section'),
-                  Column::make('tt_no')->title('TT No'),
-                  Column::make('invoice_site')->title('Invoice Site'),
-                  Column::make('tt_date')->title('TT Date'),
-                  Column::make('unit')->title('Unit'),
-                  Column::make('quantity')->title('Quantity'),
-                  Column::make('currency')->title('Currency'),
-                  Column::make('amount')->title('Amount'),
-                  Column::make('cm_percentage')->title('CM %'),
-                  Column::make('incoterm')->title('Incoterm'),
-                  Column::make('cm_amount')->title('CM Amount'),
-                  Column::make('freight_value')->title('Freight Value'),
-                  Column::make('exp_no')->title('EXP No'),
-                  Column::make('exp_date')->title('EXP Date'),
-                  Column::make('exp_permit_no')->title('EXP Permit No'),
-                  Column::make('bl_no')->title('BL No'),
-                  Column::make('bl_date')->title('BL Date'),
-                  Column::make('ex_factory_date')->title('Ex Factory Date'),
-                  Column::make('net_wet')->title('Net Wet'),
-                  Column::make('gross_wet')->title('Gross Wet'),
-                  Column::make('create_by')->title('Created By'),
-                  Column::make('update_by')->title('Updated By'),
-                  Column::make('created_at')->title('Created At'),
-                  Column::make('updated_at')->title('Updated At'),
+
+                // Invoice No	
+                // Invoice Date	
+                // Exporter	
+                // Consignee Name	
+                // Destination	Port	
+                // Item Name	
+                // H.S. Code	
+                // Qty	Incoterm	
+                // FOB	C.M.	
+                // Contract No	
+                // Contract Date
+
+
+                //   Column::make('id')->title('ID'),
+                //   
+                  
+                //   Column::make('hs_code_second')->title('HS Code 2'),
+
+                  
+                  
+                  
+                //   Column::make('consignee_site')->title('Consignee Site'),
+                //   Column::make('consignee_address')->title('Consignee Address'),
+                //   Column::make('dst_country_code')->title('Destination Country Code'),
+                //   Column::make('dst_country_name')->title('Destination Country Name'),
+                  
+                //   Column::make('transport_name')->title('Transport Name'),
+                //   Column::make('transport_address')->title('Transport Address'),
+                //   Column::make('transport_port')->title('Transport Port'),
+                //   Column::make('notify_name')->title('Notify Name'),
+                //   Column::make('notify_address')->title('Notify Address'),
+                //   Column::make('section')->title('Section'),
+                //   Column::make('tt_no')->title('TT No'),
+                //   Column::make('invoice_site')->title('Invoice Site'),
+                //   Column::make('tt_date')->title('TT Date'),
+                //   Column::make('unit')->title('Unit'),
+                // Column::make('amount')->title('Amount'),
+                //   Column::make('currency')->title('Currency'),
+                  
+                  
+                  
+                  
+                //   Column::make('exp_date')->title('EXP Date'),
+                //   Column::make('exp_permit_no')->title('EXP Permit No'),
+                //   Column::make('bl_no')->title('BL No'),
+                //   Column::make('bl_date')->title('BL Date'),
+                //   Column::make('ex_factory_date')->title('Ex Factory Date'),
+                //   Column::make('net_wet')->title('Net Wet'),
+                //   Column::make('gross_wet')->title('Gross Wet'),
+                //   Column::make('create_by')->title('Created By'),
+                //   Column::make('update_by')->title('Updated By'),
+                //   Column::make('created_at')->title('Created At'),
+                //   Column::make('updated_at')->title('Updated At'),
 
               ];
 

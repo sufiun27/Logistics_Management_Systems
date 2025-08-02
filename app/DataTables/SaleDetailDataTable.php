@@ -35,8 +35,13 @@ class SaleDetailDataTable extends DataTable
      */
     public function query(SaleDetail $model)
     {
-        $query = SaleDetail::query();
-        return $query->orderByDesc('created_at');
+        $user = auth()->user();
+
+        return SaleDetail::query()
+            ->whereHas('exportFormApparel', function ($q) use ($user) {
+                $q->where('invoice_site', $user->site);
+            })
+            ->orderByDesc('created_at');
     }
 
     /**

@@ -102,9 +102,10 @@ Route::prefix('notify')->middleware('authorization:export_manage')->group(functi
 });
 
 use App\Http\Controllers\CmValueController;
-Route::prefix('cmValue')->middleware('authorization:tt_manage')->group(function(){
+Route::prefix('cmValue')->middleware('authorization:cm_percentage')->group(function(){
     Route::get('index', [CmValueController::class, 'index'])->name('cmValue.index');
     Route::post('update/{id}', [CmValueController::class, 'update'])->name('cmValue.update');
+    Route::post('store', [CmValueController::class, 'store'])->name('cmValue.store');
 });
 ////////TtInformation/////////////////////
 Route::prefix('ttInformation')->middleware('authorization:tt_manage')->group(function(){
@@ -220,6 +221,7 @@ use App\Http\Controllers\ReportController;
 Route::prefix('reports')->middleware('auth')->group(function(){
     Route::get('sales', [ReportController::class, 'sales'])->name('reports.sales');
     Route::get('master/report', [ReportController::class, 'masterReport'])->name('reports.master');
+
     Route::get('report', [ReportController::class, 'report'])->name('reports.report');
 
     Route::get('export/master/report', [ReportController::class, 'masterReportExport'])->name('reports.masterReportExport');

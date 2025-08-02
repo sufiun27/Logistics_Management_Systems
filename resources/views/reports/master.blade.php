@@ -2,21 +2,70 @@
 
 @section('content')
 
+@php
+    use App\Models\User;
+    use App\Models\Export;
+
+    $user = auth()->user();
+    $exporters = Export::all();
+
+@endphp
+
+
+
+
+
+
+
+
+
 <form action="{{ route('reports.report') }}" method="GET" class="row g-3 mb-4">
-    <div class="col-md-4">
+    @csrf
+
+
+    {{-- <div class="col-md-3">
+
+        
+        <label for="invoice_site" class="col-sm-3 text-end control-label col-form-label">Factory:</label>
+                        <div class="col-sm-9">
+                            <select name="site[]" id="invoice_site"  required multiple >
+                                <option value="">Select Exporter</option>
+                                @php
+                                    $selectedSite = old('invoice_site', $user->site);
+                                @endphp
+                                @foreach($exporters as $exporter)
+                                    <option value="{{ $exporter->ExpoterName }}" {{ $selectedSite == $exporter->ExpoterName ? 'selected' : '' }}>
+                                        {{ $exporter->ExpoterName }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+    </div> --}}
+
+
+    <div class="col-md-3">
+        <label for="invoice_site" class="col-sm-3 text-end control-label col-form-label">Factory:</label>
+        <div class="col-sm-9">
+            <input hidden type="text" value="{{$user->site}}" readonly name="site"></input>
+            {{ $user->site }}
+        </div>
+    </div>
+    
+    
+    <div class="col-md-3">
         <label for="invoice_no" class="form-label">Invoice No</label>
         <input type="text" name="invoice_no" id="invoice_no" class="form-control"
                placeholder="Enter Invoice No" value="{{ old('invoice_no', request('invoice_no')) }}">
     </div>
 
-    <div class="col-md-4">
-        <label for="start_date" class="form-label">Start Date</label>
+    <div class="col-md-3">
+        <label for="start_date" class="form-label">Exp: Start Date</label>
         <input type="date" name="start_date" id="start_date" class="form-control"
                value="{{ old('start_date', request('start_date')) }}">
     </div>
 
-    <div class="col-md-4">
-        <label for="end_date" class="form-label">End Date</label>
+    <div class="col-md-3">
+        <label for="end_date" class="form-label">Exp: End Date</label>
         <input type="date" name="end_date" id="end_date" class="form-control"
                value="{{ old('end_date', request('end_date')) }}">
     </div>
@@ -24,12 +73,11 @@
     <div class="col-12">
         <button type="submit" class="btn btn-success">Generate Report</button>
 
-        <a
-    href="{{ route('reports.masterReportExport', request()->only(['invoice_no', 'start_date', 'end_date'])) }}"
-    class="btn btn-primary"
->
-    Download
-</a>
+        <a href="{{ route('reports.masterReportExport', request()->only(['site', 'invoice_no', 'start_date', 'end_date'])) }}"
+            class="btn btn-primary">
+             Download
+         </a>
+
     </div>
 </form>
 
@@ -88,14 +136,20 @@
 
 @php
     $export = [
+        ['column' => 'invoice_no', 'title' => 'Invoice No'],
+        ['column' => 'invoice_date', 'title' => 'Invoice Date'],
+        
+        ['column' => 'consignee_name', 'title' => 'Consignee Name'],
+        ['column' => 'invoice_site', 'title' => 'Invoice Site'],
+
         ['column' => 'item_name', 'title' => 'Item Name'],
         ['column' => 'hs_code', 'title' => 'HS Code'],
         ['column' => 'hs_code_second', 'title' => 'HS Code (Second)'],
-        ['column' => 'invoice_no', 'title' => 'Invoice No'],
-        ['column' => 'invoice_date', 'title' => 'Invoice Date'],
+        
+        
         ['column' => 'contract_no', 'title' => 'Contract No'],
         ['column' => 'contract_date', 'title' => 'Contract Date'],
-        ['column' => 'consignee_name', 'title' => 'Consignee Name'],
+        
         ['column' => 'consignee_site', 'title' => 'Consignee Site'],
         ['column' => 'consignee_country', 'title' => 'Consignee Country'],
         ['column' => 'consignee_address', 'title' => 'Consignee Address'],
@@ -110,7 +164,7 @@
         ['column' => 'section', 'title' => 'Section'],
         ['column' => 'tt_no', 'title' => 'TT No'],
         ['column' => 'tt_date', 'title' => 'TT Date'],
-        ['column' => 'invoice_site', 'title' => 'Invoice Site'],
+        
         ['column' => 'unit', 'title' => 'Unit'],
         ['column' => 'quantity', 'title' => 'Quantity'],
         ['column' => 'currency', 'title' => 'Currency'],
@@ -131,64 +185,120 @@
         ['column' => 'update_by', 'title' => 'Updated By'],
     ];
 
+    // $sales = [
+    //     ['column' => 'invoice_no', 'title' => 'Invoice No'],
+    //     ['column' => 'buyer_contract', 'title' => 'Buyer Contract'],
+    //     ['column' => 'order_no', 'title' => 'Order No'],
+    //     ['column' => 'style_no', 'title' => 'Style No'],
+    //     ['column' => 'product_type', 'title' => 'Product Type'],
+    //     ['column' => 'shipped_qty', 'title' => 'Shipped Quantity'],
+    //     ['column' => 'carton_qty', 'title' => 'Carton Quantity'],
+    //     ['column' => 'shipped_fob_value', 'title' => 'Shipped FOB Value'],
+    //     ['column' => 'shipped_cm_value', 'title' => 'Shipped CM Value'],
+    //     ['column' => 'cbm_value', 'title' => 'CBM Value'],
+    //     ['column' => 'gross_wet', 'title' => 'Gross Weight'],
+    //     ['column' => 'net_wet', 'title' => 'Net Weight'],
+    //     ['column' => 'eta_date', 'title' => 'ETA Date'],
+    //     ['column' => 'vessel_name', 'title' => 'Vessel Name'],
+    //     ['column' => 'shipbording_date', 'title' => 'Shipboarding Date'],
+    //     ['column' => 'bl_no', 'title' => 'BL No'],
+    //     ['column' => 'bl_date', 'title' => 'BL Date'],
+    //     ['column' => 'final_qty', 'title' => 'Final Quantity'],
+    //     ['column' => 'final_fob', 'title' => 'Final FOB'],
+    //     ['column' => 'final_cm', 'title' => 'Final CM'],
+    //     ['column' => 'remarks', 'title' => 'Remarks'],
+    //     ['column' => 'created_by', 'title' => 'Created By'],
+    //     ['column' => 'updated_by', 'title' => 'Updated By'],
+    //     ['column' => 'created_at', 'title' => 'Created At'],
+    //     ['column' => 'updated_at', 'title' => 'Updated At'],
+    // ];
     $sales = [
-        ['column' => 'invoice_no', 'title' => 'Invoice No'],
-        ['column' => 'buyer_contract', 'title' => 'Buyer Contract'],
-        ['column' => 'order_no', 'title' => 'Order No'],
-        ['column' => 'style_no', 'title' => 'Style No'],
-        ['column' => 'product_type', 'title' => 'Product Type'],
-        ['column' => 'shipped_qty', 'title' => 'Shipped Quantity'],
-        ['column' => 'carton_qty', 'title' => 'Carton Quantity'],
-        ['column' => 'shipped_fob_value', 'title' => 'Shipped FOB Value'],
-        ['column' => 'shipped_cm_value', 'title' => 'Shipped CM Value'],
-        ['column' => 'cbm_value', 'title' => 'CBM Value'],
-        ['column' => 'gross_wet', 'title' => 'Gross Weight'],
-        ['column' => 'net_wet', 'title' => 'Net Weight'],
-        ['column' => 'eta_date', 'title' => 'ETA Date'],
-        ['column' => 'vessel_name', 'title' => 'Vessel Name'],
-        ['column' => 'shipbording_date', 'title' => 'Shipboarding Date'],
-        ['column' => 'bl_no', 'title' => 'BL No'],
-        ['column' => 'bl_date', 'title' => 'BL Date'],
-        ['column' => 'final_qty', 'title' => 'Final Quantity'],
-        ['column' => 'final_fob', 'title' => 'Final FOB'],
-        ['column' => 'final_cm', 'title' => 'Final CM'],
-        ['column' => 'remarks', 'title' => 'Remarks'],
-        ['column' => 'created_by', 'title' => 'Created By'],
-        ['column' => 'updated_by', 'title' => 'Updated By'],
-        ['column' => 'created_at', 'title' => 'Created At'],
-        ['column' => 'updated_at', 'title' => 'Updated At'],
-    ];
+       ['column' => 'order_no', 'title' => 'Order No'],
+       ['column' => 'buyer_contract', 'title' => 'Buyer Contract'],
+     ['column' => 'style_no', 'title' => 'Style No'],
+     ['column' => 'product_type', 'title' => 'Product Type'],
+       ['column' => 'shipped_qty', 'title' => 'Shipped Quantity'],
+      ['column' => 'shipped_fob_value', 'title' => 'Shipped FOB Value'],
+       ['column' => 'shipped_cm_value', 'title' => 'Shipped CM Value'],
+      ['column' => 'carton_qty', 'title' => 'Carton Quantity'],
+      ['column' => 'cbm_value', 'title' => 'CBM Value'],
+       ['column' => 'gross_wet', 'title' => 'Gross Weight'],
+       ['column' => 'net_wet', 'title' => 'Net Weight'],
+       ['column' => 'shipbording_date', 'title' => 'Shipboarding Date'],
+       ['column' => 'bl_no', 'title' => 'BL No'],
+       ['column' => 'bl_date', 'title' => 'BL Date'],
+       ['column' => 'eta_date', 'title' => 'ETA Date'],
+       ['column' => 'vessel_name', 'title' => 'Vessel Name'],
+       ['column' => 'final_qty', 'title' => 'Final Quantity'],
+       ['column' => 'final_fob', 'title' => 'Final FOB'],
+       ['column' => 'final_cm', 'title' => 'Final CM'],
+       ['column' => 'remarks', 'title' => 'Remarks'],
+       ['column' => 'created_by', 'title' => 'Created By'],
+       ['column' => 'updated_by', 'title' => 'Updated By'],
+       ['column' => 'created_at', 'title' => 'Created At'],
+       ['column' => 'updated_at', 'title' => 'Updated At'],
+   ];
+ 
 
+    // $shipping = [
+    //     ['column' => 'id', 'title' => 'ID'],
+    //     ['column' => 'invoice_no', 'title' => 'Invoice No'],
+    //     ['column' => 'factory', 'title' => 'Factory'],
+
+    //     ['column' => 'ep_no', 'title' => 'EP No'],
+    //     ['column' => 'ep_date', 'title' => 'EP Date'],
+    //     ['column' => 'ex_pNo', 'title' => 'Export Permit No'], // Assuming ex_pNo means Export Permit No
+    //     ['column' => 'exp_date', 'title' => 'Export Date'],
+    //     ['column' => 'exp_no', 'title' => 'Export No'],
+    //     ['column' => 'ex_factory_date', 'title' => 'Ex-Factory Date'],
+
+    //     ['column' => 'cnf_agent', 'title' => 'CNF Agent'],
+    //     ['column' => 'transport_port', 'title' => 'Transport Port'],
+    //     ['column' => 'sb_no', 'title' => 'SB No'],
+    //     ['column' => 'sb_date', 'title' => 'SB Date'],
+    //     ['column' => 'vessel_no', 'title' => 'Vessel No'],
+    //     ['column' => 'cargorpt_date', 'title' => 'Cargo Report Date'],
+
+    //     ['column' => 'bring_back', 'title' => 'Bring Back'],
+    //     ['column' => 'shipped_out', 'title' => 'Shipped Out'],
+    //     ['column' => 'shipped_cancel', 'title' => 'Shipped Cancelled'],
+    //     ['column' => 'shipped_back', 'title' => 'Shipped Back'],
+    //     ['column' => 'unshipped', 'title' => 'Unshipped'],
+
+    //     ['column' => 'created_by', 'title' => 'Created By'],
+    //     ['column' => 'updated_by', 'title' => 'Updated By'],
+    //     ['column' => 'created_at', 'title' => 'Created At'],
+    //     ['column' => 'updated_at', 'title' => 'Updated At'],
+    // ];
     $shipping = [
-        ['column' => 'id', 'title' => 'ID'],
-        ['column' => 'invoice_no', 'title' => 'Invoice No'],
-        ['column' => 'factory', 'title' => 'Factory'],
-
-        ['column' => 'ep_no', 'title' => 'EP No'],
-        ['column' => 'ep_date', 'title' => 'EP Date'],
-        ['column' => 'ex_pNo', 'title' => 'Export Permit No'], // Assuming ex_pNo means Export Permit No
-        ['column' => 'exp_date', 'title' => 'Export Date'],
-        ['column' => 'exp_no', 'title' => 'Export No'],
-        ['column' => 'ex_factory_date', 'title' => 'Ex-Factory Date'],
-
-        ['column' => 'cnf_agent', 'title' => 'CNF Agent'],
-        ['column' => 'transport_port', 'title' => 'Transport Port'],
-        ['column' => 'sb_no', 'title' => 'SB No'],
-        ['column' => 'sb_date', 'title' => 'SB Date'],
-        ['column' => 'vessel_no', 'title' => 'Vessel No'],
-        ['column' => 'cargorpt_date', 'title' => 'Cargo Report Date'],
-
-        ['column' => 'bring_back', 'title' => 'Bring Back'],
-        ['column' => 'shipped_out', 'title' => 'Shipped Out'],
-        ['column' => 'shipped_cancel', 'title' => 'Shipped Cancelled'],
-        ['column' => 'shipped_back', 'title' => 'Shipped Back'],
-        ['column' => 'unshipped', 'title' => 'Unshipped'],
-
-        ['column' => 'created_by', 'title' => 'Created By'],
-        ['column' => 'updated_by', 'title' => 'Updated By'],
-        ['column' => 'created_at', 'title' => 'Created At'],
-        ['column' => 'updated_at', 'title' => 'Updated At'],
-    ];
+       ['column' => 'factory', 'title' => 'Factory'],
+       ['column' => 'ex_factory_date', 'title' => 'Ex-Factory Date'],
+      ['column' => 'cargorpt_date', 'title' => 'Cargo Report Date'],
+ 
+       ['column' => 'cnf_agent', 'title' => 'CNF Agent'],
+       ['column' => 'vessel_no', 'title' => 'Vessel No'],
+       ['column' => 'ep_no', 'title' => 'EP No'],
+       ['column' => 'ep_date', 'title' => 'EP Date'],
+       ['column' => 'ex_pNo', 'title' => 'Export Permit No'], // Assuming ex_pNo means Export Permit No
+      
+     ['column' => 'exp_no', 'title' => 'Export No'],
+     ['column' => 'exp_date', 'title' => 'Export Date'],
+     ['column' => 'transport_port', 'title' => 'Transport Port'],
+ 
+       ['column' => 'sb_no', 'title' => 'SB No'],
+       ['column' => 'sb_date', 'title' => 'SB Date'],
+       
+       ['column' => 'bring_back', 'title' => 'Bring Back'],
+       ['column' => 'shipped_out', 'title' => 'Shipped Out'],
+       ['column' => 'shipped_cancel', 'title' => 'Shipped Cancelled'],
+       ['column' => 'shipped_back', 'title' => 'Shipped Back'],
+       ['column' => 'unshipped', 'title' => 'Unshipped'],
+ 
+       ['column' => 'created_by', 'title' => 'Created By'],
+       ['column' => 'updated_by', 'title' => 'Updated By'],
+       ['column' => 'created_at', 'title' => 'Created At'],
+       ['column' => 'updated_at', 'title' => 'Updated At'],
+   ];
 
     $billing = [
         ['column' => 'id', 'title' => 'ID'],

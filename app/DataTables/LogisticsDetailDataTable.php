@@ -35,7 +35,13 @@ class LogisticsDetailDataTable extends DataTable
      */
     public function query(LogisticsDetail $model): QueryBuilder
     {
-        return $model->newQuery();
+        $user = auth()->user();
+
+        return LogisticsDetail::query()
+            ->whereHas('exportFormApparel', function ($q) use ($user) {
+                $q->where('invoice_site', $user->site);
+            })
+            ->orderByDesc('created_at');
     }
 
     /**

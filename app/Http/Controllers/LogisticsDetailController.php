@@ -13,74 +13,143 @@ class LogisticsDetailController extends Controller
     {
         return $dataTable->render('logistics.indexLogistics');
     }
+
     public function addLogistics()
     {
         return view('logistics.addLogistics');
     }
-    public function storeLogistics(Request $request){
-        if(!ExportFormApparel::where('invoice_no', $request->invoice_no)->exists()){
+
+    public function storeLogistics(Request $request)
+    {
+        $request->validate([
+            'invoice_no'                      => 'required|string',
+            'receivable_amount'               => 'nullable|numeric',
+            'doc_process_fee'                 => 'nullable|numeric',
+            'seal_lock_charge'                => 'nullable|numeric',
+            'agency_commission'               => 'nullable|numeric',
+            'documentation_charge'            => 'nullable|numeric',
+            'transportation_charge'           => 'nullable|numeric',
+            'short_shipment_certificate_fee'  => 'nullable|numeric',
+            'factory_loading_fee'             => 'nullable|numeric',
+            'uploading_fee_forwarder_wh'      => 'nullable|numeric',
+            'truck_demurrage_fee_delay_at_depot' => 'nullable|numeric',
+            'cfs_depot_mixed_cargo_loading_fee' => 'nullable|numeric',
+            'customs_misc_remark_reasons_charge' => 'nullable|numeric',
+            'customs_remark_charge_misc_reasons' => 'nullable|numeric',
+            'cargo_ho_date'                   => 'nullable|date',
+            'deadline_bill_submission'        => 'nullable|date',
+            'bill_received_date'              => 'nullable|date',
+            'status'                          => 'nullable|string',
+            'forwarder_name'                  => 'nullable|string',
+            'total_charges'                   => 'nullable|numeric',
+        ]);
+
+        $export = ExportFormApparel::where('invoice_no', $request->invoice_no)->first();
+        if (!$export) {
             return redirect()->route('logistics.addLogistics')->with('error', 'Invoice not found in Export Form');
         }
+
+        // ✅ Site access control
+        if ($export->invoice_site !== auth()->user()->site) {
+            return redirect()->route('logistics.addLogistics')->with('error', 'You only have access to your own site.');
+        }
+
         if (LogisticsDetail::where('invoice_no', $request->invoice_no)->exists()) {
             return redirect()->route('logistics.addLogistics')->with('error', 'Invoice already added');
         }
-        $ld= new LogisticsDetail();
-        $ld->invoice_no = $request->invoice_no;
-        $ld->receivable_amount = $request->receivable_amount;
-        $ld->doc_process_fee = $request->doc_process_fee;
-        $ld->seal_lock_charge = $request->seal_lock_charge;
-        $ld->agency_commission = $request->agency_commission;
-        $ld->documentation_charge = $request->documentation_charge;
-        $ld->transportation_charge = $request->transportation_charge;
-        $ld->short_shipment_certificate_fee = $request->short_shipment_certificate_fee;
-        $ld->factory_loading_fee = $request->factory_loading_fee;
-        $ld->uploading_fee_forwarder_wh = $request->uploading_fee_forwarder_wh;
-        $ld->truck_demurrage_fee_delay_at_depot = $request->truck_demurrage_fee_delay_at_depot;
-        $ld->cfs_depot_mixed_cargo_loading_fee = $request->cfs_depot_mixed_cargo_loading_fee;
-        $ld->customs_misc_remark_reasons_charge = $request->customs_misc_remark_reasons_charge;
-        $ld->customs_remark_charge_misc_reasons = $request->customs_remark_charge_misc_reasons;
-        $ld->cargo_ho_date = $request->cargo_ho_date;
-        $ld->deadline_bill_submission = $request->deadline_bill_submission;
-        $ld->bill_received_date = $request->bill_received_date;
-        $ld->status = $request->status;
-        $ld->forwarder_name = $request->forwarder_name;
-        $ld->total_charges = $request->total_charges;
+
+        $ld = new LogisticsDetail();
+        $ld->fill($request->only([
+            'invoice_no','receivable_amount','doc_process_fee','seal_lock_charge',
+            'agency_commission','documentation_charge','transportation_charge',
+            'short_shipment_certificate_fee','factory_loading_fee','uploading_fee_forwarder_wh',
+            'truck_demurrage_fee_delay_at_depot','cfs_depot_mixed_cargo_loading_fee',
+            'customs_misc_remark_reasons_charge','customs_remark_charge_misc_reasons',
+            'cargo_ho_date','deadline_bill_submission','bill_received_date','status',
+            'forwarder_name','total_charges'
+        ]));
         $ld->created_by = auth()->user()->emp_id;
         $ld->save();
-        return redirect()->route('logistics.addLogistics')->with('success', 'Logistics Information added Successfully');
+
+        return redirect()->route('logistics.addLogistics')->with('success', 'Logistics Information added successfully');
     }
-    public function editLogistics($id){
+
+    public function editLogistics($id)
+    {
         $l = LogisticsDetail::find($id);
+        if (!$l) {
+            return redirect()->route('logistics.indexLogistics')->with('error', 'Logistics record not found');
+        }
+
+        // ✅ Site access control
+        if ($l->exportFormApparel && $l->exportFormApparel->invoice_site !== auth()->user()->site) {
+            return redirect()->route('logistics.indexLogistics')->with('error', 'You only have access to your own site.');
+        }
+
         return view('logistics.editLogistics', compact('l'));
     }
-    public function updateLogistics(Request $request, $id){
-        $ld= LogisticsDetail::find($id);
-        $ld->receivable_amount = $request->receivable_amount;
-        $ld->doc_process_fee = $request->doc_process_fee;
-        $ld->seal_lock_charge = $request->seal_lock_charge;
-        $ld->agency_commission = $request->agency_commission;
-        $ld->documentation_charge = $request->documentation_charge;
-        $ld->transportation_charge = $request->transportation_charge;
-        $ld->short_shipment_certificate_fee = $request->short_shipment_certificate_fee;
-        $ld->factory_loading_fee = $request->factory_loading_fee;
-        $ld->uploading_fee_forwarder_wh = $request->uploading_fee_forwarder_wh;
-        $ld->truck_demurrage_fee_delay_at_depot = $request->truck_demurrage_fee_delay_at_depot;
-        $ld->cfs_depot_mixed_cargo_loading_fee = $request->cfs_depot_mixed_cargo_loading_fee;
-        $ld->customs_misc_remark_reasons_charge = $request->customs_misc_remark_reasons_charge;
-        $ld->customs_remark_charge_misc_reasons = $request->customs_remark_charge_misc_reasons;
-        $ld->cargo_ho_date = $request->cargo_ho_date;
-        $ld->deadline_bill_submission = $request->deadline_bill_submission;
-        $ld->bill_received_date = $request->bill_received_date;
-        $ld->status = $request->status;
-        $ld->forwarder_name = $request->forwarder_name;
-        $ld->total_charges = $request->total_charges;
+
+    public function updateLogistics(Request $request, $id)
+    {
+        $request->validate([
+            'receivable_amount'               => 'nullable|numeric',
+            'doc_process_fee'                 => 'nullable|numeric',
+            'seal_lock_charge'                => 'nullable|numeric',
+            'agency_commission'               => 'nullable|numeric',
+            'documentation_charge'            => 'nullable|numeric',
+            'transportation_charge'           => 'nullable|numeric',
+            'short_shipment_certificate_fee'  => 'nullable|numeric',
+            'factory_loading_fee'             => 'nullable|numeric',
+            'uploading_fee_forwarder_wh'      => 'nullable|numeric',
+            'truck_demurrage_fee_delay_at_depot' => 'nullable|numeric',
+            'cfs_depot_mixed_cargo_loading_fee' => 'nullable|numeric',
+            'customs_misc_remark_reasons_charge' => 'nullable|numeric',
+            'customs_remark_charge_misc_reasons' => 'nullable|numeric',
+            'cargo_ho_date'                   => 'nullable|date',
+            'deadline_bill_submission'        => 'nullable|date',
+            'bill_received_date'              => 'nullable|date',
+            'status'                          => 'nullable|string',
+            'forwarder_name'                  => 'nullable|string',
+            'total_charges'                   => 'nullable|numeric',
+        ]);
+
+        $ld = LogisticsDetail::find($id);
+        if (!$ld) {
+            return redirect()->route('logistics.indexLogistics')->with('error', 'Logistics record not found');
+        }
+
+        // ✅ Site access control
+        if ($ld->exportFormApparel && $ld->exportFormApparel->invoice_site !== auth()->user()->site) {
+            return redirect()->route('logistics.indexLogistics')->with('error', 'You only have access to your own site.');
+        }
+
+        $ld->fill($request->only([
+            'receivable_amount','doc_process_fee','seal_lock_charge','agency_commission',
+            'documentation_charge','transportation_charge','short_shipment_certificate_fee',
+            'factory_loading_fee','uploading_fee_forwarder_wh','truck_demurrage_fee_delay_at_depot',
+            'cfs_depot_mixed_cargo_loading_fee','customs_misc_remark_reasons_charge',
+            'customs_remark_charge_misc_reasons','cargo_ho_date','deadline_bill_submission',
+            'bill_received_date','status','forwarder_name','total_charges'
+        ]));
         $ld->updated_by = auth()->user()->emp_id;
         $ld->save();
-        return redirect()->route('logistics.editLogistics',$id)->with('success', 'Logistics Information updated Successfully');
+
+        return redirect()->route('logistics.editLogistics', $id)->with('success', 'Logistics Information updated successfully');
     }
-    public function deleteLogistics($id){
-        $ld= LogisticsDetail::find($id);
+
+    public function deleteLogistics($id)
+    {
+        $ld = LogisticsDetail::find($id);
+        if (!$ld) {
+            return redirect()->route('logistics.indexLogistics')->with('error', 'Logistics record not found');
+        }
+
+        // ✅ Site access control
+        if ($ld->exportFormApparel && $ld->exportFormApparel->invoice_site !== auth()->user()->site) {
+            return redirect()->route('logistics.indexLogistics')->with('error', 'You only have access to your own site.');
+        }
+
         $ld->delete();
-        return redirect()->route('logistics.indexLogistics')->with('success', 'Logistics Information deleted Successfully');
+        return redirect()->route('logistics.indexLogistics')->with('success', 'Logistics Information deleted successfully');
     }
 }

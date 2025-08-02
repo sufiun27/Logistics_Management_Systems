@@ -37,7 +37,7 @@ return new class extends Migration
             $table->date('deadline_bill_submission')->nullable();
             $table->date('bill_received_date')->nullable();
             $table->string('status')->nullable();
-            $table->string('forwarder_name');
+            $table->string('forwarder_name')->nullable();
             $table->float('total_charges')->nullable();
 
             $table->string('created_by');

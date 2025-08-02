@@ -8,4 +8,6 @@ use Illuminate\Database\Eloquent\Model;
 class CmValue extends Model
 {
     use HasFactory;
+
+    protected $fillable = ['cm_value', 'site'];
 }

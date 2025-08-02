@@ -53,21 +53,23 @@ class ExportFormApparelController extends Controller
 
     public function addExportFormApparel()
     {
+        $user = auth()->user();
         $consignees = Consignee::all(['id', 'consignee_name', 'consignee_site', 'consignee_country', 'consignee_address']);
         $dest_countries = DestCountry::all(['id', 'country_name', 'country_code', 'port']);
         $transports = Transport::all(['id', 'name', 'address', 'port']);
         $exporters = Export::all(['id', 'ExpoterNo', 'ExpoterName', 'ExpoterAddress', 'RegDetails', 'EPBReg']);
         $notifies = Notify::all(['id', 'name', 'address']);
-        $cmValue = CmValue::first();
+        $cmValue = CmValue::where('site', $user->site)->first();
         $exrter=Export::select('ExpoterName')->get();
         $user= auth()->user();
 
         // return response()->json([
-            // 'consignees' => $consignees,
-            // 'dest_countries' => $dest_countries,
-            // 'transports' => $transports,
-            // 'exporters' => $exporters,
+        //     'consignees' => $consignees,
+        //     'dest_countries' => $dest_countries,
+        //     'transports' => $transports,
+        //     'exporters' => $exporters,
         //     'notifies' => $notifies,
+        //     'cmValue' => $cmValue,
         // ]);
 
         return view('exportFormApparel.addExportFormApparel', compact('consignees', 'dest_countries', 'transports', 'exporters', 'notifies', 'cmValue', 'exrter', 'user'));
@@ -121,6 +123,7 @@ public function fetchInvoiceData(Request $request)
 
     public function storeExportFormApparel(Request $request)
     {
+        
         $request->validate([
             'item_name' => 'required|string',
             'hs_code' => 'required|string',
@@ -162,6 +165,11 @@ public function fetchInvoiceData(Request $request)
             'net_wet' => 'nullable|numeric|min:0',
             'gross_wet' => 'nullable|numeric|min:0',
         ]);
+
+        $user = auth()->user();
+        if ($request->filled('invoice_site') && $user->site !== $request->input('invoice_site')) {
+            return redirect()->back()->with('error', 'You only have access to your own site.');
+        }
 
         try {
             return DB::transaction(function () use ($request) {
@@ -287,6 +295,8 @@ public function fetchInvoiceData(Request $request)
 
 public function exportFormApparelUpdate(Request $request, $id)
 {
+    
+    // Validate the request data
     $request->validate([
         'item_name' => 'required|string',
         'hs_code' => 'required|string',
@@ -334,6 +344,19 @@ public function exportFormApparelUpdate(Request $request, $id)
         'net_wet' => 'nullable|numeric|min:0',
         'gross_wet' => 'nullable|numeric|min:0',
     ]);
+
+    // Check if the user has access to the site
+    $user = auth()->user();
+
+    $exportFormApparel = ExportFormApparel::where('invoice_no', $request->input('invoice_no'))->first();
+
+    if (!$exportFormApparel) {
+        return redirect()->back()->with('error', 'Invalid invoice number.');
+    }
+
+    if ($exportFormApparel->invoice_site !== $user->site) {
+        return redirect()->back()->with('error', 'You only have access to your own site.');
+    }
 
     DB::beginTransaction();
     try {
@@ -395,7 +418,7 @@ public function exportFormApparelUpdate(Request $request, $id)
         $efa->section = $request->input('section');
         $efa->tt_no = $request->input('tt_no');
         $efa->tt_date = $request->input('tt_date');
-        $efa->invoice_site = $request->input('invoice_site');
+        //$efa->invoice_site = $request->input('invoice_site');
 
         $efa->unit = $request->input('unit');
         $efa->quantity = $request->input('quantity');
