@@ -35,8 +35,42 @@ class SaleDetail extends Model
         'updated_by',
     ];
 
+    protected $appends = [
+        'shipping_ex_factory_date',
+        'efa_invoice_site',
+    ];
+
+    /**
+     * Relationship with Shipping
+     */
+    public function shipping()
+    {
+        return $this->belongsTo(Shipping::class, 'invoice_no', 'invoice_no');
+    }
+
+    /**
+     * Accessor for shipping_ex_factory_date
+     */
+    public function getShippingExFactoryDateAttribute(): ?string
+    {
+        return $this->shipping->ex_factory_date ?? null;
+    }
+    /**
+     * Relationship with SaleDetail
+     */
+    public function saleDetail()
+    {
+        return $this->belongsTo(SaleDetail::class, 'invoice_no', 'invoice_no');
+    }
+
     public function exportFormApparel()
     {
         return $this->belongsTo(ExportFormApparel::class , 'invoice_no', 'invoice_no');
     }
+
+    public function getEfaInvoiceSiteAttribute(): ?string
+    {
+        return $this->exportFormApparel?->invoice_site ?? null;
+    }
+
 }

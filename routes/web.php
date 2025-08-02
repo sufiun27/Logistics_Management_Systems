@@ -231,8 +231,10 @@ use App\Http\Controllers\GetInvoiceController;
 Route::post('/getInvoice', [GetInvoiceController::class, 'getInvoice'])->name('getInvoice');
 
 
-use App\Http\Controllers\ReportIndivisualController;
+use App\Http\Controllers\ReportIndividualController;
 
-Route::get('/reports/individual', [ReportIndivisualController::class, 'index'])->name('reports.individual');
-Route::get('/reports/individual/report', [ReportIndivisualController::class, 'report'])->name('reports.individual.report');
-Route::get('/reports/individual/export', [ReportIndivisualController::class, 'moduleReportExport'])->name('reports.individual.export');
+Route::middleware('auth')->group(function () {
+    Route::get('/reports/individual', [ReportIndividualController::class, 'index'])->name('reports.individual');
+    Route::get('/reports/individual/report', [ReportIndividualController::class, 'report'])->name('reports.individual.report');
+    Route::get('/reports/individual/export', [ReportIndividualController::class, 'moduleReportExport'])->name('reports.individual.export');
+});

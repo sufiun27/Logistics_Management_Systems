@@ -5,24 +5,25 @@ namespace App\Exports;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 
-class ReportIndivisualExport implements FromCollection, WithHeadings
+class ReportIndividualExport implements FromCollection, WithHeadings
 {
     protected $data;
     protected $headers;
+    protected $module;
 
-    public function __construct($data, $headers)
+    public function __construct($data, $headers, $module)
     {
         $this->data = $data;
         $this->headers = $headers;
+        $this->module = $module;
     }
 
     public function collection()
     {
-        $module = key($this->headers);
-        return $this->data->map(function ($item) use ($module) {
+        return $this->data->map(function ($item) {
             $row = [];
-            foreach ($this->headers[$module] as $field) {
-                $value = $module === 'export' ? ($item[$field['column']] ?? '-') : ($item[$module][$field['column']] ?? '-');
+            foreach ($this->headers[$this->module] as $field) {
+                $value = $item[$field['column']] ?? '-';
                 if (str_contains($field['column'], 'date')) {
                     try {
                         $value = $value ? \Carbon\Carbon::parse($value)->format('Y-m-d') : '-';
@@ -38,7 +39,6 @@ class ReportIndivisualExport implements FromCollection, WithHeadings
 
     public function headings(): array
     {
-        $module = key($this->headers);
-        return array_column($this->headers[$module], 'title');
+        return array_column($this->headers[$this->module], 'title');
     }
 }

@@ -1,7 +1,6 @@
 @extends('template.index')
 
 @section('content')
-
 @php
 use App\Models\User;
 $user = auth()->user();
@@ -13,23 +12,22 @@ function formatDate($date) {
         return '-';
     }
 }
-isset($data) ? $data : $data = new \Illuminate\Pagination\LengthAwarePaginator([], 0, 20);
+$data = $data ?? new \Illuminate\Pagination\LengthAwarePaginator([], 0, 20);
 @endphp
 
 <div class="container-fluid py-4">
-    <h2 class="mb-4">{{ ucfirst($module) }} Report</h2>
+    <h2 class="mb-4">{{ ucfirst($module ?? 'export') }} Report</h2>
 
     <form action="{{ route('reports.individual.report') }}" method="GET" class="row g-3 mb-4">
-        @csrf
         <div class="col-md-3">
             <label for="module" class="form-label">Report Module</label>
             <select name="module" id="module" class="form-control" required>
                 <option value="">Select Module</option>
-                <option value="export" {{ old('module', request('module', $module)) == 'export' ? 'selected' : '' }}>Export</option>
-                <option value="sales" {{ old('module', request('module', $module)) == 'sales' ? 'selected' : '' }}>Sales</option>
-                <option value="shipping" {{ old('module', request('module', $module)) == 'shipping' ? 'selected' : '' }}>Shipping</option>
-                <option value="billing" {{ old('module', request('module', $module)) == 'billing' ? 'selected' : '' }}>Billing</option>
-                <option value="logistics" {{ old('module', request('module', $module)) == 'logistics' ? 'selected' : '' }}>Logistics</option>
+                @foreach(['export', 'sales', 'shipping', 'billing', 'logistics'] as $mod)
+                    <option value="{{ $mod }}" {{ old('module', request('module', $module ?? 'export')) == $mod ? 'selected' : '' }}>
+                        {{ ucfirst($mod) }}
+                    </option>
+                @endforeach
             </select>
             @error('module')
                 <span class="text-danger">{{ $message }}</span>
@@ -38,7 +36,7 @@ isset($data) ? $data : $data = new \Illuminate\Pagination\LengthAwarePaginator([
 
         <div class="col-md-3">
             <label for="site" class="form-label">Factory</label>
-            <input type="text" value="{{ $user->site }}" readonly name="site" class="form-control">
+            <input type="text" value="{{ $user->site ?? '' }}" readonly name="site" class="form-control">
             @error('site')
                 <span class="text-danger">{{ $message }}</span>
             @enderror
@@ -54,7 +52,7 @@ isset($data) ? $data : $data = new \Illuminate\Pagination\LengthAwarePaginator([
         </div>
 
         <div class="col-md-3">
-            <label for="start_date" class="form-label">Exp: Start Date</label>
+            <label for="start_date" class="form-label">Start Date</label>
             <input type="date" name="start_date" id="start_date" class="form-control"
                    value="{{ old('start_date', request('start_date')) }}">
             @error('start_date')
@@ -63,7 +61,7 @@ isset($data) ? $data : $data = new \Illuminate\Pagination\LengthAwarePaginator([
         </div>
 
         <div class="col-md-3">
-            <label for="end_date" class="form-label">Exp: End Date</label>
+            <label for="end_date" class="form-label">End Date</label>
             <input type="date" name="end_date" id="end_date" class="form-control"
                    value="{{ old('end_date', request('end_date')) }}">
             @error('end_date')
@@ -73,51 +71,51 @@ isset($data) ? $data : $data = new \Illuminate\Pagination\LengthAwarePaginator([
 
         <div class="col-12">
             <button type="submit" class="btn btn-success">Generate Report</button>
-            @if(request('module') || $module !== 'export')
-                <a href="{{ route('reports.individual.export', array_merge(['module' => request('module', $module)], request()->only(['site', 'invoice_no', 'start_date', 'end_date']))) }}"
+            @if(request('module') && $data->isNotEmpty())
+                <a href="{{ route('reports.individual.export', array_merge(['module' => request('module', $module ?? 'export')], request()->only(['site', 'invoice_no', 'start_date', 'end_date']))) }}"
                    class="btn btn-primary">
-                    Download {{ ucfirst(request('module', $module)) }} Report
+                    Download {{ ucfirst(request('module', $module ?? 'export')) }} Report
                 </a>
             @endif
         </div>
     </form>
 
     @if ($data->isEmpty() && request('module'))
-    <div class="alert alert-info">No data available for the selected filters.</div>
-@elseif (!request('module') && $module == 'export' && $data->isEmpty())
-    <div class="alert alert-info">Please select a module and filters to generate a report.</div>
-@else
-    <div class="table-container">
-        <table class="table table-bordered table-hover text-nowrap">
-            <thead class="table-dark">
-                <tr>
-                    @foreach($headers[$module] as $field)
-                        <th>{{ $field['title'] }}</th>
-                    @endforeach
-                </tr>
-            </thead>
-            <tbody>
-                @foreach($data as $row)
+        <div class="alert alert-info">No data available for the selected filters.</div>
+    @elseif (!request('module') && ($module ?? 'export') == 'export' && $data->isEmpty())
+        <div class="alert alert-info">Please select a module and filters to generate a report.</div>
+    @else
+        <div class="table-container">
+            <table class="table table-bordered table-hover text-nowrap">
+                <thead class="table-dark">
                     <tr>
-                        @foreach($headers[$module] as $field)
-                            @php
-                                $value = $row[$field['column']] ?? '-';
-                                if (str_contains($field['column'], 'date')) {
-                                    $value = formatDate($value);
-                                }
-                            @endphp
-                            <td>{{ $value }}</td>
+                        @foreach($headers[$module ?? 'export'] as $field)
+                            <th>{{ $field['title'] }}</th>
                         @endforeach
                     </tr>
-                @endforeach
-            </tbody>
-        </table>
-    </div>
-    <!-- Pagination links -->
-    <div class="mt-3">
-        {{ $data->appends(request()->except('page'))->links() }}
-    </div>
-@endif
+                </thead>
+                <tbody>
+                    @foreach($data as $row)
+                        <tr>
+                            @foreach($headers[$module ?? 'export'] as $field)
+                                @php
+                                    $value = $row[$field['column']] ?? '-';
+                                    if (str_contains($field['column'], 'date')) {
+                                        $value = formatDate($value);
+                                    }
+                                @endphp
+                                <td>{{ $value }}</td>
+                            @endforeach
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
+        <!-- Pagination links -->
+        <div class="mt-3">
+            {{ $data->appends(request()->except('page'))->links() }}
+        </div>
+    @endif
 </div>
 
 <style>
@@ -139,7 +137,7 @@ isset($data) ? $data : $data = new \Illuminate\Pagination\LengthAwarePaginator([
 .table th, .table td {
     vertical-align: middle;
     white-space: nowrap;
-    padding: 0.25rem 1rem;
+    padding: 0.75rem 1rem;
     border: 1px solid #dee2e6;
 }
 
@@ -147,11 +145,11 @@ isset($data) ? $data : $data = new \Illuminate\Pagination\LengthAwarePaginator([
     position: sticky;
     top: 0;
     z-index: 2;
-    background-color: #0056b3;
+    background-color: #343a40;
     color: #ffffff;
     text-align: center;
     font-weight: 600;
-    border-bottom: 2px solid #00408a;
+    border-bottom: 2px solid #23272b;
 }
 
 .table tbody tr:nth-child(even) {
@@ -159,7 +157,7 @@ isset($data) ? $data : $data = new \Illuminate\Pagination\LengthAwarePaginator([
 }
 
 .table tbody tr:hover {
-    background-color: #adcef1;
+    background-color: #e9ecef;
     transition: background-color 0.2s ease-in-out;
 }
 
@@ -169,6 +167,10 @@ isset($data) ? $data : $data = new \Illuminate\Pagination\LengthAwarePaginator([
 
 .table tbody td:first-child {
     font-weight: 500;
+}
+
+.btn-success, .btn-primary {
+    margin-right: 0.5rem;
 }
 </style>
 

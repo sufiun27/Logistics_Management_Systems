@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\ExportFormApparel;
+use App\Models\SaleDetail;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
@@ -10,7 +11,7 @@ class Shipping extends Model
 {
     use HasFactory;
 
-    public $fillable = [
+    protected $fillable = [
         'invoice_no',
         'factory',
         'ep_no',
@@ -29,12 +30,46 @@ class Shipping extends Model
         'shipped_cancel',
         'shipped_back',
         'unshipped',
-        'created_by',   // ✅ Added
-        'updated_by'    // ✅ Added
+        'created_by',
+        'updated_by'
     ];
 
+    protected $appends = [
+        'shipping_ex_factory_date',
+        'efa_invoice_site',
+    ];
+
+    /**
+     * Relationship with SaleDetail
+     */
+    public function saleDetail()
+    {
+        return $this->belongsTo(SaleDetail::class, 'invoice_no', 'invoice_no');
+    }
+
+    /**
+     * Relationship with ExportFormApparel
+     */
     public function exportFormApparel()
     {
-        return $this->belongsTo(ExportFormApparel::class , 'invoice_no', 'invoice_no');
+        return $this->belongsTo(ExportFormApparel::class, 'invoice_no', 'invoice_no');
+    }
+
+    /**
+     * Accessor for shipping_ex_factory_date
+     * Returns this shipping's own ex_factory_date attribute
+     */
+    public function getShippingExFactoryDateAttribute(): ?string
+    {
+        return $this->ex_factory_date;
+    }
+
+    /**
+     * Accessor for efa_invoice_site
+     * Returns related exportFormApparel invoice_site attribute
+     */
+    public function getEfaInvoiceSiteAttribute(): ?string
+    {
+        return $this->exportFormApparel?->invoice_site ?? null;
     }
 }

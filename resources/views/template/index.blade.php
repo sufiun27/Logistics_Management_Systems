@@ -406,7 +406,7 @@
             </li>
             @endcan
 
-      
+
 
               <!-- /////////////////////Invoice///////////////////// -->
 
@@ -420,7 +420,7 @@
                 >
               </li> --}}
 
-              
+
 
               <!-- /////////////////////Audit/////////////////////  -->
               @can('policy', [App\Models\User::class, 'audit_manage'])
@@ -470,7 +470,7 @@
               </li>
               @endcan
 
-              
+
               {{-- @endcan --}}
               <!-- /////////////////////logistics.indexLogistics///////////////////// audit.indexAudit -->
               @can('policy', [App\Models\User::class, 'logistics_manage'])
@@ -519,6 +519,14 @@
                   </li> --}}
 
                   <li class="sidebar-item">
+                    <a href="{{route('reports.individual')}}" class="sidebar-link">
+                    <i class="mdi">R</i>
+                    <span class="hide-menu"> Report</span></a
+                    >
+                </li>
+
+
+                  <li class="sidebar-item">
                     <a href="{{route('reports.master')}}" class="sidebar-link">
                       <i class="mdi">M R</i>
                       <span class="hide-menu"> Master Report</span></a
@@ -526,8 +534,11 @@
                   </li>
 
 
+
+
+
                 </ul>
-              </li> 
+              </li>
 
 
                <!-- Employees//////////////////// -->

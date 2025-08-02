@@ -3,15 +3,16 @@
 namespace App\Http\Controllers;
 
 use App\Models\ExportFormApparel;
-use Illuminate\Http\Request;
-use Maatwebsite\Excel\Facades\Excel;
-use App\Exports\ReportIndivisualExport;
 use App\Models\BillingDetail;
 use App\Models\LogisticsDetail;
 use App\Models\SaleDetail;
 use App\Models\Shipping;
+use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\ReportIndividualExport;
+use Illuminate\Database\Eloquent\Builder;
 
-class ReportIndivisualController extends Controller
+class ReportIndividualController extends Controller
 {
     protected $modules = [
         'export' => [
@@ -63,7 +64,7 @@ class ReportIndivisualController extends Controller
         ],
         'sales' => [
             'model' => SaleDetail::class,
-            'relations' => ['saleDetail'],
+            'relations' => [],
             'columns' => [
                 ['column' => 'invoice_no', 'title' => 'Invoice No'],
                 ['column' => 'order_no', 'title' => 'Order No'],
@@ -94,7 +95,7 @@ class ReportIndivisualController extends Controller
         ],
         'shipping' => [
             'model' => Shipping::class,
-            'relations' => ['shipping'],
+            'relations' => [],
             'columns' => [
                 ['column' => 'invoice_no', 'title' => 'Invoice No'],
                 ['column' => 'factory', 'title' => 'Factory'],
@@ -123,7 +124,7 @@ class ReportIndivisualController extends Controller
         ],
         'billing' => [
             'model' => BillingDetail::class,
-            'relations' => ['billingDetail'],
+            'relations' => [],
             'columns' => [
                 ['column' => 'invoice_no', 'title' => 'Invoice No'],
                 ['column' => 'id', 'title' => 'ID'],
@@ -146,7 +147,7 @@ class ReportIndivisualController extends Controller
         ],
         'logistics' => [
             'model' => LogisticsDetail::class,
-            'relations' => ['logisticsDetail'],
+            'relations' => [],
             'columns' => [
                 ['column' => 'invoice_no', 'title' => 'Invoice No'],
                 ['column' => 'id', 'title' => 'ID'],
@@ -177,60 +178,106 @@ class ReportIndivisualController extends Controller
         ],
     ];
 
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
     public function index()
     {
-        $data = new \Illuminate\Pagination\LengthAwarePaginator([], 0, 20);
         $module = 'export';
         $moduleConfig = $this->modules[$module];
+        $data = new \Illuminate\Pagination\LengthAwarePaginator([], 0, 20);
 
         return view('reports.module', [
             'data' => $data,
             'module' => $module,
             'headers' => [$module => $moduleConfig['columns']],
         ]);
+    }
+
+    /**
+     * Build the base query for reports.
+     */
+    private function buildReportQuery(array $validated): Builder
+    {
+        $module = $validated['module'];
+        $moduleConfig = $this->modules[$module];
+        $user = auth()->user();
+
+        $modelClass = $moduleConfig['model'];
+        $modelInstance = new $modelClass;
+        $tableName = $modelInstance->getTable();
+
+        $query = $modelClass::query();
+
+        // Eager load relations if they exist
+        // if (!empty($moduleConfig['relations'])) {
+        //     $query->with($moduleConfig['relations']);
+        // }
+
+        // Filter by user's site
+        if ($module === 'export') {
+            $query->where('invoice_site', $user->site);
+        } else {
+            $query->whereHas('exportFormApparel', function ($q) use ($user) {
+                $q->where('invoice_site', $user->site);
+            });
+        }
+
+        // Filter by invoice_no
+        if (!empty($validated['invoice_no'])) {
+            $query->where("$tableName.invoice_no", $validated['invoice_no']);
+        }
+
+        // Filter by date range using ex_factory_date from the shipping relation/table
+        if (!empty($validated['start_date']) || !empty($validated['end_date'])) {
+            $query->whereHas('shipping', function ($q) use ($validated) {
+                if (!empty($validated['start_date'])) {
+                    $q->whereDate('ex_factory_date', '>=', $validated['start_date']);
+                }
+                if (!empty($validated['end_date'])) {
+                    $q->whereDate('ex_factory_date', '<=', $validated['end_date']);
+                }
+            });
+        }
+
+        // Join shippings only if the model is NOT shipping itself
+        if ($tableName !== 'shippings') {
+            $query->leftJoin('shippings', "$tableName.invoice_no", '=', 'shippings.invoice_no')
+                ->orderByDesc('shippings.ex_factory_date');
+        }
+
+        $query->select("$tableName.*");
+
+        return $query;
     }
 
     public function report(Request $request)
     {
         $validated = $request->validate([
             'module' => 'required|string|in:export,sales,shipping,billing,logistics',
-            'site' => 'required|string',
-            'invoice_no' => 'nullable|string',
+            'invoice_no' => 'nullable|string|max:255',
             'start_date' => 'nullable|date',
             'end_date' => 'nullable|date|after_or_equal:start_date',
         ]);
 
-        $module = $validated['module'];
-        $moduleConfig = $this->modules[$module];
-
-        // ✅ Corrected this line
-        $query = $moduleConfig['model']::query();
-
-        if (!empty($validated['invoice_no'])) {
-            $query->where('invoice_no', $validated['invoice_no']);
-        }
-
-        $data = $query->orderBy('created_at', 'desc')->paginate(20);
-
-        // return response()->json([
-        //     'data' => $data,
-        //     'module' => $module,
-        //     'headers' => [$module => $moduleConfig['columns']],
-        // ]);
+        $query = $this->buildReportQuery($validated);
+        $data = $query->paginate(20);
 
         return view('reports.module', [
             'data' => $data,
-            'module' => $module,
-            'headers' => [$module => $moduleConfig['columns']],
+            'module' => $validated['module'],
+            'headers' => [$validated['module'] => $this->modules[$validated['module']]['columns']],
         ]);
     }
 
     public function moduleReportExport(Request $request)
     {
+        // NOTE: Removed the 'site' validation rule as it was unused.
         $validated = $request->validate([
             'module' => 'required|string|in:export,sales,shipping,billing,logistics',
-            'site' => 'required|string',
-            'invoice_no' => 'nullable|string',
+            'invoice_no' => 'nullable|string|max:255',
             'start_date' => 'nullable|date',
             'end_date' => 'nullable|date|after_or_equal:start_date',
         ]);
@@ -238,39 +285,14 @@ class ReportIndivisualController extends Controller
         $module = $validated['module'];
         $moduleConfig = $this->modules[$module];
 
-        $query = ExportFormApparel::with($moduleConfig['relations'])
-            ->where('invoice_site', $validated['site']);
+        $query = $this->buildReportQuery($validated);
+        $data = $query->get(); // Get all results for export
 
-        if (!empty($validated['invoice_no'])) {
-            $query->where('invoice_no', $validated['invoice_no']);
-        }
-
-        if (!empty($validated['start_date'])) {
-            $query->whereHas('shipping', function ($q) use ($validated) {
-                $q->whereDate('ex_factory_date', '>=', $validated['start_date']);
-            });
-        }
-
-        if (!empty($validated['end_date'])) {
-            $query->whereHas('shipping', function ($q) use ($validated) {
-                $q->whereDate('ex_factory_date', '<=', $validated['end_date']);
-            });
-        }
-
-        $data = $query->get();
-
-        $transformed = $data->map(function ($item) use ($module) {
-            $itemData = $item->toArray(); // Get all ExportFormApparel attributes
-            if ($module !== 'export') {
-                // For non-export modules, include the related module data
-                $itemData[$module] = $item->{$module . 'Detail'} ? $item->{$module . 'Detail'}->toArray() : [];
-            }
-            return $itemData;
-        });
-
+        // Pass the Eloquent Collection directly to the export class.
+        // No need for the ->map()->toArray() transformation.
         return Excel::download(
-            new ReportIndivisualExport($transformed, [$module => $moduleConfig['columns']]),
-            "{$module}_report.xlsx"
+            new ReportIndividualExport($data, [$module => $moduleConfig['columns']], $module),
+            "{$module}_report_" . now()->format('Ymd_His') . ".xlsx"
         );
     }
 }
