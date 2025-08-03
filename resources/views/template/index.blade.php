@@ -214,8 +214,12 @@
                   class="dropdown-menu dropdown-menu-end user-dd animated"
                   aria-labelledby="navbarDropdown"
                 >
-                  <a class="dropdown-item" href="javascript:void(0)"
-                    ><i class="mdi mdi-account me-1 ms-1"></i> My Profile</a
+                  <a class="dropdown-item" href="{{route('user.details')}}"
+                    ><i class="mdi mdi-account me-1 ms-1"></i>My Profile</a
+                  >
+
+                  <a class="dropdown-item" href="{{route('user.permissions')}}"
+                    ><i class="mdi mdi-account me-1 ms-1"></i>Informations</a
                   >
 
                   <div class="dropdown-divider"></div>
@@ -248,7 +252,7 @@
               <li class="sidebar-item">
                 <a
                   class="sidebar-link waves-effect waves-dark sidebar-link"
-                  href="{{route('dashboard.dashboard')}}"
+                  href="{{route('dashboard.index')}}"
                   aria-expanded="false"
                   ><i class="mdi mdi-view-dashboard"></i
                   ><span class="hide-menu">Dashboard</span></a

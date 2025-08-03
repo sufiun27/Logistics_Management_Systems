@@ -18,8 +18,8 @@ $data = $data ?? new \Illuminate\Pagination\LengthAwarePaginator([], 0, 20);
 <div class="container-fluid py-4">
     <h2 class="mb-4">{{ ucfirst($module ?? 'export') }} Report</h2>
 
-    <form action="{{ route('reports.individual.report') }}" method="GET" class="row g-3 mb-4">
-        <div class="col-md-3">
+    <form action="{{ route('reports.individual.report') }}" method="GET" class="d-flex flex-wrap align-items-end gap-3 mb-4">
+        <div class="flex-grow-1">
             <label for="module" class="form-label">Report Module</label>
             <select name="module" id="module" class="form-control" required>
                 <option value="">Select Module</option>
@@ -29,47 +29,37 @@ $data = $data ?? new \Illuminate\Pagination\LengthAwarePaginator([], 0, 20);
                     </option>
                 @endforeach
             </select>
-            @error('module')
-                <span class="text-danger">{{ $message }}</span>
-            @enderror
+            @error('module')<span class="text-danger">{{ $message }}</span>@enderror
         </div>
-
-        <div class="col-md-3">
+    
+        <div class="flex-grow-1">
             <label for="site" class="form-label">Factory</label>
             <input type="text" value="{{ $user->site ?? '' }}" readonly name="site" class="form-control">
-            @error('site')
-                <span class="text-danger">{{ $message }}</span>
-            @enderror
+            @error('site')<span class="text-danger">{{ $message }}</span>@enderror
         </div>
-
-        <div class="col-md-3">
+    
+        <div class="flex-grow-1">
             <label for="invoice_no" class="form-label">Invoice No</label>
             <input type="text" name="invoice_no" id="invoice_no" class="form-control"
                    placeholder="Enter Invoice No" value="{{ old('invoice_no', request('invoice_no')) }}">
-            @error('invoice_no')
-                <span class="text-danger">{{ $message }}</span>
-            @enderror
+            @error('invoice_no')<span class="text-danger">{{ $message }}</span>@enderror
         </div>
-
-        <div class="col-md-3">
+    
+        <div>
             <label for="start_date" class="form-label">Start Date</label>
             <input type="date" name="start_date" id="start_date" class="form-control"
                    value="{{ old('start_date', request('start_date')) }}">
-            @error('start_date')
-                <span class="text-danger">{{ $message }}</span>
-            @enderror
+            @error('start_date')<span class="text-danger">{{ $message }}</span>@enderror
         </div>
-
-        <div class="col-md-3">
+    
+        <div>
             <label for="end_date" class="form-label">End Date</label>
             <input type="date" name="end_date" id="end_date" class="form-control"
                    value="{{ old('end_date', request('end_date')) }}">
-            @error('end_date')
-                <span class="text-danger">{{ $message }}</span>
-            @enderror
+            @error('end_date')<span class="text-danger">{{ $message }}</span>@enderror
         </div>
-
-        <div class="col-12">
+    
+        <div class="d-flex align-items-end gap-2">
             <button type="submit" class="btn btn-success">Generate Report</button>
             @if(request('module') && $data->isNotEmpty())
                 <a href="{{ route('reports.individual.export', array_merge(['module' => request('module', $module ?? 'export')], request()->only(['site', 'invoice_no', 'start_date', 'end_date']))) }}"
@@ -79,6 +69,7 @@ $data = $data ?? new \Illuminate\Pagination\LengthAwarePaginator([], 0, 20);
             @endif
         </div>
     </form>
+    
 
     @if ($data->isEmpty() && request('module'))
         <div class="alert alert-info">No data available for the selected filters.</div>

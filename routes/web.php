@@ -238,3 +238,11 @@ Route::middleware('auth')->group(function () {
     Route::get('/reports/individual/report', [ReportIndividualController::class, 'report'])->name('reports.individual.report');
     Route::get('/reports/individual/export', [ReportIndividualController::class, 'moduleReportExport'])->name('reports.individual.export');
 });
+
+use App\Http\Controllers\DashboardController;
+Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard.index')->middleware('auth');
+
+
+Route::get('/userDetails', [UserController::class, 'userDetails'])->name('user.details')->middleware('auth');
+Route::get('/userDetails/update', [UserController::class, 'userDetailsUpdate'])->name('user.detailsUpdate')->middleware('auth');
+Route::get('/userDetails/permissions', [UserController::class, 'userDetailsPermissions'])->name('user.permissions')->middleware('auth');

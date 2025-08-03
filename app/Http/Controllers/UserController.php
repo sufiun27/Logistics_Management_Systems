@@ -6,7 +6,7 @@ use App\Models\Permission;
 use App\Models\User;
 use App\Models\UserPermission;
 use Illuminate\Http\Request;
-
+use Illuminate\Support\Facades\Hash;
 class UserController extends Controller
 {
     public function list()
@@ -247,5 +247,74 @@ class UserController extends Controller
         // Redirect or perform any other action
         return redirect()->back()->with('success', 'Permission status updated');
     }
+
+
+    //! user details :
+    public function userDetails()
+    {
+        $user = auth()->user();
+        return view('employee.details', compact('user'));
+    }
+
+    public function userDetailsUpdate(Request $request)
+    {
+        $user = auth()->user();
+
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'designation' => 'required|string|max:255',
+            'phone' => 'nullable|string|max:20',
+            'address' => 'nullable|string|max:255',
+            'remarks' => 'nullable|string|max:255',
+            'old_password' => 'nullable|string|min:6',
+            'password' => 'nullable|min:6|confirmed',
+        ]);
+
+        $user->update([
+            'name' => $request->name,
+            'designation' => $request->designation,
+            'department' => $request->department,
+            'site' => $request->site,
+            'phone' => $request->phone,
+            'address' => $request->address,
+            'remarks' => $request->remarks,
+        ]);
+
+        // ✅ Update password only if entered
+        if ($request->filled('old_password') && $request->filled('password')) {
+
+            // Check if the old password matches
+            if (!Hash::check($request->old_password, $user->password)) {
+                return redirect()->back()->withErrors(['old_password' => 'The provided password does not match our records.']);
+            }
+            // Update the password
+            $user->password = Hash::make($request->password);
+            $user->save();
+        }
+
+        return redirect()->route('user.details', $user->id)->with('success', 'Profile updated successfully!');
+    }
+
+    public function userDetailsPermissions(){
+        $user = auth()->user();
+        $permissions = Permission::all();
+        $user_permissions = UserPermission::where('user_id', $user->id)->get();
+
+        // Check if the user is found
+        if (!$user) {
+            // Handle the case when the user is not found (you can redirect or display an error message)
+            return redirect()->back()->with('error', 'User not found');
+        }
+
+        // return response()->json([
+        //     'user' => $user,
+        //     'permissions' => $permissions,
+        //     'user_permissions' => $user_permissions
+        // ]);
+
+        // Return the user to the permissions view
+        return view('employee.userpermissions', compact('user', 'permissions', 'user_permissions'));
+    }
+
 
 }
