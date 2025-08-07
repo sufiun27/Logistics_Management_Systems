@@ -77,4 +77,15 @@ class ExportFormApparel extends Model
     {
         return $this->belongsTo(LogisticsDetail::class, 'invoice_no', 'invoice_no');
     }
+
+
+    public function createdByUser()
+    {
+        return $this->belongsTo(User::class, 'create_by', 'emp_id');
+    }
+
+    public function updatedByUser()
+    {
+        return $this->belongsTo(User::class, 'update_by', 'emp_id');
+    }
 }

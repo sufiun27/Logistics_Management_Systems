@@ -9,7 +9,7 @@ class TransportController extends Controller
 {
     public function transport()
     {
-        $transports = Transport::all();
+        $transports = Transport::paginate(10); // Paginate the results to show 10 per page
         return view('transport.transport', compact('transports'));
     }
     public function addTransport()

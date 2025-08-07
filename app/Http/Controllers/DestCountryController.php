@@ -9,7 +9,7 @@ use Illuminate\Auth\Events\Validated;
 class DestCountryController extends Controller
 {
     public function destCountry()
-    {   $destcountries = DestCountry::all();
+    {   $destcountries = DestCountry::paginate(10); // Paginate the results to show 10 per page
         return view('DestCountry.DestCountry',compact('destcountries'));
     }
     public function storeDestCountry(Request $request)

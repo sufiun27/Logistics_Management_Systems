@@ -19,8 +19,7 @@ Route::post('/authorization', [AuthManager::class, 'authentication'])->name('log
 Route::get('/logout', [AuthManager::class, 'logout'])->name('logout');
 
 
-//Dashboard routes///////////////////////////
-Route::get('/', function () {return view('dashboard.dashboard');})->name('dashboard.dashboard')->middleware('auth');
+
 
 //Invoice Module Routes//////////////////////
 Route::get('/invoice', [InvoiceController::class, 'index'])->name('invoice');
@@ -241,7 +240,8 @@ Route::middleware('auth')->group(function () {
 
 use App\Http\Controllers\DashboardController;
 Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard.index')->middleware('auth');
-
+//Dashboard routes///////////////////////////
+Route::get('/', [DashboardController::class, 'index'])->name('dashboard.index')->middleware('auth');
 
 Route::get('/userDetails', [UserController::class, 'userDetails'])->name('user.details')->middleware('auth');
 Route::get('/userDetails/update', [UserController::class, 'userDetailsUpdate'])->name('user.detailsUpdate')->middleware('auth');

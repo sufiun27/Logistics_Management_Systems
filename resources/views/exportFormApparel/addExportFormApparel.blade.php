@@ -26,7 +26,7 @@
                         <div class="col-sm-9">
                             <input type="{{ $type }}" {{ $required ? 'required' : '' }} name="{{ $name }}" class="form-control" id="{{ $name }}" placeholder="{{ $label }}" value="{{ old($name) }}" />
                             @if($name == 'invoice_no')
-                            <span id="invoice_validation" class="text-success"></span>
+                            <span id="invoice_validation" class="text-success font-bold"></span>
                             @endif
                         </div>
                     </div>

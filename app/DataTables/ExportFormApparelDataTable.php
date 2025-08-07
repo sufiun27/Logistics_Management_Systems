@@ -11,6 +11,7 @@ use Yajra\DataTables\Html\Column;
 use Yajra\DataTables\Html\Editor\Editor;
 use Yajra\DataTables\Html\Editor\Fields;
 use Yajra\DataTables\Services\DataTable;
+use App\Models\User;
 
 class ExportFormApparelDataTable extends DataTable
 {
@@ -22,6 +23,7 @@ class ExportFormApparelDataTable extends DataTable
     public function dataTable(QueryBuilder $query): EloquentDataTable
     {
         return (new EloquentDataTable($query))
+        
         ->addColumn('action', function ($query) {
             return '
                 <a class="btn-outline-info btn-sm" href="' . route('exportFormApparel.exportFormApparelDetails', $query->id) . '"><b>'.$query->invoice_no.'</b></a>
@@ -35,7 +37,26 @@ class ExportFormApparelDataTable extends DataTable
             return optional($row->created_at)->format('d-m-Y');
         })
 
-        ->setRowId('id');
+        ->setRowId('id')
+        
+        ->editColumn('invoice_no', function ($row) {
+            $createdBy = $row->createdByUser->name ?? 'Unknown';
+            $createdByMail = $row->createdByUser->email ?? 'Unknown';
+            $createdAt = $row->created_at ? $row->created_at->format('Y-m-d H:i:s') : '';
+        
+            $updatedBy = $row->updatedByUser->name ?? 'Unknown';
+            $updatedByMail = $row->updatedByUser->email ?? 'Unknown';
+            $updatedAt = $row->updated_at ? $row->updated_at->format('Y-m-d H:i:s') : '';
+        
+            $tooltip = "Created By: {$createdBy} ({$createdByMail}) | {$createdAt}\n".
+                       "Updated By: {$updatedBy} ({$updatedByMail}) | {$updatedAt}";
+        
+            return '<span title="'.$tooltip.'">'.$row->invoice_no.'</span>';
+        })
+        ->rawColumns(['invoice_no', 'action'])
+
+        
+        ;
     }
 
     /**
@@ -43,7 +64,7 @@ class ExportFormApparelDataTable extends DataTable
      */
     public function query()
     {
-        $query = ExportFormApparel::query();
+        $query = ExportFormApparel::with(['createdByUser', 'updatedByUser']); // eager load users;
 
         $user = auth()->user();
         $query->where('invoice_site', $user->site);

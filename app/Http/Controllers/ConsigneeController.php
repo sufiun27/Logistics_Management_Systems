@@ -11,7 +11,9 @@ class ConsigneeController extends Controller
     {
         // $consignees = Consignee::all();
         //pagineat
-        $consignees = Consignee::paginate(10);
+        $consignees = Consignee::orderBy('consignee_name')
+                       ->orderBy('created_at', 'desc')
+                       ->paginate(10);
         return view('consignee.consignee', compact('consignees'));
     }
     public function storeConsignee(Request $request)

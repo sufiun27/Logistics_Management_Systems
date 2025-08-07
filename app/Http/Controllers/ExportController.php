@@ -10,7 +10,7 @@ class ExportController extends Controller
 {
     public function exporter()
     {
-        $exporters = Export::all();
+        $exporters = Export::paginate(10); // Paginate the results to show 10 per page
         return view('export.exporter',compact('exporters'));
     }
     public function storeExporter(Request $request)

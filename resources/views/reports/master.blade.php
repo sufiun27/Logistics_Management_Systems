@@ -59,13 +59,13 @@
     </div>
 
     <div class="col-md-3">
-        <label for="start_date" class="form-label">Exp: Start Date</label>
+        <label for="start_date" class="form-label">Exf: Start Date</label>
         <input type="date" name="start_date" id="start_date" class="form-control"
                value="{{ old('start_date', request('start_date')) }}">
     </div>
 
     <div class="col-md-3">
-        <label for="end_date" class="form-label">Exp: End Date</label>
+        <label for="end_date" class="form-label">Exf: End Date</label>
         <input type="date" name="end_date" id="end_date" class="form-control"
                value="{{ old('end_date', request('end_date')) }}">
     </div>

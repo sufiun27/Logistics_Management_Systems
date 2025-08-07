@@ -31,7 +31,7 @@ class AuthManager extends Controller
                 return redirect()->intended('/');
             } else {
                 auth()->logout();
-                return redirect()->back()->with('error', 'Employee Inactive');
+                return redirect()->route('login')->with('error', 'Employee Inactive');
             }
         }
 
