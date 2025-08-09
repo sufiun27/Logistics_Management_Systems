@@ -17,6 +17,7 @@ return new class extends Migration
             $table->foreign('invoice_no')->references('invoice_no')->on('export_form_apparels');
 
             $table->string('factory')->nullable();
+            $table->foreign('factory')->references('factory_name')->on('factories');
 
             $table->string('ep_no')->nullable();
             $table->date('ep_date')->nullable();

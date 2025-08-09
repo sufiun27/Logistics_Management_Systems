@@ -2,8 +2,8 @@
 
 @section('content')
 @php
-use App\Models\Export;
-$exporters = Export::pluck('ExpoterName', 'ExpoterName'); // key-value pair (label => value)
+use App\Models\Factory;
+$exporters = Factory::pluck('factory_name','factory_name');// key-value pair (label => value)
 @endphp
 
     <div class="card">

@@ -15,7 +15,7 @@ return new class extends Migration
         Schema::create('exports', function (Blueprint $table) {
             $table->id();
             $table->string('ExpoterNo')->unique()->autoIncrement();;
-            $table->string('ExpoterName')->unique(); //old exporter_no
+            $table->string('ExpoterName')->unique()->comment('site Or Bond'); //old exporter_no
             $table->string('ExpoterAddress');
             $table->string('RegDetails');
             $table->string('EPBReg');
@@ -24,74 +24,18 @@ return new class extends Migration
 
         DB::table('exports')->insert([
             [
-                'ExpoterNo'      => 'XFTR',
-                'ExpoterName'    => 'Dhaka',
-                'ExpoterAddress' => 'Dhaka Port',
-                'RegDetails'     => 'Dhaka Port Registration',
-                'EPBReg'         => '002DH',
+                'ExpoterNo'      => 'Outside',
+                'ExpoterName'    => 'APPAREL',
+                'ExpoterAddress' => 'HOP LUN APPAREL LTD. S T TOWER, 3 NO. DHAKA- MYMENSHINGH ROAD EAST GAZIPURA, TONGI, GAZIPUR, BANGLADESH.',
+                'RegDetails'     => 'REG NO : RA 78849 BIN: 18051009200 (E-BIN:000391855)',
+                'EPBReg'         => 'BDO4808',
             ],
             [
-                'ExpoterNo'      => 'KLMP',
-                'ExpoterName'    => 'Khulna',
-                'ExpoterAddress' => 'Mongla Port',
-                'RegDetails'     => 'Mongla Port Registration',
-                'EPBReg'         => '003KH',
-            ],
-            [
-                'ExpoterNo'      => 'RJSV',
-                'ExpoterName'    => 'Rajshahi',
-                'ExpoterAddress' => 'Harian Port',
-                'RegDetails'     => 'Harian Port Registration',
-                'EPBReg'         => '004RJ',
-            ],
-            [
-                'ExpoterNo'      => 'SYLT',
-                'ExpoterName'    => 'Sylhet',
-                'ExpoterAddress' => 'Tamabil Border',
-                'RegDetails'     => 'Tamabil Border Registration',
-                'EPBReg'         => '005SY',
-            ],
-            [
-                'ExpoterNo'      => 'BRSP',
-                'ExpoterName'    => 'Barisal',
-                'ExpoterAddress' => 'Barisal Port',
-                'RegDetails'     => 'Barisal Port Registration',
-                'EPBReg'         => '006BR',
-            ],
-            [
-                'ExpoterNo'      => 'CMPL',
-                'ExpoterName'    => 'Cumilla',
-                'ExpoterAddress' => 'Cumilla Trade Center',
-                'RegDetails'     => 'Cumilla Trade Registration',
-                'EPBReg'         => '007CM',
-            ],
-            [
-                'ExpoterNo'      => 'NGPR',
-                'ExpoterName'    => 'Narayanganj',
-                'ExpoterAddress' => 'Narayanganj Port',
-                'RegDetails'     => 'Narayanganj Port Registration',
-                'EPBReg'         => '008NG',
-            ],
-            [
-                'ExpoterNo'      => 'MNSR',
-                'ExpoterName'    => 'Mymensingh',
-                'ExpoterAddress' => 'Mymensingh Trade Hub',
-                'RegDetails'     => 'Mymensingh Trade Registration',
-                'EPBReg'         => '009MY',
-            ],
-            [
-                'ExpoterNo'      => 'JSRP',
-                'ExpoterName'    => 'Jessore',
-                'ExpoterAddress' => 'Benapole Border',
-                'RegDetails'     => 'Benapole Border Registration',
-                'EPBReg'         => '010JS',
-            ],
-            [
-                'ExpoterNo'      => 'RNPR',
-                'ExpoterName'    => 'Rangpur',
-                'ExpoterAddress' => 'Burimari Border',
-                'RegDetails'     => 'Burimari Border Registration',
-                'EPBReg'         => '011RN',
+                'ExpoterNo'      => 'In-Side',
+                'ExpoterName'    => 'HOPYICK',
+                'ExpoterAddress' => 'HOP YICK (BANGLADESH) LTD., PLOT # 61-65, DEPZ, SAVAR, DHAKA.',
+                'RegDetails'     => 'BEPZA: 03.0314.014.02.00.321.2010/959 DATE: JULY 19, 2011 BIN:17141016950 (E-BIN:000391431)',
+                'EPBReg'         => 'BD00000',
             ],
         ]);
     }

@@ -126,6 +126,35 @@
                             </select>
                         </div>
 
+
+                        {{-- factories --}}
+                        <!-- Factory -->
+                        @php
+                        use App\Models\Factory;
+                        $factories = Factory::pluck('factory_name')->toArray();
+                        @endphp
+
+                        <div class="input-group mb-3">
+                            <span class="input-group-text bg-primary text-white" id="basic-addon5">
+                                <i class="fas fa-industry"></i>
+                            </span>
+                            <select
+                                name="factory"
+                                class="form-control form-control-lg"
+                                required
+                                aria-label="Factory"
+                                aria-describedby="basic-addon5"
+                            >
+                                <option value="" disabled selected>Select Factory</option>
+                                @foreach ($factories as $factory)
+                                    <option value="{{ htmlspecialchars($factory) }}">
+                                        {{ htmlspecialchars($factory) }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+
+
                         <!-- Department -->
                         <div class="input-group mb-3">
                             <span class="input-group-text bg-primary text-white" id="basic-addon6">

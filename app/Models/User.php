@@ -18,13 +18,14 @@ class User extends Authenticatable
      *
      * @var array<int, string>
      */
-    protected $fillable = [                
+    protected $fillable = [
         'password',
         'emp_id',
         'name',
         'designation',
         'remarks',
         'site',
+        'factory',
         'email',
         'department',
         'phone',
@@ -77,11 +78,11 @@ class User extends Authenticatable
                 $query->whereHas('permission', function ($subquery) use ($permission) {
                     $subquery->where('name', $permission);
                 });
-            
+
             })
             ->exists();
     }
-    
+
 
 
 }

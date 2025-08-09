@@ -1,7 +1,7 @@
 @extends('template.index')
 
 @section('basic_table_css')
-   
+
     <link
       rel="stylesheet"
       type="text/css"
@@ -45,8 +45,8 @@
               <div class="card">
                 <div class="card-body">
                   <h5 class="card-title">Employee List
-                  
-                   
+
+
                   </h5>
                   <div class="table-responsive">
                     <table
@@ -57,10 +57,11 @@
                         <tr>
                         <th>ID</th>
                           <th>Name</th>
-                          
+
                           <th>Designation</th>
                           <th>Department</th>
                           <th>site</th>
+                          <th>Factory</th>
                           <th>Email</th>
                           <th>Phone</th>
                           <th>Address</th>
@@ -70,14 +71,15 @@
                         </tr>
                       </thead>
                       <tbody>
-                        
+
                         @foreach($employees as $employee)
                             <tr>
                                 <td>{{ $employee->emp_id }}</td>
-                                <td>{{ $employee->name }}</td>                               
+                                <td>{{ $employee->name }}</td>
                                 <td>{{ $employee->designation}}</td>
                                 <td>{{ $employee->department}}</td>
                                 <td>{{ $employee->site}}</td>
+                                <td>{{ $employee->factory}}</td>
                                 <td>{{ $employee->email}}</td>
                                 <td>{{ $employee->phone}}</td>
                                 <td>{{ $employee->address}}</td>
@@ -99,19 +101,19 @@
                                         Action
                                     </button>
                                     <ul class="dropdown-menu">
-                                        
+
                                         <li class="text-center"><a class="dropdown-item btn btn-xs bg-success" href="{{ route('employee.activate', ['id' => $employee->id]) }}">Active</a></li>
                                         <li class="text-center"><a class="dropdown-item btn btn-xs bg-warning" href="{{ route('employee.deactivate', ['id' => $employee->id]) }}">Deactive</a></li>
-                                     
+
                                         <li><hr class="dropdown-divider"></li>
-                                      
+
                                         <li class="text-center"><a class="dropdown-item btn btn-xs bg-primary" href="{{ route('employee.edit', ['id' => $employee->id]) }}">Edit</a></li>
-                                     
-                                        
+
+
                                         <li class="text-center"><a class="dropdown-item btn btn-xs bg-danger" href="{{ route('employee.delete', ['id' => $employee->id]) }}">Delete</a></li>
-                                       
-                                        <li><hr class="dropdown-divider"></li>   
-                                        @can('policy', [App\Models\User::class, 'emp_permissions'])                             
+
+                                        <li><hr class="dropdown-divider"></li>
+                                        @can('policy', [App\Models\User::class, 'emp_permissions'])
                                         <li class="text-center"><a class="dropdown-item btn btn-xs bg-info" href="{{ route('employee.permissions', ['id' => $employee->id]) }}">Permissions</a></li>
                                        @endcan
                                       </ul>
@@ -120,13 +122,13 @@
                                 </td>
                             </tr>
                         @endforeach
-                        
+
                       </tbody>
                       <tfoot>
                         <tr>
                         <th>ID</th>
                         <th>Name</th>
-                          
+
                           <th>Designation</th>
                           <th>Department</th>
                           <th>site</th>
@@ -158,7 +160,7 @@
         <!-- ============================================================== -->
         <!-- End Container fluid  -->
         <!-- ============================================================== -->
-       
+
 @endsection
 
 @section('basic_table')

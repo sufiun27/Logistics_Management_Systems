@@ -10,9 +10,19 @@ use App\DataTables\ShippingDataTable;
 
 class ShippingController extends Controller
 {
-    public function shipping(ShippingDataTable $dataTable)
+    public function data()
     {
-        return $dataTable->render('shipping.shipping');
+        return (new ShippingDataTable())->dataTable(Shipping::query())->toJson();
+    }
+    public function shipping()
+    {
+        $data = Shipping::with('exportFormApparel')
+            ->whereHas('exportFormApparel', function ($query) {
+                $query->where('invoice_site', auth()->user()->site);
+            })
+            ->orderByDesc('created_at')
+            ->paginate(25);
+        return view('shipping.shipping', compact('data'));
     }
 
     public function addShipping()

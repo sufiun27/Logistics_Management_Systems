@@ -17,10 +17,10 @@
                 <h5>Shipment Status Information</h5>
                 <hr>
                 @php
-    use App\Models\Export;
 
-    // Fetch unique factory names from the Export model
-    $exporters = Export::pluck('ExpoterName', 'ExpoterName'); // ['ABC Ltd' => 'ABC Ltd', ...]
+use App\Models\Factory;
+$exporters = Factory::pluck('factory_name','factory_name');// key-value pair (label => value)
+
 
     $shipmentFields = [
         ['label' => 'Invoice No', 'name' => 'invoice_no', 'type' => 'text', 'value' => $s->invoice_no, 'readonly' => true],

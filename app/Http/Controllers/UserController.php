@@ -2,16 +2,18 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Permission;
 use App\Models\User;
-use App\Models\UserPermission;
+use App\Models\Permission;
 use Illuminate\Http\Request;
+use App\Models\UserPermission;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Validator;
+
 class UserController extends Controller
 {
     public function list()
     {
-        
+
         $employees = User::all();
         return view('employee.list', compact('employees'));
     }
@@ -45,50 +47,48 @@ class UserController extends Controller
                     // Handle the case when the employee is not found (you can redirect or display an error message)
                     return redirect()->back()->with('error', 'Employee not found');
                 }
-        
+
                 // Update the status to 1
                 $employee->update(['status' => 0]);
-        
+
                 // Redirect or perform any other action
                 return redirect()->back()->with('success', 'Employee status updated');
     }
 
     ///////////////STORE/////////////////////
 
-    public function store(Request $request)
-    {
-        $validatedData = $request->validate([
-            'emp_id' => 'required|string|max:255|unique:users',
-            'name' => 'required|string|max:255',
-            'designation' => 'required|string|max:255',
-            'remarks' => 'nullable|string|max:255',
-            'site' => 'required|string|max:255',
-            'email' => 'required|email|unique:users|max:255',
-            'password'  => 'required|string|min:8',
-            'department' => 'required|string|max:255',
-            'phone' => 'nullable|string|max:255',
-            'address' => 'nullable|string',
-            // Add more validation rules as needed
-        ]);
 
-        $employee = new User;
-        $employee->emp_id = $validatedData['emp_id'];
-        $employee->name = $validatedData['name'];
-        $employee->designation = $validatedData['designation'];
-        $employee->remarks = $validatedData['remarks'];
-        $employee->site = $validatedData['site'];
-        $employee->email = $validatedData['email'];
-        $employee->password = $validatedData['password'];
-        $employee->department = $validatedData['department'];
-        $employee->phone = $validatedData['phone'];
-        $employee->address = $validatedData['address'];
 
-        // Save the employee to the database
-        $employee->save();
+public function store(Request $request)
+{
+    $validator = Validator::make($request->all(), [
+        'emp_id' => 'required|string|max:255|unique:users',
+        'name' => 'required|string|max:255',
+        'designation' => 'required|string|max:255',
+        'remarks' => 'nullable|string|max:255',
+        'site' => 'required|string|max:255',
+        'factory' => 'required|string|exists:factories,factory_name',
+        'email' => 'required|email|unique:users|max:255',
+        'password'  => 'required|string|min:8',
+        'department' => 'required|string|max:255',
+        'phone' => 'nullable|string|max:255',
+        'address' => 'nullable|string',
+    ]);
 
-        // You can also return a response, redirect, or perform any other actions as needed
-        return redirect()->back()->with('success', 'Employee added successfully');
+    if ($validator->fails()) {
+        return redirect()->back()->withErrors($validator)->withInput();
     }
+
+    $validatedData = $validator->validated();
+
+    $employee = new User;
+    $employee->fill($validatedData);
+    $employee->password = Hash::make($validatedData['password']);
+    $employee->save();
+
+    return redirect()->back()->with('success', 'Employee added successfully');
+}
+
 
     ///Edit/////////////////////
     public function edit($id)
@@ -119,6 +119,8 @@ class UserController extends Controller
             'department' => 'required|string|max:255',
             'phone' => 'nullable|string|max:255',
             'address' => 'nullable|string',
+            'factory' => 'required|string|exists:factories,factory_name',
+             'password' => 'nullable|string|min:8|confirmed', // Uncomment if you
             // Add more validation rules as needed
         ]);
 
@@ -128,16 +130,22 @@ class UserController extends Controller
         $employee->designation = $validatedData['designation'];
         $employee->remarks = $validatedData['remarks'];
         $employee->site = $validatedData['site'];
+        $employee->factory = $validatedData['factory'];
         $employee->email = $validatedData['email'];
         $employee->department = $validatedData['department'];
         $employee->phone = $validatedData['phone'];
         $employee->address = $validatedData['address'];
+        // Update password only if provided
+        if (!empty($validatedData['password'])) {
+            $employee->password = Hash::make($validatedData['password']);
+        }
+            // If password is not provided, keep the existing password
         // Save the employee to the database
         $employee->save();
 
         // You can also return a response, redirect, or perform any other actions as needed
         return redirect()->back()->with('success', 'Employee updated successfully');
-        
+
     }
     /////////////DELETE/////////////////////
     public function delete($id)
@@ -165,7 +173,7 @@ class UserController extends Controller
         //$permissions = Permission::all();
         $user_permissions= UserPermission::where('user_id',$id)->get();
         //////
-        
+
         $permissions = Permission::whereDoesntHave('UserPermission', function ($query) use ($id) {
             $query->where('user_id', $id);
         })->get();

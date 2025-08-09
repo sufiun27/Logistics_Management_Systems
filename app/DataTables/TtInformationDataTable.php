@@ -15,7 +15,6 @@ class TtInformationDataTable extends DataTable
     public function dataTable(QueryBuilder $query): EloquentDataTable
     {
         return (new EloquentDataTable($query))
-
             ->addColumn('action', function ($row) {
                 return '<a class="btn btn-sm btn-outline-info" href="' . route('ttInformation.ttDetails', $row->id) . '"><b>' . e($row->tt_no) . '</b></a>';
             })
@@ -23,7 +22,6 @@ class TtInformationDataTable extends DataTable
                 return optional($row->created_at)->format('d-m-Y');
             })
             ->editColumn('tt_date', function ($row) {
-                // Use editColumn for model attributes
                 return optional($row->tt_date)->format('d-m-Y');
             })
             ->editColumn('tt_status', function ($row) {
@@ -36,13 +34,14 @@ class TtInformationDataTable extends DataTable
     public function query(): QueryBuilder
     {
         $query = TtInformation::query();
-        $query = $query->where('tt_site', auth()->user()->site);
+        $query->where('tt_site', auth()->user()->site);
 
         if (!empty($this->start_date) && !empty($this->end_date)) {
             $query->whereBetween('created_at', [$this->start_date, $this->end_date]);
         }
 
-        return $query->orderByDesc('created_at');
+        // Removed orderBy here to avoid SQL Server ORDER BY in subquery issue
+        return $query;
     }
 
     public function html(): HtmlBuilder
@@ -52,7 +51,7 @@ class TtInformationDataTable extends DataTable
             ->columns($this->getColumns())
             ->minifiedAjax()
             ->dom('lBfrtip')
-            ->orderBy(1)
+            ->orderBy(9, 'desc') // Default sort by 'Created Date' column descending; adjust index if necessary
             ->selectStyleSingle()
             ->buttons([
                 Button::make('reload'),
@@ -69,7 +68,6 @@ class TtInformationDataTable extends DataTable
                 ->width(60)
                 ->addClass('text-center'),
             Column::make('tt_no')->title('TT No'),
-
             Column::make('tt_amount')->title('Amount'),
             Column::make('tt_currency')->title('Currency'),
             Column::make('tt_used_amount')->title('Used Amount'),
@@ -77,7 +75,7 @@ class TtInformationDataTable extends DataTable
             Column::make('tt_site')->title('Site'),
             Column::make('tt_status')->title('Status'),
             Column::make('tt_remarks')->title('Remarks'),
-            Column::make('tt_date')->title('TT Date'), // Use make, not computed
+            Column::make('tt_date')->title('TT Date'),
             Column::computed('create_date')->title('Created Date'),
         ];
     }

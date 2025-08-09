@@ -22,7 +22,15 @@ return new class extends Migration
             $table->timestamp('email_verified_at')->nullable();
             $table->string('designation');
             $table->string('department');
-            $table->string('site');
+
+            $table->string('site')->comment('bond');
+            $table->foreign('site')
+                    ->references('ExpoterName') // column in the foreign table
+                    ->on('exports');
+
+            $table->string('factory')->comment('Working factory');
+            $table->foreign('factory')->references('factory_name')->on('factories');
+
             $table->string('phone')->nullable();
             $table->text('address')->nullable();
             $table->string('remarks')->nullable();
@@ -40,7 +48,8 @@ return new class extends Migration
             'password' => bcrypt('12345678'),
             'designation' => 'Officer',
             'department' => 'IT',
-            'site' => 'HLFS',
+            'site' => 'Apparel',
+            'factory' => 'Fashion',
             'phone' => '01324724642',
             'address' => 'Dhaka',
             'remarks' => 'Developer',

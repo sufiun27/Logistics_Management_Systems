@@ -170,8 +170,16 @@ Route::prefix('shipping')->middleware('authorization:shipping_manage')->group(fu
     Route::post('updateShippingStatusInfo/{id}', [ShippingController::class, 'updateShippingStatusInfo'])->name('shipping.updateShippingStatusInfo');
     Route::post('updateOtherInformation/{id}', [ShippingController::class, 'updateOtherInformation'])->name('shipping.updateOtherInformation');
     Route::post('updateRemarks/{id}', [ShippingController::class, 'updateRemarks'])->name('shipping.updateRemarks');
-
+    Route::get('/data', [ShippingController::class, 'data'])->name('shipping.data');
 });
+
+// routes/web.php
+use App\DataTables\ShippingDataTable;
+
+Route::get('/shipping-data', function (ShippingDataTable $dataTable) {
+    return $dataTable->ajax();
+})->name('shipping.data');
+
 
 use App\Http\Controllers\SaleDetailController;
 

@@ -74,7 +74,11 @@ return new class extends Migration
             $table->foreign('tt_no')->references('tt_no')->on('tt_information');
             $table->date('tt_date')->nullable();
 
+            //! invoice_site bond site
             $table->string('invoice_site')->nullable();
+            $table->foreign('invoice_site')
+            ->references('ExpoterName') // column in the foreign table
+            ->on('exports');
 
             // unit
             // quantity

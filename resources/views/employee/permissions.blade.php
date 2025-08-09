@@ -1,7 +1,7 @@
 @extends('template.index')
 
 @section('basic_table_css')
-   
+
     <link
       rel="stylesheet"
       type="text/css"
@@ -52,26 +52,28 @@
                         <tr>
                         <th>ID</th>
                           <th>Name</th>
-                          
+
                           <th>Designation</th>
                           <th>Department</th>
                           <th>site</th>
+                            <th>Factory</th>
                           <th>Email</th>
                           <th>Phone</th>
                           <th>Address</th>
                           <th>remarks</th>
-                 
+
                         </tr>
                       </thead>
                       <tbody>
-                        
-                     
+
+
                             <tr>
                                 <td>{{ $employee->emp_id }}</td>
-                                <td>{{ $employee->name }}</td>                               
+                                <td>{{ $employee->name }}</td>
                                 <td>{{ $employee->designation}}</td>
                                 <td>{{ $employee->department}}</td>
                                 <td>{{ $employee->site}}</td>
+                                <td>{{ $employee->factory}}</td>
                                 <td>{{ $employee->email}}</td>
                                 <td>{{ $employee->phone}}</td>
                                 <td>{{ $employee->address}}</td>
@@ -79,7 +81,7 @@
 
                             </tr>
                       </tbody>
-                      
+
                     </table>
                   </div>
                 </div>
@@ -87,7 +89,7 @@
 
 
             </div>
-          </div>    
+          </div>
           <!-- end row -->
           <!-- ////user permission table -->
           <div class="card">
@@ -101,14 +103,14 @@
                           <th>Name</th>
                           <th>status</th>
                           <th>Action</th>
-                        </tr>  
+                        </tr>
                       </thead>
                       <tbody>
-                        
+
                         @foreach($user_permissions as $user_permissions)
-                            <tr>                            
-                                <td>{{ $user_permissions->permission->module }}</td>   
-                                <td>{{ $user_permissions->permission->name }}</td>   
+                            <tr>
+                                <td>{{ $user_permissions->permission->module }}</td>
+                                <td>{{ $user_permissions->permission->name }}</td>
                                 <td
                                   @if($user_permissions->status == 1)
                                   class="table-success">
@@ -119,7 +121,7 @@
                                   @endif
                                 </td>
                                 <td>
-                                    
+
                                     <div class="btn-group">
                                     <button type="button" class="btn btn-primary dropdown-toggle btn-xs" data-bs-toggle="dropdown" aria-expanded="false">
                                     <i class="mdi mdi-table-edit"></i>
@@ -136,10 +138,10 @@
                             </tr>
                         @endforeach
                       </tbody>
-                      
+
                   </table>
-                      
-                    
+
+
 
           <!-- ////Give permission table -->
           <div class="row">
@@ -168,7 +170,7 @@
                                 <td>{{ $permissions->name }}</td>
                                 <td>{{ $permissions->description }}</td>
                                   <td><a href="{{ route('employee.permissions.add', ['e_id' => $employee->id, 'p_id' => $permissions->id]) }}" class="btn btn-success btn-xs">Add</a></td>
-                                  
+
                                 </td>
                             </tr>
                         @endforeach
@@ -185,7 +187,7 @@
                   </div>
                 </div>
               </div>
-            
+
             </div>
           </div>
 
@@ -206,7 +208,7 @@
         <!-- ============================================================== -->
         <!-- End Container fluid  -->
         <!-- ============================================================== -->
-       
+
 @endsection
 
 @section('basic_table')

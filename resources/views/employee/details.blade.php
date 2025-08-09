@@ -23,7 +23,7 @@
 
             <form action="{{ route('user.detailsUpdate', $user->id) }}" method="GET">
                 @csrf
-                
+
 
                 <div class="row g-3">
                     {{-- Name --}}
@@ -62,6 +62,12 @@
                         <input readonly type="text" name="site" class="form-control" value="{{ old('site', $user->site) }}">
                     </div>
 
+                    {{-- factory --}}
+                    <div class="col-md-6">
+                        <label class="form-label fw-bold">Factory</label>
+                        <input readonly type="text" name="factory" class="form-control" value="{{ old('factory', $user->factory) }}">
+                    </div>
+
                     {{-- Phone --}}
                     <div class="col-md-6">
                         <label class="form-label fw-bold">Phone</label>
@@ -87,7 +93,7 @@
                     <hr>
 
                     {{-- Password (Optional) --}}
-                   
+
                     <div class="col-md-6">
                       <label class="form-label fw-bold">Old Password </label>
                       <input type="old_password" name="old_password" class="form-control" placeholder="Leave blank to keep current password">

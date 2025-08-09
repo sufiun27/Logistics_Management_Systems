@@ -3,14 +3,15 @@
 namespace App\DataTables;
 
 use App\Models\Shipping;
-use Illuminate\Database\Eloquent\Builder as QueryBuilder;
-use Yajra\DataTables\EloquentDataTable;
-use Yajra\DataTables\Html\Builder as HtmlBuilder;
 use Yajra\DataTables\Html\Button;
 use Yajra\DataTables\Html\Column;
+use Illuminate\Support\Facades\DB;
+use Yajra\DataTables\EloquentDataTable;
 use Yajra\DataTables\Html\Editor\Editor;
 use Yajra\DataTables\Html\Editor\Fields;
 use Yajra\DataTables\Services\DataTable;
+use Yajra\DataTables\Html\Builder as HtmlBuilder;
+use Illuminate\Database\Eloquent\Builder as QueryBuilder;
 
 class ShippingDataTable extends DataTable
 {
@@ -37,11 +38,23 @@ class ShippingDataTable extends DataTable
     {
         $user = auth()->user();
 
-        return Shipping::query()
-            ->whereHas('exportFormApparel', function ($q) use ($user) {
-                $q->where('invoice_site', $user->site);
-            })
-            ->orderByDesc('created_at');
+        // return DB::table('shippings as s')
+        //     ->join('export_form_apparels as efa', 'efa.invoice_no', '=', 's.invoice_no')
+        //     ->where('efa.invoice_site', $user->site)
+        //     ->orderByDesc('s.created_at')
+        //     ->get();
+
+
+    //   return  Shipping::query()
+    //         ->whereHas('exportFormApparel', function ($q) use ($user) {
+    //             $q->where('invoice_site', $user->site);
+    //         })
+    //         ->orderByDesc('created_at');
+
+    $query = Shipping::query();
+
+
+    return $query;
     }
 
     /**
