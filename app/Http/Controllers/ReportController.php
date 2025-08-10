@@ -7,88 +7,27 @@ use App\Exports\ReportExport;
 use App\Models\ExportFormApparel;
 use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Facades\Excel;
-use App\DataTables\SalesReportDataTable;
-use App\DataTables\ExportFormApparelDataTable;
+
 
 class ReportController extends Controller
 {
-    public function sales(SalesReportDataTable $dataTable, Request $request){
 
-        if (isset($request->start_date)&&isset($request->end_date)) {
-            $start_date = $request->start_date;
-            $end_date = $request->end_date;
-             $start_date = \Carbon\Carbon::parse($start_date)->startOfDay()->format('Y-m-d');
-             $end_date = \Carbon\Carbon::parse($end_date)->endOfDay()->format('Y-m-d');
-
-          return $dataTable->with('start_date', $start_date)
-          ->with('end_date', $end_date)
-          ->render('reports.sales');
-        }else{
-            return $dataTable->render('reports.sales');
-        }
-    }
 
     public function masterReport(){
         return view('reports.master');
     }
 
-    // //multiple
-    // public function report(Request $request)
-    // {
-    //     // dd($request->all());
-    //     // ✅ Validate incoming data
-    //     $validated = $request->validate([
-    //         'site'       => 'required|array',
-    //         'invoice_no' => 'nullable|string',
-    //         'start_date' => 'nullable|date',
-    //         'end_date'   => 'nullable|date|after_or_equal:start_date',
-    //     ]);
 
 
-    //     // dd($validated);
-    
-    //     // ✅ Start query with eager loading
-    //     $query = ExportFormApparel::with([
-    //         'saleDetail',
-    //         'shipping',
-    //         'billingDetail',
-    //         'logisticsDetail'
-    //     ])->whereIn('invoice_site', $validated['site']);
-    
-    //     // ✅ Apply optional filters
-    //     if (!empty($validated['invoice_no'])) {
-    //         $query->where('invoice_no', $validated['invoice_no']);
-    //     }
-    
-    //     if (!empty($validated['start_date'])) {
-    //         $query->whereDate('created_at', '>=', $validated['start_date']);
-    //     }
-    
-    //     if (!empty($validated['end_date'])) {
-    //         $query->whereDate('created_at', '<=', $validated['end_date']);
-    //     }
-    
-    //     // ✅ Paginate results
-    //     $data = $query->orderBy('created_at', 'desc')->paginate(20);
-    
-    //     // ✅ Transform but keep paginator
-    //     $data->getCollection()->transform(function ($item) {
-    //         return [
-    //             'export'    => collect($item)->except([
-    //                 'sale_detail',
-    //                 'shipping',
-    //                 'billing_detail',
-    //                 'logistics_detail'
-    //             ]),
-    //             'sales'     => $item->saleDetail,
-    //             'shipping'  => $item->shipping,
-    //             'billing'   => $item->billingDetail,
-    //             'logistics' => $item->logisticsDetail,
-    //         ];
-    //     });
-    
-    //     return view('reports.master', compact('data'));
-    // }
+        // public function report()
+        // {
+        //     try {
+        //         $data = ExportFormApparel::first();
+        //         return response()->json($data);
+        //     } catch (\Exception $e) {
+        //         return response()->json(['error' => $e->getMessage()], 500);
+        //     }
+        // }
 
     //single
     public function report(Request $request)
@@ -145,24 +84,24 @@ class ReportController extends Controller
     return view('reports.master', compact('data'));
 }
 
-    
+
 
     public function masterReportExport(Request $request) {
         $export = [
             ['column' => 'invoice_no', 'title' => 'Invoice No'],
             ['column' => 'invoice_date', 'title' => 'Invoice Date'],
-            
+
             ['column' => 'consignee_name', 'title' => 'Consignee Name'],
             ['column' => 'invoice_site', 'title' => 'Invoice Site'],
-            
+
 
             ['column' => 'item_name', 'title' => 'Item Name'],
             ['column' => 'hs_code', 'title' => 'HS Code'],
             ['column' => 'hs_code_second', 'title' => 'HS Code (Second)'],
-            
+
             ['column' => 'contract_no', 'title' => 'Contract No'],
             ['column' => 'contract_date', 'title' => 'Contract Date'],
-            
+
             ['column' => 'consignee_site', 'title' => 'Consignee Site'],
             ['column' => 'consignee_country', 'title' => 'Consignee Country'],
             ['column' => 'consignee_address', 'title' => 'Consignee Address'],
@@ -177,7 +116,7 @@ class ReportController extends Controller
             ['column' => 'section', 'title' => 'Section'],
             ['column' => 'tt_no', 'title' => 'TT No'],
             ['column' => 'tt_date', 'title' => 'TT Date'],
-            
+
             ['column' => 'unit', 'title' => 'Unit'],
             ['column' => 'quantity', 'title' => 'Quantity'],
             ['column' => 'currency', 'title' => 'Currency'],
@@ -229,26 +168,26 @@ class ReportController extends Controller
             ['column' => 'factory', 'title' => 'Factory'],
             ['column' => 'ex_factory_date', 'title' => 'Ex-Factory Date'],
            ['column' => 'cargorpt_date', 'title' => 'Cargo Report Date'],
-      
+
             ['column' => 'cnf_agent', 'title' => 'CNF Agent'],
             ['column' => 'vessel_no', 'title' => 'Vessel No'],
             ['column' => 'ep_no', 'title' => 'EP No'],
             ['column' => 'ep_date', 'title' => 'EP Date'],
             ['column' => 'ex_pNo', 'title' => 'Export Permit No'], // Assuming ex_pNo means Export Permit No
-           
+
           ['column' => 'exp_no', 'title' => 'Export No'],
           ['column' => 'exp_date', 'title' => 'Export Date'],
           ['column' => 'transport_port', 'title' => 'Transport Port'],
-      
+
             ['column' => 'sb_no', 'title' => 'SB No'],
             ['column' => 'sb_date', 'title' => 'SB Date'],
-            
+
             ['column' => 'bring_back', 'title' => 'Bring Back'],
             ['column' => 'shipped_out', 'title' => 'Shipped Out'],
             ['column' => 'shipped_cancel', 'title' => 'Shipped Cancelled'],
             ['column' => 'shipped_back', 'title' => 'Shipped Back'],
             ['column' => 'unshipped', 'title' => 'Unshipped'],
-      
+
             ['column' => 'created_by', 'title' => 'Created By'],
             ['column' => 'updated_by', 'title' => 'Updated By'],
             ['column' => 'created_at', 'title' => 'Created At'],

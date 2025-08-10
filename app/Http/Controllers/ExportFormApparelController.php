@@ -20,22 +20,18 @@ use Carbon\Carbon;
 class ExportFormApparelController extends Controller
 {
 
-    public function exportFormApparel(ExportFormApparelDataTable $dataTable, Request $request){
-        $export=Export::all();
-        $site=$request->site;
-        if (isset($request->start_date)&&isset($request->end_date)) {
-            $start_date = $request->start_date;
-            $end_date = $request->end_date;
-             $start_date = \Carbon\Carbon::parse($start_date)->startOfDay()->format('Y-m-d H:i:s');
-             $end_date = \Carbon\Carbon::parse($end_date)->endOfDay()->format('Y-m-d H:i:s');
-
-          return $dataTable->with(['start_date' => $start_date, 'end_date' => $end_date, 'site' => $site])
-          ->render('exportFormApparel.exportFormApparel',compact('export'));
-        }else{
-            return $dataTable->with([
-                'site' => $site,
-            ])->render('exportFormApparel.exportFormApparel', compact('export'));
+    public function exportFormApparel(Request $request){
+       $request->validate([
+            'invoice_no' => 'nullable|string|max:255', // Allow nullable, add max length
+        ]);
+        $invoice_no = $request->input('invoice_no');
+        $data = ExportFormApparel::query();
+        if ($invoice_no) {
+            $data = $data->where('invoice_no', 'like', '%' . $invoice_no . '%'); // Case-insensitive search
         }
+        $data = $data->where('invoice_site', auth()->user()->site);
+        $data = $data->orderByDesc('created_at')->paginate(25);
+        return view('exportFormApparel.exportFormApparel', compact('data'));
 
     }
 
@@ -114,8 +110,8 @@ public function fetchInvoiceData(Request $request)
 
     return response()->json([
         'html' => $output,
-        'tt_date' => Carbon::parse($tt->tt_date)->format('Y-m-d'), 
-        
+        'tt_date' => Carbon::parse($tt->tt_date)->format('Y-m-d'),
+
     ]);
 }
 
@@ -123,7 +119,7 @@ public function fetchInvoiceData(Request $request)
 
     public function storeExportFormApparel(Request $request)
     {
-        
+
         $request->validate([
             'item_name' => 'required|string',
             'hs_code' => 'required|string',
@@ -295,7 +291,7 @@ public function fetchInvoiceData(Request $request)
 
 public function exportFormApparelUpdate(Request $request, $id)
 {
-    
+
     // Validate the request data
     $request->validate([
         'item_name' => 'required|string',

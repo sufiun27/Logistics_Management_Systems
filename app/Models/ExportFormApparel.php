@@ -8,6 +8,8 @@ use App\Models\Shipping;
 use App\Models\SaleDetail;
 use App\Models\BillingDetail;
 use App\Models\LogisticsDetail;
+use App\Models\User;
+
 
 class ExportFormApparel extends Model
 {

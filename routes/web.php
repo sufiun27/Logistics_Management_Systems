@@ -147,7 +147,9 @@ Route::prefix('exportFormApparel')->middleware('authorization:export_manage')->g
 ///////shipping/////////////////////
 use App\Http\Controllers\ShippingController;
 Route::prefix('shipping')->middleware('authorization:shipping_manage')->group(function(){
-    Route::get('shipping', [ShippingController::class, 'shipping'])->name('shipping.shipping');
+
+    Route::get('/shipping', [ShippingController::class, 'shipping'])->name('shipping.shipping');
+
     Route::get('addShipping', [ShippingController::class, 'addShipping'])->name('shipping.addShipping');
     //shipping.getInvoice
     Route::post('getInvoice', [ShippingController::class, 'getInvoice'])->name('shipping.getInvoice');
@@ -171,14 +173,10 @@ Route::prefix('shipping')->middleware('authorization:shipping_manage')->group(fu
     Route::post('updateOtherInformation/{id}', [ShippingController::class, 'updateOtherInformation'])->name('shipping.updateOtherInformation');
     Route::post('updateRemarks/{id}', [ShippingController::class, 'updateRemarks'])->name('shipping.updateRemarks');
     Route::get('/data', [ShippingController::class, 'data'])->name('shipping.data');
+
 });
 
 // routes/web.php
-use App\DataTables\ShippingDataTable;
-
-Route::get('/shipping-data', function (ShippingDataTable $dataTable) {
-    return $dataTable->ajax();
-})->name('shipping.data');
 
 
 use App\Http\Controllers\SaleDetailController;
@@ -215,8 +213,9 @@ Route::prefix('billing')->middleware('authorization:billing_manage')->group(func
 });
 
 use App\Http\Controllers\LogisticsDetailController;
+Route::get('/logistics/data', [LogisticsDetailController::class, 'data'])->name('logistics.data');
 Route::prefix('logistics')->middleware('authorization:logistics_manage')->group(function(){
-    Route::get('indexLogistics', [LogisticsDetailController::class, 'indexLogistics'])->name('logistics.indexLogistics');
+    Route::match(['get', 'post'],'indexLogistics', [LogisticsDetailController::class, 'indexLogistics'])->name('logistics.indexLogistics');
      Route::get('addLogistics', [LogisticsDetailController::class, 'addLogistics'])->name('logistics.addLogistics');
      Route::post('storeLogistics', [LogisticsDetailController::class, 'storeLogistics'])->name('logistics.storeLogistics');
      Route::get('editLogistics/{id}', [LogisticsDetailController::class, 'editLogistics'])->name('logistics.editLogistics');
@@ -224,9 +223,17 @@ Route::prefix('logistics')->middleware('authorization:logistics_manage')->group(
      Route::get('deleteLogistics/{id}', [LogisticsDetailController::class, 'deleteLogistics'])->name('logistics.deleteLogistics');
 });
 
+
+
+use App\Http\Controllers\GetInvoiceController;
+Route::post('/getInvoice', [GetInvoiceController::class, 'getInvoice'])->name('getInvoice');
+
+
+
 use App\Http\Controllers\ReportController;
 Route::prefix('reports')->middleware('auth')->group(function(){
-    Route::get('sales', [ReportController::class, 'sales'])->name('reports.sales');
+
+
     Route::get('master/report', [ReportController::class, 'masterReport'])->name('reports.master');
 
     Route::get('report', [ReportController::class, 'report'])->name('reports.report');
@@ -234,12 +241,10 @@ Route::prefix('reports')->middleware('auth')->group(function(){
     Route::get('export/master/report', [ReportController::class, 'masterReportExport'])->name('reports.masterReportExport');
 });
 
-use App\Http\Controllers\GetInvoiceController;
-Route::post('/getInvoice', [GetInvoiceController::class, 'getInvoice'])->name('getInvoice');
+
 
 
 use App\Http\Controllers\ReportIndividualController;
-
 Route::middleware('auth')->group(function () {
     Route::get('/reports/individual', [ReportIndividualController::class, 'index'])->name('reports.individual');
     Route::get('/reports/individual/report', [ReportIndividualController::class, 'report'])->name('reports.individual.report');
@@ -247,7 +252,7 @@ Route::middleware('auth')->group(function () {
 });
 
 use App\Http\Controllers\DashboardController;
-Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard.index')->middleware('auth');
+// Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard.index')->middleware('auth');
 //Dashboard routes///////////////////////////
 Route::get('/', [DashboardController::class, 'index'])->name('dashboard.index')->middleware('auth');
 

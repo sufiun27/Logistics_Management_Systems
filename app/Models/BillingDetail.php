@@ -73,4 +73,14 @@ class BillingDetail extends Model
     {
         return $this->exportFormApparel?->invoice_site ?? null;
     }
+
+    public function createdByUser()
+    {
+        return $this->belongsTo(User::class, 'created_by', 'emp_id');
+    }
+
+    public function updatedByUser()
+    {
+        return $this->belongsTo(User::class, 'updated_by', 'emp_id');
+    }
 }

@@ -3,8 +3,9 @@
 @section('content')
 
 @php
-    // Define table headers: column => [title, type]
-    // 'type' can be 'date' for Carbon formatting or 'string' for normal text
+    $pageTitle = 'Shipping Records';
+    $actionUrl = 'shipping.updateShipping';
+    $addNewUrl = 'shipping.addShipping';
     $tableHeaders = [
         'invoice_no'       => ['title' => 'Invoice No',          'type' => 'string'],
         'factory'          => ['title' => 'Factory',             'type' => 'string'],
@@ -23,12 +24,12 @@
     ];
 @endphp
 
-<div class="container-fluid p-4">
+<div class="">
     <div class="card shadow-sm border-0">
         <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
-            <h5 class="mb-0">Shipping Records</h5>
+            <h5 class="mb-0">{{$pageTitle}}</h5>
             <div>
-                <a href="#" class="btn btn-light btn-sm">➕ Add New</a>
+                <a href="{{ route($addNewUrl) }}" class="btn btn-light btn-sm">➕ Add New</a>
             </div>
         </div>
 
@@ -47,16 +48,7 @@
                         >
                     </div>
                 </div>
-                <div class="col-md-4">
-                    <select name="factory" class="form-select">
-                        <option value="">All Factories</option>
-                        @foreach($factories ?? [] as $factory)
-                            <option value="{{ $factory }}" {{ request('factory') == $factory ? 'selected' : '' }}>
-                                {{ $factory }}
-                            </option>
-                        @endforeach
-                    </select>
-                </div>
+
                 <div class="col-md-4 d-flex align-items-center">
                     <button type="submit" class="btn btn-primary me-2">Search</button>
                     @if(request()->hasAny(['invoice_no', 'factory']))
@@ -70,8 +62,7 @@
                 <table class="table table-hover table-striped align-middle">
                     <thead class="table-dark">
                         <tr>
-                             <th class="text-center text-primary">Actions</th>
-                            @foreach ($tableHeaders as $key => $info)
+                            @foreach ($tableHeaders as $info)
                                 <th class="text-nowrap text-white">{{ $info['title'] }}</th>
                             @endforeach
 
@@ -82,16 +73,35 @@
                             <tr>
                                 @foreach ($tableHeaders as $key => $info)
                                     <td class="text-nowrap">
-                                        @if ($info['type'] === 'date')
+                                        @if ($key === 'invoice_no')
+
+                                                @php
+                                                    $createdBy = $item->createdByUser->name ?? 'Unknown';
+                                                    $createdByMail = $item->createdByUser->email ?? 'Unknown';
+                                                    $createdAt = $item->created_at ? $item->created_at->format('Y-m-d H:i:s') : '';
+
+                                                    $updatedBy = $item->updatedByUser->name ?? 'Unknown';
+                                                    $updatedByMail = $item->updatedByUser->email ?? 'Unknown';
+                                                    $updatedAt = $item->updated_at ? $item->updated_at->format('Y-m-d H:i:s') : '';
+
+                                                    $tooltip = "Created By: {$createdBy} ({$createdByMail}) | {$createdAt}\n" .
+                                                               "Updated By: {$updatedBy} ({$updatedByMail}) | {$updatedAt}";
+                                                @endphp
+
+                                                <a href="{{ route($actionUrl, $item->id) }}"
+                                                class="btn btn-sm btn-primary rounded-5 text-decoration-none"
+                                                title="{{ $tooltip }}">
+                                                    {{ $item->invoice_no ?? 'N/A' }}
+                                                </a>
+
+                                        @elseif ($info['type'] === 'date')
                                             {{ $item->$key ? \Carbon\Carbon::parse($item->$key)->format('d M, Y') : 'N/A' }}
                                         @else
                                             {{ $item->$key ?? 'N/A' }}
                                         @endif
                                     </td>
                                 @endforeach
-                                <td class="text-center">
-                                    {{-- Action buttons here (edit/delete/view etc) --}}
-                                </td>
+
                             </tr>
                         @empty
                             <tr>

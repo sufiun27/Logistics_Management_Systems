@@ -11,6 +11,8 @@ class Shipping extends Model
 {
     use HasFactory;
 
+    protected $table = 'sale_details';
+
     protected $fillable = [
         'invoice_no',
         'factory',
@@ -71,5 +73,15 @@ class Shipping extends Model
     public function getEfaInvoiceSiteAttribute(): ?string
     {
         return $this->exportFormApparel?->invoice_site ?? null;
+    }
+
+    public function createdByUser()
+    {
+        return $this->belongsTo(User::class, 'created_by', 'emp_id');
+    }
+
+    public function updatedByUser()
+    {
+        return $this->belongsTo(User::class, 'updated_by', 'emp_id');
     }
 }

@@ -9,9 +9,26 @@ use App\DataTables\SaleDetailDataTable;
 
 class SaleDetailController extends Controller
 {
-    public function index(SaleDetailDataTable $dataTable)
+    public function index(Request $request)
     {
-        return $dataTable->render('sales.index');
+        $request->validate([
+            'invoice_no' => 'nullable|string|max:255', // Allow nullable, add max length
+        ]);
+
+        $invoice_no = $request->input('invoice_no');
+
+        $data = SaleDetail::query();
+        if ($invoice_no) {
+            $data = $data->where('invoice_no', 'like', '%' . $invoice_no . '%'); // Case-insensitive search
+        }
+        $data = $data->with('exportFormApparel')
+            ->whereHas('exportFormApparel', function ($query) {
+                $query->where('invoice_site', auth()->user()->site ?? 'default'); // Fallback for null user
+            });
+
+        $data = $data->orderByDesc('created_at')->paginate(25);
+
+        return view('sales.index', compact('data'));
     }
 
     public function add()

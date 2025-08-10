@@ -10,18 +10,26 @@ use App\DataTables\ShippingDataTable;
 
 class ShippingController extends Controller
 {
-    public function data()
+
+    public function shipping(Request $request)
     {
-        return (new ShippingDataTable())->dataTable(Shipping::query())->toJson();
-    }
-    public function shipping()
-    {
-        $data = Shipping::with('exportFormApparel')
+        $request->validate([
+            'invoice_no' => 'nullable|string|max:255', // Allow nullable, add max length
+        ]);
+
+        $invoice_no = $request->input('invoice_no');
+
+        $data = Shipping::query();
+        if ($invoice_no) {
+            $data = $data->where('invoice_no', 'like', '%' . $invoice_no . '%'); // Case-insensitive search
+        }
+        $data = $data->with('exportFormApparel')
             ->whereHas('exportFormApparel', function ($query) {
-                $query->where('invoice_site', auth()->user()->site);
-            })
-            ->orderByDesc('created_at')
-            ->paginate(25);
+                $query->where('invoice_site', auth()->user()->site ?? 'default'); // Fallback for null user
+            });
+
+        $data = $data->orderByDesc('created_at')->paginate(25);
+
         return view('shipping.shipping', compact('data'));
     }
 
