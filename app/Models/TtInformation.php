@@ -29,5 +29,14 @@ class TtInformation extends Model
         'tt_date' => 'datetime',
     ];
 
+    public function createdByUser()
+    {
+        return $this->belongsTo(User::class, 'tt_created_by', 'emp_id');
+    }
+
+    public function updatedByUser()
+    {
+        return $this->belongsTo(User::class, 'Modified_by', 'emp_id');
+    }
 
 }

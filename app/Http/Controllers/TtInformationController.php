@@ -12,19 +12,27 @@ use Illuminate\Http\Request;
 class TtInformationController extends Controller
 {
 
-    public function ttInformation(TtInformationDataTable $dataTable, Request $request)
+    public function ttInformation(Request $request)
 
     {
-       if (isset($request->start_date)&&isset($request->end_date)) {
-           $start_date = $request->start_date;
-           $end_date = $request->end_date;
-            $start_date = \Carbon\Carbon::parse($start_date)->startOfDay()->format('Y-m-d H:i:s');
-            $end_date = \Carbon\Carbon::parse($end_date)->endOfDay()->format('Y-m-d H:i:s');
+        $request->validate([
+            'invoice_no' => 'nullable|string|max:255', // Allow nullable, add max length
+        ]);
 
-         return $dataTable->with('start_date', $start_date)
-         ->with('end_date', $end_date)
-         ->render('ttinformation.ttInformation');
-       }else{return $dataTable->render('ttinformation.ttInformation');}
+        $invoice_no = $request->input('invoice_no');
+
+        $data = TtInformation::query();
+        if ($invoice_no) {
+            $data = $data->where('invoice_no', 'like', '%' . $invoice_no . '%'); // Case-insensitive search
+        }
+        $data = $data->where('tt_site', auth()->user()->site );
+
+        $data = $data->orderByDesc('created_at')->paginate(25);
+
+       // return $data;
+
+        return view('ttInformation.ttInformation', compact('data'));
+
     }
     //ttInformation.addTtInformation
     public function addTtInformation(){
