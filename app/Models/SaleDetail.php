@@ -4,11 +4,12 @@ namespace App\Models;
 
 use App\Models\ExportFormApparel;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+
 
 class SaleDetail extends Model
 {
-    use HasFactory;
+    protected $table = 'sale_details';
+
     protected $fillable = [
         'invoice_no',
         'buyer_contract',

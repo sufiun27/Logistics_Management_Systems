@@ -3,7 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+
 use App\Models\Shipping;
 use App\Models\SaleDetail;
 use App\Models\BillingDetail;
@@ -13,7 +13,7 @@ use App\Models\User;
 
 class ExportFormApparel extends Model
 {
-    use HasFactory;
+
 
     protected $fillable = [
         'item_name', 'hs_code', 'hs_code_second', 'invoice_no', 'invoice_date',
@@ -27,10 +27,10 @@ class ExportFormApparel extends Model
         'net_wet', 'gross_wet', 'create_by', 'update_by'
     ];
 
-    protected $appends = [
-        'shipping_ex_factory_date',
-        'efa_invoice_site'
-    ];
+    // protected $appends = [
+    //     'shipping_ex_factory_date',
+    //     'efa_invoice_site'
+    // ];
 
     /**
      * Relationship with Shipping
@@ -43,18 +43,18 @@ class ExportFormApparel extends Model
     /**
      * Accessor: Get Shipping Ex-Factory Date
      */
-    public function getShippingExFactoryDateAttribute(): ?string
-    {
-        return $this->shipping->ex_factory_date ?? null;
-    }
+    // public function getShippingExFactoryDateAttribute(): ?string
+    // {
+    //     return $this->shipping?->ex_factory_date ?? null;
+    // }
 
-    /**
-     * Accessor: Get EFA Invoice Site
-     */
-    public function getEfaInvoiceSiteAttribute(): ?string
-    {
-        return $this->invoice_site ?? null;
-    }
+    // /**
+    //  * Accessor: Get EFA Invoice Site
+    //  */
+    // public function getEfaInvoiceSiteAttribute(): ?string
+    // {
+    //     return $this->invoice_site ?? null;
+    // }
 
     /**
      * Relationship with SaleDetail

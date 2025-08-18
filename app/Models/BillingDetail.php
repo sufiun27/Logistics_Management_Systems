@@ -6,11 +6,12 @@ use App\Models\ExportFormApparel;
 use App\Models\Shipping;
 use App\Models\SaleDetail;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+
 
 class BillingDetail extends Model
 {
-    use HasFactory;
+
+    protected $table = 'billing_details';
 
     protected $fillable = [
         'invoice_no',

@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Exports\ReportExport;
 use App\Models\ExportFormApparel;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Maatwebsite\Excel\Facades\Excel;
 
 
@@ -30,14 +31,13 @@ class ReportController extends Controller
         // }
 
     //single
-    public function report(Request $request)
+private function buildReportQuery(Request $request)
 {
-
     $validated = $request->validate([
-        'site'       => 'required|string',
+        'site' => 'required|string',
         'invoice_no' => 'nullable|string',
         'start_date' => 'nullable|date',
-        'end_date'   => 'nullable|date|after_or_equal:start_date',
+        'end_date' => 'nullable|date|after_or_equal:start_date',
     ]);
 
     $query = ExportFormApparel::with([
@@ -47,12 +47,10 @@ class ReportController extends Controller
         'logisticsDetail'
     ])->where('invoice_site', auth()->user()->site);
 
-    // ✅ Filter by invoice number
     if (!empty($validated['invoice_no'])) {
         $query->where('invoice_no', $validated['invoice_no']);
     }
 
-    // ✅ Filter by shipping->exp_date
     if (!empty($validated['start_date'])) {
         $query->whereHas('shipping', function ($q) use ($validated) {
             $q->whereDate('ex_factory_date', '>=', $validated['start_date']);
@@ -65,19 +63,28 @@ class ReportController extends Controller
         });
     }
 
+    return $query;
+}
+
+public function report(Request $request)
+{
+    $query = $this->buildReportQuery($request);
+
     $data = $query->orderBy('created_at', 'desc')->paginate(20);
-    return $data;
+    Log::info('enter');
+
+
     $data->getCollection()->transform(function ($item) {
         return [
-            'export'    => collect($item)->except([
+            'export' => collect($item)->except([
                 'sale_detail',
                 'shipping',
                 'billing_detail',
                 'logistics_detail'
             ]),
-            'sales'     => $item->saleDetail,
-            'shipping'  => $item->shipping,
-            'billing'   => $item->billingDetail,
+            'sales' => $item->saleDetail,
+            'shipping' => $item->shipping,
+            'billing' => $item->billingDetail,
             'logistics' => $item->logisticsDetail,
         ];
     });
