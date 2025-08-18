@@ -236,7 +236,7 @@ Route::prefix('reports')->middleware('auth')->group(function(){
 
     Route::get('master/report', [ReportController::class, 'masterReport'])->name('reports.master');
 
-    Route::get('report', [ReportController::class, 'report'])->name('reports.report');
+    Route::post('report', [ReportController::class, 'report'])->name('reports.report');
 
     Route::get('export/master/report', [ReportController::class, 'masterReportExport'])->name('reports.masterReportExport');
 });

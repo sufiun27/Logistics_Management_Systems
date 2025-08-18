@@ -30,6 +30,8 @@ class ShippingController extends Controller
 
         $data = $data->orderByDesc('created_at')->paginate(25);
 
+        //return $data;
+
         return view('shipping.shipping', compact('data'));
     }
 
@@ -42,15 +44,15 @@ class ShippingController extends Controller
     public function storeShipmentStatusInfo(Request $request)
     {
         $request->validate([
-            'invoice_no'       => 'required|string',
-            'factory'          => 'required|string',
-            'ep_no'            => 'required|string',
-            'ep_date'          => 'required|date',
-            'exp_no'           => 'required|string',
-            'exp_date'         => 'required|date',
-            'ex_factory_date'  => 'required|date',
-            'sb_no'            => 'required|string',
-            'sb_date'          => 'required|date',
+            'invoice_no'       => 'nullable|string',
+            'factory'          => 'nullable|string',
+            'ep_no'            => 'nullable|string',
+            'ep_date'          => 'nullable|date',
+            'exp_no'           => 'nullable|string',
+            'exp_date'         => 'nullable|date',
+            'ex_factory_date'  => 'nullable|date',
+            'sb_no'            => 'nullable|string',
+            'sb_date'          => 'nullable|date',
         ]);
 
         // Check invoice exists in ExportFormApparel

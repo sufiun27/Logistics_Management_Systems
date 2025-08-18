@@ -19,13 +19,13 @@
 
 
 
-<form action="{{ route('reports.report') }}" method="GET" class="row g-3 mb-4">
+<form action="{{ route('reports.report') }}" method="POST" class="row g-3 mb-4">
     @csrf
 
 
     {{-- <div class="col-md-3">
 
-        
+
         <label for="invoice_site" class="col-sm-3 text-end control-label col-form-label">Factory:</label>
                         <div class="col-sm-9">
                             <select name="site[]" id="invoice_site"  required multiple >
@@ -50,8 +50,8 @@
             {{ $user->site }}
         </div>
     </div>
-    
-    
+
+
     <div class="col-md-3">
         <label for="invoice_no" class="form-label">Invoice No</label>
         <input type="text" name="invoice_no" id="invoice_no" class="form-control"
@@ -138,18 +138,18 @@
     $export = [
         ['column' => 'invoice_no', 'title' => 'Invoice No'],
         ['column' => 'invoice_date', 'title' => 'Invoice Date'],
-        
+
         ['column' => 'consignee_name', 'title' => 'Consignee Name'],
         ['column' => 'invoice_site', 'title' => 'Invoice Site'],
 
         ['column' => 'item_name', 'title' => 'Item Name'],
         ['column' => 'hs_code', 'title' => 'HS Code'],
         ['column' => 'hs_code_second', 'title' => 'HS Code (Second)'],
-        
-        
+
+
         ['column' => 'contract_no', 'title' => 'Contract No'],
         ['column' => 'contract_date', 'title' => 'Contract Date'],
-        
+
         ['column' => 'consignee_site', 'title' => 'Consignee Site'],
         ['column' => 'consignee_country', 'title' => 'Consignee Country'],
         ['column' => 'consignee_address', 'title' => 'Consignee Address'],
@@ -164,7 +164,7 @@
         ['column' => 'section', 'title' => 'Section'],
         ['column' => 'tt_no', 'title' => 'TT No'],
         ['column' => 'tt_date', 'title' => 'TT Date'],
-        
+
         ['column' => 'unit', 'title' => 'Unit'],
         ['column' => 'quantity', 'title' => 'Quantity'],
         ['column' => 'currency', 'title' => 'Currency'],
@@ -238,7 +238,7 @@
        ['column' => 'created_at', 'title' => 'Created At'],
        ['column' => 'updated_at', 'title' => 'Updated At'],
    ];
- 
+
 
     // $shipping = [
     //     ['column' => 'id', 'title' => 'ID'],
@@ -274,26 +274,26 @@
        ['column' => 'factory', 'title' => 'Factory'],
        ['column' => 'ex_factory_date', 'title' => 'Ex-Factory Date'],
       ['column' => 'cargorpt_date', 'title' => 'Cargo Report Date'],
- 
+
        ['column' => 'cnf_agent', 'title' => 'CNF Agent'],
        ['column' => 'vessel_no', 'title' => 'Vessel No'],
        ['column' => 'ep_no', 'title' => 'EP No'],
        ['column' => 'ep_date', 'title' => 'EP Date'],
        ['column' => 'ex_pNo', 'title' => 'Export Permit No'], // Assuming ex_pNo means Export Permit No
-      
+
      ['column' => 'exp_no', 'title' => 'Export No'],
      ['column' => 'exp_date', 'title' => 'Export Date'],
      ['column' => 'transport_port', 'title' => 'Transport Port'],
- 
+
        ['column' => 'sb_no', 'title' => 'SB No'],
        ['column' => 'sb_date', 'title' => 'SB Date'],
-       
+
        ['column' => 'bring_back', 'title' => 'Bring Back'],
        ['column' => 'shipped_out', 'title' => 'Shipped Out'],
        ['column' => 'shipped_cancel', 'title' => 'Shipped Cancelled'],
        ['column' => 'shipped_back', 'title' => 'Shipped Back'],
        ['column' => 'unshipped', 'title' => 'Unshipped'],
- 
+
        ['column' => 'created_by', 'title' => 'Created By'],
        ['column' => 'updated_by', 'title' => 'Updated By'],
        ['column' => 'created_at', 'title' => 'Created At'],

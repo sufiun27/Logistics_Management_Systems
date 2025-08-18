@@ -18,6 +18,7 @@ return new class () extends Migration {
             $table->string('consignee_address');
             $table->string('consignee_country');
             $table->string('BCode')->nullable();
+            //$table->string('site');
             $table->timestamps();
         });
 

@@ -5,13 +5,13 @@ namespace App\Models;
 use App\Models\ExportFormApparel;
 use App\Models\SaleDetail;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+
 
 class Shipping extends Model
 {
-    use HasFactory;
 
-    protected $table = 'sale_details';
+
+    protected $table = 'shippings';
 
     protected $fillable = [
         'invoice_no',

@@ -32,6 +32,7 @@ class ReportController extends Controller
     //single
     public function report(Request $request)
 {
+
     $validated = $request->validate([
         'site'       => 'required|string',
         'invoice_no' => 'nullable|string',
@@ -44,7 +45,7 @@ class ReportController extends Controller
         'shipping',
         'billingDetail',
         'logisticsDetail'
-    ])->where('invoice_site', $validated['site']);
+    ])->where('invoice_site', auth()->user()->site);
 
     // ✅ Filter by invoice number
     if (!empty($validated['invoice_no'])) {
@@ -65,7 +66,7 @@ class ReportController extends Controller
     }
 
     $data = $query->orderBy('created_at', 'desc')->paginate(20);
-
+    return $data;
     $data->getCollection()->transform(function ($item) {
         return [
             'export'    => collect($item)->except([
@@ -269,7 +270,7 @@ class ReportController extends Controller
 
             // dd($validated);
 
-            $query = ExportFormApparel::with('saleDetail', 'shipping', 'billingDetail', 'logisticsDetail')->where('invoice_site', $validated['site']);
+            $query = ExportFormApparel::with('saleDetail', 'shipping', 'billingDetail', 'logisticsDetail')->where('invoice_site', auth()->user()->site);
 
             if (isset($request->invoice_no) && $request->invoice_no !== '') {
                 $query->where('invoice_no', $request->invoice_no);

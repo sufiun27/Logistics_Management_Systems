@@ -36,7 +36,7 @@
                     <br>
                     <hr>
                     <br>
-  
+
                     <div>
                         <h4>Quantity & Value Entry</h4>
                         <hr>
@@ -90,7 +90,7 @@
                                 <input required readonly name="cm_percentage" id="cm_percentage" type="number" class="form-control" value="{{ $cmValue->cm_value ?? '' }}" placeholder="..%"/>
                             </div>
                         </div>
-                        
+
                         <div class="form-group row">
                             <label for="cm_amount" class="col-sm-3 text-end control-label col-form-label">CM Amount:</label>
                             <div class="col-sm-9">
@@ -102,7 +102,7 @@
                     </div>
 
                     {{-- //FOB Value: --}}
-                    
+
 
 
                 </div>
@@ -111,14 +111,14 @@
                     const cmInput = document.getElementById('cm_amount');
                     const freightInput = document.getElementById('freight_input');
                     const fobDiv = document.getElementById('fob_value');
-                
+
                     function calculateFOB() {
                         let cmAmount = parseFloat(cmInput.value) || 0;
                         let freightValue = parseFloat(freightInput.value) || 0;
                         let fob = cmAmount - freightValue;
                         fobDiv.innerText = "FOB Value: " + fob.toFixed(2);
                     }
-                
+
                     cmInput.addEventListener('input', calculateFOB);
                     freightInput.addEventListener('input', calculateFOB);
                 </script>
@@ -301,8 +301,8 @@
                             <input type="hidden" name="invoice_site" value="{{ $user->site }}">
                         </div>
                     </div>
-                    
-                    
+
+
 
 
                     <div class="form-group row">
@@ -319,7 +319,7 @@
             <div class="row">
                 <!-- Quantity & Value Entry -->
                 <div class="col-6">
-                   
+
                 </div>
 
                 <!--TODO: from making formate : Ex-Factory Information Entry -->
@@ -580,19 +580,19 @@ function updateIncotermCalculation() {
             $('#incoterm_calculation').html(cmOutput);
             $('#freight_value').html('');
             $('#fob_value').text('FOB Value: ' + incoterm_calculation.toFixed(2)); // FOB = CM amount (no freight)
-        } 
+        }
         else if (['CPT', 'CIF', 'DAP', 'DDP'].includes(incoterm)) {
             var freightOutput = '<div class="form-group row">' +
                                 '<label for="freight_value_input" class="col-sm-3 text-end control-label col-form-label">Freight Value:</label>' +
                                 '<div class="col-sm-9">' +
-                                '<input name="freight_value" id="freight_value_input" type="number" class="form-control" placeholder="Freight Value"/>' +
+                                '<input name="freight_value" id="freight_value_input" type="number" step="0.01"  class="form-control" placeholder="Freight Value"/>' +
                                 '</div></div>';
             $('#incoterm_calculation').html(cmOutput);
             $('#freight_value').html(freightOutput);
 
             // Attach event dynamically to new freight input
             $('#freight_value_input').on('input', calculateFOB);
-        } 
+        }
         else {
             $('#incoterm_calculation').html('Calculate Automatically');
             $('#freight_value').html('');

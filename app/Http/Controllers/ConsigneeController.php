@@ -2,15 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\Consignee;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class ConsigneeController extends Controller
 {
     public function consignee()
     {
-        // $consignees = Consignee::all();
-        //pagineat
+
         $consignees = Consignee::orderBy('consignee_name')
                        ->orderBy('created_at', 'desc')
                        ->paginate(10);
@@ -18,20 +18,35 @@ class ConsigneeController extends Controller
     }
     public function storeConsignee(Request $request)
     {
-        // dd($request->all());
+        // Validate the request data
         $request->validate([
             'consignee_name' => 'required',
             'consignee_site' => 'required',
             'consignee_address' => 'required',
             'consignee_country' => 'required',
         ]);
-        $consignee = new Consignee();
-        $consignee->consignee_name = $request->consignee_name;
-        $consignee->consignee_site = $request->consignee_site;
-        $consignee->consignee_address = $request->consignee_address;
-        $consignee->consignee_country = $request->consignee_country;
-        $consignee->save();
-        return redirect()->back()->with('success', 'Consignee added successfully');
+
+        DB::beginTransaction();
+
+        try {
+            $consignee = new Consignee();
+            $consignee->consignee_name = $request->consignee_name;
+            $consignee->consignee_site = $request->consignee_site;
+            $consignee->consignee_address = $request->consignee_address;
+            $consignee->consignee_country = $request->consignee_country;
+            $consignee->save();
+
+            DB::commit();
+
+            return redirect()->back()->with('success', 'Consignee added successfully');
+        } catch (\Exception $e) {
+            DB::rollBack();
+
+            // Log the error if needed
+            // Log::error('Consignee creation failed: '.$e->getMessage());
+
+            return redirect()->back()->with('error', 'Failed to add consignee. Please try again.');
+        }
     }
     public function editConsignee($id)
     {
