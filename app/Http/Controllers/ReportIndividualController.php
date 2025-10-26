@@ -50,6 +50,8 @@ class ReportIndividualController extends Controller
                 ['column' => 'incoterm', 'title' => 'Incoterm'],
                 ['column' => 'cm_amount', 'title' => 'CM Amount'],
                 ['column' => 'freight_value', 'title' => 'Freight Value'],
+                //fob_value
+                ['column' => 'fob_value', 'title' => 'FOB Value'],
                 ['column' => 'exp_no', 'title' => 'Export No'],
                 ['column' => 'exp_date', 'title' => 'Export Date'],
                 ['column' => 'exp_permit_no', 'title' => 'Export Permit No'],
