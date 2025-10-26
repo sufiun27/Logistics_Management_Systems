@@ -127,7 +127,7 @@ class ReportIndividualController extends Controller
             'relations' => [],
             'columns' => [
                 ['column' => 'invoice_no', 'title' => 'Invoice No'],
-                ['column' => 'id', 'title' => 'ID'],
+                // ['column' => 'id', 'title' => 'ID'],
                 ['column' => 'sb_no', 'title' => 'SB No'],
                 ['column' => 'sb_date', 'title' => 'SB Date'],
                 ['column' => 'doc_submit_date', 'title' => 'Document Submit Date'],
@@ -150,7 +150,7 @@ class ReportIndividualController extends Controller
             'relations' => [],
             'columns' => [
                 ['column' => 'invoice_no', 'title' => 'Invoice No'],
-                ['column' => 'id', 'title' => 'ID'],
+                // ['column' => 'id', 'title' => 'ID'],
                 ['column' => 'receivable_amount', 'title' => 'Receivable Amount'],
                 ['column' => 'doc_process_fee', 'title' => 'Document Processing Fee'],
                 ['column' => 'seal_lock_charge', 'title' => 'Seal Lock Charge'],

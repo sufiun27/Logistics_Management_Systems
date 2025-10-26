@@ -244,11 +244,60 @@
       <!-- Left Sidebar - style you can find in sidebar.scss  -->
       <!-- ============================================================== -->
       <aside class="left-sidebar" data-sidebarbg="skin5">
+
+
+
+
         <!-- Sidebar scroll-->
         <div class="scroll-sidebar">
           <!-- Sidebar navigation-->
           <nav class="sidebar-nav">
             <ul id="sidebarnav" class="pt-4">
+                {{-- ///////////////////////// --}}
+                @can('policy', [App\Models\User::class, 'exporter_manage'])
+                  <li class="sidebar-item">
+                    <a href="{{route('export.exporter')}}" class="sidebar-link"
+                      ><i class="mdi text-danger">E</i
+                      ><span class="hide-menu text-danger"> Exporter (Bond)</span></a
+                    >
+                  </li>
+                  @endcan
+
+
+                  {{-- /* ---------------------- //////////////////////////// ---------------------- */ --}}
+
+                  <!-- Employees//////////////////// -->
+                    @can('policy', [App\Models\User::class, 'emp_manage'])
+                    <li class="sidebar-item">
+                        <a
+                        class="sidebar-link has-arrow waves-effect waves-dark"
+                        href="javascript:void(0)"
+                        aria-expanded="false"
+                        ><i class="mdi mdi-account-multiple text-danger"></i
+                        ><span class="hide-menu text-danger ">Employees </span></a
+                        >
+                        <ul aria-expanded="false" class="collapse first-level">
+
+                        <li class="sidebar-item">
+                            <a href="{{route('employee.list')}}" class="sidebar-link">
+                            <i class="mdi">L</i>
+                            <span class="hide-menu"> List </span></a
+                            >
+                        </li>
+
+                        <li class="sidebar-item">
+                            <a href="{{route('employee.register')}}" class="sidebar-link"
+                            ><i class="mdi">A N</i
+                            ><span class="hide-menu"> Add  New </span></a
+                            >
+                        </li>
+
+
+                        </ul>
+                    </li>
+                    @endcan
+            <!-- Employees//////////////////// -->
+
               <li class="sidebar-item">
                 <a
                   class="sidebar-link waves-effect waves-dark sidebar-link"
@@ -273,14 +322,14 @@
 
                 <ul aria-expanded="false" class="collapse first-level">
 
-                  @can('policy', [App\Models\User::class, 'exporter_manage'])
+                  {{-- @can('policy', [App\Models\User::class, 'exporter_manage'])
                   <li class="sidebar-item">
                     <a href="{{route('export.exporter')}}" class="sidebar-link"
                       ><i class="mdi ">E</i
-                      ><span class="hide-menu"> Exporter </span></a
+                      ><span class="hide-menu"> Exporter (Bond)</span></a
                     >
                   </li>
-                  @endcan
+                  @endcan --}}
 
                   @can('policy', [App\Models\User::class, 'dest_country_manage'])
                   <li class="sidebar-item">
@@ -545,39 +594,9 @@
               </li>
 
 
-               <!-- Employees//////////////////// -->
-               @can('policy', [App\Models\User::class, 'emp_manage'])
-               <li class="sidebar-item">
-                <a
-                  class="sidebar-link has-arrow waves-effect waves-dark"
-                  href="javascript:void(0)"
-                  aria-expanded="false"
-                  ><i class="mdi mdi-account-multiple"></i
-                  ><span class="hide-menu">Employees </span></a
-                >
-                <ul aria-expanded="false" class="collapse first-level">
-
-                <li class="sidebar-item">
-                    <a href="{{route('employee.list')}}" class="sidebar-link">
-                      <i class="mdi">L</i>
-                      <span class="hide-menu"> List </span></a
-                    >
-                  </li>
-
-                  <li class="sidebar-item">
-                    <a href="{{route('employee.register')}}" class="sidebar-link"
-                      ><i class="mdi">A N</i
-                      ><span class="hide-menu"> Add  New </span></a
-                    >
-                  </li>
 
 
-                </ul>
-              </li>
-            @endcan
-      <!-- Employees//////////////////// -->
-
-            <li class="sidebar-item">
+            {{-- <li class="sidebar-item">
 
               <a
                   class="sidebar-link"
@@ -587,7 +606,7 @@
                   <span class="hide-menu" style="font-size: smaller">Developed By <br>BD-IT: Abu Sufiun</span></a
 
                 >
-            </li>
+            </li> --}}
 
 
             </ul>
@@ -613,7 +632,16 @@
         <!-- Bread crumb and right sidebar toggle -->
         <!-- ============================================================== -->
         @yield('content')
+
     </div>
+
+       <footer class="text-end footer  py-2 m-0  text-muted">
+        Developed © 2025 BD-IT <span class=" text-primary">Abu Sufiun</span>
+        </footer>
+
+
+
+
     <!-- ============================================================== -->
     <!-- End Wrapper -->
     <!-- ============================================================== -->

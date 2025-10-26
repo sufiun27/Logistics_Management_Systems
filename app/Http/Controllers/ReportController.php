@@ -71,7 +71,7 @@ public function report(Request $request)
     $query = $this->buildReportQuery($request);
 
     $data = $query->orderBy('created_at', 'desc')->paginate(20);
-    Log::info('enter');
+
 
 
     $data->getCollection()->transform(function ($item) {

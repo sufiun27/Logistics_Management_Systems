@@ -98,7 +98,7 @@
                             </div>
                         </div>
                         <div id="freight_value"></div>
-                        <div id="fob_value"></div>
+                        <div id="fob_value" class="mt-3 fw-bold text-primary"></div>
                     </div>
 
                     {{-- //FOB Value: --}}
@@ -605,13 +605,67 @@ function updateIncotermCalculation() {
     }
 }
 
-// FOB Calculation
-function calculateFOB() {
-    var amount = parseFloat($('#amount').val()) || 0;
-    var freightValue = parseFloat($('#freight_value_input').val()) || 0;
-    var fob = amount - freightValue;
-    $('#fob_value').text('FOB Value: ' + fob.toFixed(2));
-}
+//! FOB Calculation
+// function calculateFOB() {
+//     //when select incoterm in CPT, CIF, DAP, DDP can only show freight input box
+
+
+
+//     var amount = parseFloat($('#amount').val()) || 0;
+//     var freightValue = parseFloat($('#freight_value_input').val()) || 0;
+//     var fob = amount - freightValue;
+//     $('#fob_value').text('FOB Value: ' + fob.toFixed(2));
+// }
+
+  const freightIncoterms = ['CPT', 'CIF', 'DAP', 'DDP'];
+
+  $('#incoterm').on('change', function () {
+    const selected = $(this).val();
+
+    if (freightIncoterms.includes(selected)) {
+      // show freight input box
+      $('#freight_value').html(`
+        <div class="form-group row">
+          <label for="freight_value_input" class="col-sm-3 text-end control-label col-form-label">Freight Value:</label>
+          <div class="col-sm-9">
+            <input type="number" id="freight_value_input" class="form-control" placeholder="Enter freight value">
+          </div>
+        </div>
+      `);
+      $('#fob_value').show();
+    } else {
+      // hide both freight and FOB display
+      $('#freight_value').empty();
+      $('#fob_value').empty().hide();
+    }
+
+    calculateFOB();
+  });
+
+  // recalculate when values change
+  $(document).on('input', '#amount, #freight_value_input', calculateFOB);
+
+  function calculateFOB() {
+    const incoterm = $('#incoterm').val();
+
+    // Only calculate if incoterm is in freight list
+    if (!freightIncoterms.includes(incoterm)) {
+      $('#fob_value').hide();
+      return;
+    }
+
+    const amount = parseFloat($('#amount').val()) || 0;
+    const freight = parseFloat($('#freight_value_input').val()) || 0;
+
+    if (amount > 0 && freight >= 0) {
+      const fob = amount - freight;
+      $('#fob_value').show().text('FOB Value: ' + fob.toFixed(2));
+    } else {
+      $('#fob_value').hide();
+    }
+  }
+
+  ////////////////////////
 
 // Event bindings
 $('#cm_percentage, #amount').on('input', updateIncotermCalculation);

@@ -216,7 +216,7 @@
 <div class="container-fluid py-4">
     <h2 class="mb-4">Sale Detail Master Report</h2>
 
-    @if (empty($data->items()))
+    @if (empty($data))
         <div class="alert alert-info">No data available for the selected filters.</div>
     @else
         <div class="table-container">

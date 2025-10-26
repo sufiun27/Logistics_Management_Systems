@@ -9,7 +9,8 @@ use Illuminate\Auth\Events\Validated;
 class DestCountryController extends Controller
 {
     public function destCountry()
-    {   $destcountries = DestCountry::paginate(10); // Paginate the results to show 10 per page
+    {
+        $destcountries = DestCountry::orderBy('country_name')->paginate(10);
         return view('DestCountry.DestCountry',compact('destcountries'));
     }
     public function storeDestCountry(Request $request)
@@ -18,7 +19,6 @@ class DestCountryController extends Controller
             'country_name' => 'required',
             'country_code' => 'required',
             'port' => 'required',
-
         ]);
 
         // Check if combination already exists

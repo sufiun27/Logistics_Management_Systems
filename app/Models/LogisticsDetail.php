@@ -35,10 +35,10 @@ class LogisticsDetail extends Model
         'updated_by',
     ];
 
-    protected $appends = [
-        'shipping_ex_factory_date',
-        'efa_invoice_site',
-    ];
+    // protected $appends = [
+    //     'shipping_ex_factory_date',
+    //     'efa_invoice_site',
+    // ];
 
     /**
      * Relationship with Shipping
@@ -51,10 +51,10 @@ class LogisticsDetail extends Model
     /**
      * Accessor for shipping_ex_factory_date
      */
-    public function getShippingExFactoryDateAttribute(): ?string
-    {
-        return $this->shipping->ex_factory_date ?? null;
-    }
+    // public function getShippingExFactoryDateAttribute(): ?string
+    // {
+    //     return $this->shipping->ex_factory_date ?? null;
+    // }
     /**
      * Relationship with SaleDetail
      */
@@ -68,10 +68,10 @@ class LogisticsDetail extends Model
         return $this->belongsTo(ExportFormApparel::class , 'invoice_no', 'invoice_no');
     }
 
-    public function getEfaInvoiceSiteAttribute(): ?string
-    {
-        return $this->exportFormApparel?->invoice_site ?? null;
-    }
+    // public function getEfaInvoiceSiteAttribute(): ?string
+    // {
+    //     return $this->exportFormApparel?->invoice_site ?? null;
+    // }
 
     public function createdByUser()
     {
