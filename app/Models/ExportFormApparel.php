@@ -27,10 +27,24 @@ class ExportFormApparel extends Model
         'net_wet', 'gross_wet', 'create_by', 'update_by'
     ];
 
-    // protected $appends = [
-    //     'shipping_ex_factory_date',
-    //     'efa_invoice_site'
-    // ];
+    protected $appends = [
+        // 'shipping_ex_factory_date',
+        // 'efa_invoice_site'
+        'fob_value'
+    ];
+
+
+    public function getFOBvalueAttribute()
+    {
+        if (is_null($this->amount) || is_null($this->freight_value)) {
+            return null;
+        }
+        $amount = $this->amount ?? 0;
+        $freight = $this->freight_value ?? 0;
+
+        return $amount - $freight;
+    }
+
 
     /**
      * Relationship with Shipping
