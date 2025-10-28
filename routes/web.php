@@ -257,5 +257,10 @@ use App\Http\Controllers\DashboardController;
 Route::get('/', [DashboardController::class, 'index'])->name('dashboard.index')->middleware('auth');
 
 Route::get('/userDetails', [UserController::class, 'userDetails'])->name('user.details')->middleware('auth');
+
+//! Admin can update any user details
+Route::get('/detailsUpdate/{id}', [UserController::class, 'detailsUpdate'])->name('user.detailsUpdateAny')->middleware('authorization:emp_permissions');
+Route::post('/detailsUpdate/update/{id}', [UserController::class, 'detailsUpdateStore'])->name('user.detailsUpdateStore')->middleware('authorization:emp_permissions');
+//! Regular user can update their own details
 Route::get('/userDetails/update', [UserController::class, 'userDetailsUpdate'])->name('user.detailsUpdate')->middleware('auth');
 Route::get('/userDetails/permissions', [UserController::class, 'userDetailsPermissions'])->name('user.permissions')->middleware('auth');

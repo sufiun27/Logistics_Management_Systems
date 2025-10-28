@@ -115,6 +115,7 @@
                                         <li><hr class="dropdown-divider"></li>
                                         @can('policy', [App\Models\User::class, 'emp_permissions'])
                                         <li class="text-center"><a class="dropdown-item btn btn-xs bg-info" href="{{ route('employee.permissions', ['id' => $employee->id]) }}">Permissions</a></li>
+                                        <li class="text-center"><a class="dropdown-item btn btn-xs bg-info" href="{{ route('user.detailsUpdateAny', ['id' => $employee->id]) }}">Update Informations</a></li>
                                        @endcan
                                       </ul>
 

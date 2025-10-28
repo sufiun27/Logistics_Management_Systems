@@ -264,6 +264,81 @@ public function store(Request $request)
         return view('employee.details', compact('user'));
     }
 
+    public function detailsUpdate($id)
+    {
+        $user = User::find($id);
+        return view('employee.detailsUpdate', compact('user'));
+    }
+
+public function detailsUpdateStore(Request $request, $id)
+{
+    try {
+        // Find the user or fail
+        $user = User::findOrFail($id);
+
+        // Validate request
+        $request->validate([
+            'emp_id' => 'required|string|max:255|unique:users,emp_id,' . $id,
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|max:255|unique:users,email,' . $id,
+            'department' => 'required|string|max:255',
+            'designation' => 'required|string|max:255',
+            'site' => 'nullable|string|max:255',
+            'factory' => 'nullable|string|max:255',
+            'phone' => 'nullable|string|max:20',
+            'address' => 'nullable|string|max:255',
+            'remarks' => 'nullable|string|max:255',
+            'password' => 'nullable|string|min:6|confirmed', // optional password validation
+        ]);
+
+        // Update user info
+        $user->update($request->only([
+            'emp_id',
+            'name',
+            'email',
+            'designation',
+            'department',
+            'site',
+            'factory',
+            'phone',
+            'address',
+            'remarks',
+        ]));
+
+        // Update password if provided
+        if ($request->filled('password')) {
+            $user->update(['password' => Hash::make($request->password)]);
+        }
+
+        // Return JSON response
+        // return response()->json([
+        //     'message' => 'Profile updated successfully!',
+        //     'user' => $user,
+        // ]);
+
+       // OR, for web redirect:
+        return redirect()
+            ->route('user.detailsUpdateAny', $user->id)
+            ->with('success', 'Profile updated successfully!');
+
+    } catch (\Exception $e) {
+        // Handle errors
+        // return response()->json([
+        //     'message' => 'Failed to update profile.',
+        //     'error' => $e->getMessage(),
+        // ], 500);
+
+        return redirect()
+            ->route('user.detailsUpdateAny', $user->id)
+            ->with('error', 'Failed to update profile: ' . $e->getMessage());
+
+        // OR, for web redirect:
+        // return redirect()->back()->with('error', 'Failed to update profile: ' . $e->getMessage());
+    }
+}
+
+
+
     public function userDetailsUpdate(Request $request)
     {
         $user = auth()->user();

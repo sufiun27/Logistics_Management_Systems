@@ -16,10 +16,10 @@
     'hs_code'           => ['title' => 'HS Code',                    'type' => 'string'],
     'quantity'          => ['title' => 'Quantity',                   'type' => 'string'],
     'incoterm'          => ['title' => 'Incoterm',                   'type' => 'string'],
+    'fob_value'         => ['title' => 'FOB Value',                  'type' => 'string'],
     'cm_percentage'     => ['title' => 'CM %',                        'type' => 'string'],
     'cm_amount'         => ['title' => 'CM Amount',                   'type' => 'string'],
     'freight_value'     => ['title' => 'Freight Value',               'type' => 'string'],
-    'fob_value'         => ['title' => 'FOB Value',                  'type' => 'string'],
     'contract_no'       => ['title' => 'Contract No',                 'type' => 'string'],
     'contract_date'     => ['title' => 'Contract Date',               'type' => 'date'],
 ];

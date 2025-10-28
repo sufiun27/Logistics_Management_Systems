@@ -35,6 +35,30 @@ class SaleDetail extends Model
         'updated_by',
     ];
 
+     protected $casts = [
+        'shipped_fob_value' => 'float',
+        'shipped_cm_value'  => 'float',
+        'cbm_value'         => 'float',
+    ];
+
+    /* ------------------------------
+     |  Accessors for 2 decimal places
+     -------------------------------*/
+    public function getShippedFobValueAttribute($value)
+    {
+        return round((float)$value, 2);
+    }
+
+    public function getShippedCmValueAttribute($value)
+    {
+        return round((float)$value, 2);
+    }
+
+    public function getCbmValueAttribute($value)
+    {
+        return round((float)$value, 2);
+    }
+
     // protected $appends = [
     //     'shipping_ex_factory_date',
     //     'efa_invoice_site',

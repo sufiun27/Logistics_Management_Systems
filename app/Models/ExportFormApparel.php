@@ -36,8 +36,8 @@ class ExportFormApparel extends Model
 
     public function getFOBvalueAttribute()
     {
-        if (is_null($this->amount) || is_null($this->freight_value)) {
-            return null;
+        if (is_null($this->freight_value)) {
+            return $this->amount;
         }
         $amount = $this->amount ?? 0;
         $freight = $this->freight_value ?? 0;
