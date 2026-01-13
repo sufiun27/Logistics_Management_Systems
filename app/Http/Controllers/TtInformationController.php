@@ -16,14 +16,14 @@ class TtInformationController extends Controller
 
     {
         $request->validate([
-            'invoice_no' => 'nullable|string|max:255', // Allow nullable, add max length
+            'tt_no' => 'nullable|string|max:255', // Allow nullable, add max length
         ]);
 
         $invoice_no = $request->input('invoice_no');
 
         $data = TtInformation::query();
         if ($invoice_no) {
-            $data = $data->where('invoice_no', 'like', '%' . $invoice_no . '%'); // Case-insensitive search
+            $data = $data->where('tt_no', 'like', '%' . $invoice_no . '%'); // Case-insensitive search
         }
         $data = $data->where('tt_site', auth()->user()->site );
 

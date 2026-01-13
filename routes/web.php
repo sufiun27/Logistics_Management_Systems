@@ -109,7 +109,9 @@ Route::prefix('cmValue')->middleware('authorization:cm_percentage')->group(funct
 ////////TtInformation/////////////////////
 Route::prefix('ttInformation')->middleware('authorization:tt_manage')->group(function(){
     Route::get('ttDetails/{id}', [TtInformationController::class, 'ttDetails'])->name('ttInformation.ttDetails');
+
     Route::get('ttInformation', [TtInformationController::class, 'ttInformation'])->name('ttInformation.ttInformation');
+
     Route::get('addTtInformation', [TtInformationController::class,'addTtInformation'])->name('ttInformation.addTtInformation');
     Route::post('storeTtInformation', [TtInformationController::class, 'storeTtInformation'])->name('ttInformation.storeTtInformation');
     Route::get('editTtInformation/{id}', [TtInformationController::class, 'editTtInformation'])->name('ttInformation.editTtInformation');
@@ -236,7 +238,7 @@ Route::prefix('reports')->middleware('auth')->group(function(){
 
     Route::get('master/report', [ReportController::class, 'masterReport'])->name('reports.master');
 
-    Route::post('report', [ReportController::class, 'report'])->name('reports.report');
+    Route::get('report', [ReportController::class, 'report'])->name('reports.report');
 
     Route::get('export/master/report', [ReportController::class, 'masterReportExport'])->name('reports.masterReportExport');
 });

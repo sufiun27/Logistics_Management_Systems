@@ -18,13 +18,13 @@
                 <div class="row ">
                     <div class="col-6 ">
                         <hr>
-                        <h3>&nbsp;&nbsp; Billing Information Entry</h3>
+                        <h3>&nbsp;&nbsp; Billing Information Entry </h3>
                         <hr>
                         <div class="form-group row">
                             <label for="invoice_no" class="col-sm-3 text-end control-label col-form-label">Invoice No:</label>
                             <div class="col-sm-9">
                             <div id="displayDiv">
-                                <input type="text" name="invoice_no" class="form-control" id="invoice_no" placeholder="Invoice No" value="{{ old('invoice_no') }}" required />
+                                <input type="text" readonly name="invoice_no" class="form-control" id="invoice_no" placeholder="Invoice No" value="{{ old('invoice_no') }}" required />
                             </div>
                             </div>
                         </div>

@@ -9,11 +9,11 @@ use App\DataTables\CustomAuditDetailDataTable;
 
 class CustomAuditDetailController extends Controller
 {
-    
+
     public function indexAudit(CustomAuditDetailDataTable $dataTable)
     {
         return $dataTable->render('audit.indexAudit');
-    }    
+    }
     public function addAudit()
     {
         return view('audit.addAudit');
@@ -29,7 +29,7 @@ class CustomAuditDetailController extends Controller
         $cad->total_fabric_used = $request->total_fabric_used;
         $cad->adjusted_reg = $request->adjusted_reg;
         $cad->adjusted_reg_page = $request->adjusted_reg_page;
-        $cad->createad_by = auth()->user()->emp_id;
+        $cad->created_by = auth()->user()->emp_id;
         $cad->save();
         return redirect()->route('audit.addAudit')->with('success', 'Custom Audit Information added Successfully');
     }
@@ -45,7 +45,7 @@ class CustomAuditDetailController extends Controller
         $cad->total_fabric_used = $request->total_fabric_used;
         $cad->adjusted_reg = $request->adjusted_reg;
         $cad->adjusted_reg_page = $request->adjusted_reg_page;
-        $cad->createad_by = auth()->user()->emp_id;
+        $cad->updated_by = auth()->user()->emp_id;
         $cad->save();
         return redirect()->route('audit.editAudit',$id)->with('success', 'Custom Audit Information updated Successfully');
     }

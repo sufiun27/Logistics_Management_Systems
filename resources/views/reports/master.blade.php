@@ -10,7 +10,7 @@
     $exporters = Export::all();
 @endphp
 
-<form action="{{ route('reports.report') }}" method="POST" class="row g-3 mb-4">
+<form action="{{ route('reports.report') }}" method="GET" class="row g-3 mb-4">
     @csrf
 
     <div class="col-md-3">
@@ -168,7 +168,8 @@
         ['column' => 'created_at', 'title' => 'Created At'], ['column' => 'updated_at', 'title' => 'Updated At'],
     ];
     $billing = [
-        ['column' => 'id', 'title' => 'ID'], ['column' => 'sb_no', 'title' => 'SB No'],
+       // ['column' => 'id', 'title' => 'ID'],
+         ['column' => 'sb_no', 'title' => 'SB No'],
         ['column' => 'sb_date', 'title' => 'SB Date'], ['column' => 'doc_submit_date', 'title' => 'Document Submit Date'],
         ['column' => 'hk_courier_no', 'title' => 'HK Courier No'], ['column' => 'hk_courier_date', 'title' => 'HK Courier Date'],
         ['column' => 'buyer_courier_no', 'title' => 'Buyer Courier No'], ['column' => 'buyer_courier_date', 'title' => 'Buyer Courier Date'],
@@ -178,7 +179,8 @@
         ['column' => 'created_at', 'title' => 'Created At'], ['column' => 'updated_at', 'title' => 'Updated At'],
     ];
     $logistics = [
-        ['column' => 'id', 'title' => 'ID'], ['column' => 'receivable_amount', 'title' => 'Receivable Amount'],
+       // ['column' => 'id', 'title' => 'ID'],
+         ['column' => 'receivable_amount', 'title' => 'Receivable Amount'],
         ['column' => 'doc_process_fee', 'title' => 'Document Processing Fee'], ['column' => 'seal_lock_charge', 'title' => 'Seal Lock Charge'],
         ['column' => 'agency_commission', 'title' => 'Agency Commission'], ['column' => 'documentation_charge', 'title' => 'Documentation Charge'],
         ['column' => 'transportation_charge', 'title' => 'Transportation Charge'], ['column' => 'short_shipment_certificate_fee', 'title' => 'Short Shipment Certificate Fee'],
@@ -192,9 +194,23 @@
         ['column' => 'created_at', 'title' => 'Created At'], ['column' => 'updated_at', 'title' => 'Updated At'],
     ];
 
+    $audit = [
+        ['column' => 'id', 'title' => 'ID'],
+        ['column' => 'invoice_no', 'title' => 'Invoice No'],
+        ['column' => 'import_reg_no', 'title' => 'Import Reg No'],
+        ['column' => 'import_bond', 'title' => 'Import Bond'],
+        ['column' => 'total_fabric_used', 'title' => 'Total Fabric Used'],
+        ['column' => 'adjusted_reg', 'title' => 'Adjusted Reg'],
+        ['column' => 'adjusted_reg_page', 'title' => 'Adjusted Reg Page'],
+        ['column' => 'created_by', 'title' => 'Created By'],
+        ['column' => 'updated_by', 'title' => 'Updated By'],
+        ['column' => 'created_at', 'title' => 'Created At'],
+        ['column' => 'updated_at', 'title' => 'Updated At'],
+    ];
+
     $excelHeaders = [
         'export' => $export, 'sales' => $sales, 'shipping' => $shipping,
-        'billing' => $billing, 'logistics' => $logistics
+        'billing' => $billing, 'logistics' => $logistics, 'audit' => $audit
     ];
 
     // --- NEW: Color mapping for header groups ---
@@ -204,6 +220,7 @@
         'shipping' => '#006064',  // Dark Cyan/Teal
         'billing' => '#4a148c',   // Deep Purple
         'logistics' => '#37474f', // Blue Grey
+        'audit' => '#b71c1c',     // Dark Red
     ];
 
     // --- Data Type Definitions & Formatting Functions ---

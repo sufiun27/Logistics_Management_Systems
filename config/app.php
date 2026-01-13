@@ -8,7 +8,7 @@ use Illuminate\Support\ServiceProvider;
 
 return [
     ///jadja data table
-    
+
 
     /*
     |--------------------------------------------------------------------------
@@ -75,7 +75,7 @@ return [
     |
     */
 
-    'timezone' => 'UTC',
+    'timezone' => 'Asia/Dhaka',
 
     /*
     |--------------------------------------------------------------------------
@@ -175,7 +175,7 @@ return [
         App\Providers\RouteServiceProvider::class,
 
         Yajra\DataTables\DataTablesServiceProvider::class,
-        
+
         Yajra\DataTables\ButtonsServiceProvider::class,
 
         Maatwebsite\Excel\ExcelServiceProvider::class,

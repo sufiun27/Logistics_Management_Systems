@@ -16,6 +16,7 @@ use Yajra\DataTables\Facades\DataTables;
 use App\DataTables\ExportFormApparelDataTable;
 use App\Models\CmValue;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Log;
 
 class ExportFormApparelController extends Controller
 {
@@ -145,7 +146,7 @@ public function fetchInvoiceData(Request $request)
             'invoice_site' => 'required|string',
             'tt_date' => 'required|date',
             'unit' => 'required|string|in:PCS,SET',
-            'quantity' => 'required|integer|min:1',
+            'quantity' => 'required|integer|min:0',
             'currency' => 'required|string|in:USDollers,EUros,Pound',
             'amount' => 'required|numeric|min:0',
             'cm_percentage' => 'required|numeric|min:0',
@@ -229,6 +230,7 @@ public function fetchInvoiceData(Request $request)
                 return redirect()->route('exportFormApparel.exportFormApparel')->with('success', 'Export form for apparel has been successfully created.');
             });
         } catch (\Exception $e) {
+            Log::class::error('Error storing Export Form Apparel: ' . $e->getMessage());
             return redirect()->back()->with('error', 'An error occurred while processing the form. Please try again.');
         }
     }
@@ -323,7 +325,7 @@ public function exportFormApparelUpdate(Request $request, $id)
         'invoice_site' => 'nullable|string',
 
         'unit' => 'required|string',
-        'quantity' => 'required|integer',
+        'quantity' => 'required|integer|min:0',
         'currency' => 'required|string',
         'amount' => 'required|numeric',
         'cm_percentage' => 'required|numeric',

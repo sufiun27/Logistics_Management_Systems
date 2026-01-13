@@ -21,8 +21,11 @@ class ExportFormApparel extends Model
         'consignee_country', 'consignee_address', 'dst_country_code',
         'dst_country_name', 'dst_country_port', 'transport_name', 'transport_address',
         'transport_port', 'notify_name', 'notify_address', 'section', 'tt_no',
-        'tt_date', 'invoice_site', 'unit', 'quantity', 'currency', 'amount',
-        'cm_percentage', 'incoterm', 'cm_amount', 'freight_value', 'exp_no',
+        'tt_date', 'invoice_site', 'unit', 'quantity', 'currency',
+        'amount',
+        'cm_percentage', 'incoterm', 'cm_amount',
+        'freight_value',
+        'exp_no',
         'exp_date', 'exp_permit_no', 'bl_no', 'bl_date', 'ex_factory_date',
         'net_wet', 'gross_wet', 'create_by', 'update_by'
     ];
@@ -30,20 +33,52 @@ class ExportFormApparel extends Model
     protected $appends = [
         // 'shipping_ex_factory_date',
         // 'efa_invoice_site'
-        'fob_value'
+        'fob_value',
+
+    ];
+
+        protected $casts = [
+        'freight_value' => 'float',
+    'cm_percentage'=> 'float',
+    'cm_amount'=> 'float',
+    'amount'=> 'float',
     ];
 
 
     public function getFOBvalueAttribute()
     {
         if (is_null($this->freight_value)) {
-            return $this->amount;
+
+
+            return number_format($this->amount, 2, '.', '');
         }
         $amount = $this->amount ?? 0;
         $freight = $this->freight_value ?? 0;
 
-        return $amount - $freight;
+        return number_format($amount - $freight, 2, '.', '');
     }
+
+
+
+    public function getFreightValueAttribute()
+{
+    return number_format($this->attributes['freight_value'] ?? 0, 2, '.', '');
+}
+
+public function getCmPercentageAttribute()
+{
+    return number_format($this->attributes['cm_percentage'] ?? 0, 2, '.', '');
+}
+
+public function getCmAmountAttribute()
+{
+    return number_format($this->attributes['cm_amount'] ?? 0, 2, '.', '');
+}
+
+public function getAmountAttribute(){
+    return number_format($this->attributes['amount'] ?? 0, 2, '.', '');
+}
+
 
 
     /**
@@ -92,6 +127,12 @@ class ExportFormApparel extends Model
     public function logisticsDetail()
     {
         return $this->belongsTo(LogisticsDetail::class, 'invoice_no', 'invoice_no');
+    }
+
+    //audit
+    public function auditDetail()
+    {
+        return $this->belongsTo(CustomAuditDetail::class, 'invoice_no', 'invoice_no');
     }
 
 

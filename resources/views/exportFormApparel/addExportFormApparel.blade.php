@@ -53,7 +53,7 @@
                         <div class="form-group row">
                             <label for="quantity" class="col-sm-3 text-end control-label col-form-label">Quantity:</label>
                             <div class="col-sm-9">
-                                <input required name="quantity" id="quantity" type="number" class="form-control" value="{{ old('quantity') }}" placeholder="Quantity"/>
+                                <input required name="quantity" id="quantity" type="number" step="1" min="0" class="form-control" value="{{ old('quantity') }}" placeholder="Quantity"/>
                             </div>
                         </div>
                         <div class="form-group row">

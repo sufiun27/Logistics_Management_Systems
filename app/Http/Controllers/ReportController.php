@@ -44,7 +44,8 @@ private function buildReportQuery(Request $request)
         'saleDetail',
         'shipping',
         'billingDetail',
-        'logisticsDetail'
+        'logisticsDetail',
+        'auditDetail'
     ])->where('invoice_site', auth()->user()->site);
 
     if (!empty($validated['invoice_no'])) {
@@ -80,12 +81,14 @@ public function report(Request $request)
                 'sale_detail',
                 'shipping',
                 'billing_detail',
-                'logistics_detail'
+                'logistics_detail',
+                'audit_detail'
             ]),
             'sales' => $item->saleDetail,
             'shipping' => $item->shipping,
             'billing' => $item->billingDetail,
             'logistics' => $item->logisticsDetail,
+            'audit' => $item->auditDetail,
         ];
     });
 
@@ -184,8 +187,8 @@ public function report(Request $request)
             ['column' => 'ep_date', 'title' => 'EP Date'],
             ['column' => 'ex_pNo', 'title' => 'Export Permit No'], // Assuming ex_pNo means Export Permit No
 
-          ['column' => 'exp_no', 'title' => 'Export No'],
-          ['column' => 'exp_date', 'title' => 'Export Date'],
+          ['column' => 'exp_no', 'title' => 'Exp No'],
+          ['column' => 'exp_date', 'title' => 'Exp Date'],
           ['column' => 'transport_port', 'title' => 'Transport Port'],
 
             ['column' => 'sb_no', 'title' => 'SB No'],
@@ -204,7 +207,7 @@ public function report(Request $request)
         ];
 
         $billing = [
-            ['column' => 'id', 'title' => 'ID'],
+          //  ['column' => 'id', 'title' => 'ID'],
             // ['column' => 'invoice_no', 'title' => 'Invoice No'],
 
             ['column' => 'sb_no', 'title' => 'SB No'],
@@ -229,7 +232,7 @@ public function report(Request $request)
         ];
 
         $logistics = [
-            ['column' => 'id', 'title' => 'ID'],
+         //  ['column' => 'id', 'title' => 'ID'],
             // ['column' => 'invoice_no', 'title' => 'Invoice No'],
 
             ['column' => 'receivable_amount', 'title' => 'Receivable Amount'],
@@ -261,12 +264,27 @@ public function report(Request $request)
             ['column' => 'updated_at', 'title' => 'Updated At'],
         ];
 
+        $audit = [
+        ['column' => 'id', 'title' => 'ID'],
+        ['column' => 'invoice_no', 'title' => 'Invoice No'],
+        ['column' => 'import_reg_no', 'title' => 'Import Reg No'],
+        ['column' => 'import_bond', 'title' => 'Import Bond'],
+        ['column' => 'total_fabric_used', 'title' => 'Total Fabric Used'],
+        ['column' => 'adjusted_reg', 'title' => 'Adjusted Reg'],
+        ['column' => 'adjusted_reg_page', 'title' => 'Adjusted Reg Page'],
+        ['column' => 'created_by', 'title' => 'Created By'],
+        ['column' => 'updated_by', 'title' => 'Updated By'],
+        ['column' => 'created_at', 'title' => 'Created At'],
+        ['column' => 'updated_at', 'title' => 'Updated At'],
+    ];
+
         $table = [
             'export' => $export,
             'sales' => $sales,
             'shipping' => $shipping,
             'billing' => $billing,
-            'logistics' => $logistics
+            'logistics' => $logistics,
+            'audit' => $audit
         ];
             $validated = $request->validate([
                 // 'site' => 'required|array', //multiple
@@ -278,7 +296,7 @@ public function report(Request $request)
 
             // dd($validated);
 
-            $query = ExportFormApparel::with('saleDetail', 'shipping', 'billingDetail', 'logisticsDetail')->where('invoice_site', auth()->user()->site);
+            $query = ExportFormApparel::with('saleDetail', 'shipping', 'billingDetail', 'logisticsDetail', 'auditDetail')->where('invoice_site', auth()->user()->site);
 
             if (isset($request->invoice_no) && $request->invoice_no !== '') {
                 $query->where('invoice_no', $request->invoice_no);
@@ -302,11 +320,12 @@ public function report(Request $request)
 
             $transformed = $data->map(function ($item) {
                 return [
-                    'export' => collect($item)->except(['sale_detail', 'shipping', 'billing_detail', 'logistics_detail']),
+                    'export' => collect($item)->except(['sale_detail', 'shipping', 'billing_detail', 'logistics_detail', 'audit_detail']),
                     'sales' => $item->saleDetail,
                     'shipping' => $item->shipping,
                     'billing' => $item->billingDetail,
                     'logistics' => $item->logisticsDetail,
+                    'audit' => $item->auditDetail,
                 ];
             });
 

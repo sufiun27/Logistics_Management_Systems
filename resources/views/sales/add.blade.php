@@ -26,7 +26,8 @@
                                 'type' => 'text',
                                 'placeholder' => 'Invoice No',
                                 'required' => true,
-                                'wrapper' => 'displayDiv'
+                                'wrapper' => 'displayDiv',
+                                'readonly' => true,
                             ],
                             [
                                 'label' => 'Buyer Contract',
@@ -216,9 +217,11 @@
                                             name="{{ $field['name'] }}"
                                             class="form-control"
                                             id="{{ $field['name'] }}"
+
                                             placeholder="{{ $field['placeholder'] }}"
                                             value="{{ isset($field['value']) ? $field['value'] : old($field['name']) }}"
                                             @if (!empty($field['required'])) required @endif
+                                            @if (!empty($field['readonly'])) readonly @endif
                                             @if ($field['type'] === 'number') step="0.01" @endif
                                         />
                                     @endif

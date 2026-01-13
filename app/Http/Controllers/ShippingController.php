@@ -81,7 +81,7 @@ class ShippingController extends Controller
         $ssi->created_by = auth()->user()->emp_id;
         $ssi->save();
 
-        return redirect()->route('shipping.shipping')->with('success', 'Shipment Information Added Successfully');
+        return redirect()->route('shipping.addShipping')->with('success', 'Shipment Information Added Successfully');
     }
 
     public function ShippingDetails($id)
@@ -154,15 +154,16 @@ class ShippingController extends Controller
 
     public function updateShippingStatusInfo(Request $request, $id)
     {
+        //return $request->all();
         $request->validate([
-            'factory'         => 'required|string',
-            'ep_no'           => 'required|string',
-            'ep_date'         => 'required|date',
-            'exp_no'          => 'required|string',
-            'exp_date'        => 'required|date',
-            'ex_factory_date' => 'required|date',
-            'sb_no'           => 'required|string',
-            'sb_date'         => 'required|date',
+            'factory'         => 'string|nullable',
+            'ep_no'           => 'string|nullable',
+            'ep_date'         => 'date|nullable',
+            'exp_no'          => 'string|nullable',
+            'exp_date'        => 'date|nullable',
+            'ex_factory_date' => 'date|nullable',
+            'sb_no'           => 'string|nullable',
+            'sb_date'         => 'date|nullable',
         ]);
 
         $shipping = Shipping::find($id);
@@ -175,10 +176,14 @@ class ShippingController extends Controller
             return redirect()->back()->with('error', 'You only have access to your own site.');
         }
 
-        $shipping->fill($request->only([
-            'factory','ep_no','ep_date','exp_no','exp_date',
-            'ex_factory_date','sb_no','sb_date'
-        ]));
+        $shipping->factory = $request->factory ?? null;
+        $shipping->ep_no = $request->ep_no ?? null;
+        $shipping->ep_date = $request->ep_date ?? null;
+        $shipping->exp_no = $request->exp_no ?? null;
+        $shipping->exp_date = $request->exp_date ?? null;
+        $shipping->ex_factory_date = $request->ex_factory_date ?? null;
+        $shipping->sb_no = $request->sb_no ?? null;
+        $shipping->sb_date = $request->sb_date ?? null;
         $shipping->updated_by = auth()->user()->emp_id;
         $shipping->save();
 
@@ -188,12 +193,23 @@ class ShippingController extends Controller
 
     public function updateOtherInformation(Request $request, $id)
     {
+        $request->validate([
+            'transport_port' => 'string|nullable',
+            'cnf_agent'      => 'string|nullable',
+            'vessel_no'      => 'string|nullable',
+            'cargorpt_date'  => 'date|nullable',
+        ]);
+
+
         $shipping = Shipping::find($id);
         if (!$shipping) {
             return redirect()->back()->with('error', 'Shipping record not found.');
         }
 
-        $shipping->fill($request->only(['transport_port','cnf_agent','vessel_no','cargorpt_date']));
+        $shipping->transport_port = $request->transport_port ?? null;
+        $shipping->cnf_agent = $request->cnf_agent ?? null;
+        $shipping->vessel_no = $request->vessel_no ?? null;
+        $shipping->cargorpt_date = $request->cargorpt_date ?? null;
         $shipping->updated_by = auth()->user()->emp_id;
         $shipping->save();
 
@@ -203,12 +219,23 @@ class ShippingController extends Controller
 
     public function updateRemarks(Request $request, $id)
     {
+        $request->validate([
+            'bring_back'   => 'string|nullable',
+            'shipped_out'  => 'string|nullable',
+            'shipped_cancel'=> 'string|nullable',
+            'shipped_back' => 'string|nullable',
+            'unshipped'    => 'string|nullable',
+        ]);
         $shipping = Shipping::find($id);
         if (!$shipping) {
             return redirect()->back()->with('error', 'Shipping record not found.');
         }
 
-        $shipping->fill($request->only(['bring_back','shipped_out','shipped_cancel','shipped_back','unshipped']));
+        $shipping->bring_back = $request->bring_back ?? null;
+        $shipping->shipped_out = $request->shipped_out ?? null;
+        $shipping->shipped_cancel = $request->shipped_cancel ?? null;
+        $shipping->shipped_back = $request->shipped_back ?? null ;
+        $shipping->unshipped = $request->unshipped ?? null;
         $shipping->updated_by = auth()->user()->emp_id;
         $shipping->save();
 

@@ -65,6 +65,15 @@
                     <dt class="col-sm-4">TT No:</dt>
                     <dd class="col-sm-8">{{ $efa->tt_no ?? 'N/A' }}</dd>
 
+                    @php
+                    use App\Models\Ttinformation;
+                        $ttinfo = Ttinformation::where('tt_no', $efa->tt_no)->first();
+                    @endphp
+
+
+                    <dt class="col-sm-4">TT Balance:</dt>
+                    <dd class="col-sm-8">{{ $ttinfo ? $ttinfo->balance : 'N/A' }}</dd>
+
                     <dt class="col-sm-4">TT Date:</dt>
                     <dd class="col-sm-8">{{ (!empty($efa->tt_date) && $efa->tt_date != '0000-00-00' && $efa->tt_date != '1970-01-01') ? \Illuminate\Support\Carbon::parse($efa->tt_date)->format('Y-m-d') : 'N/A' }}</dd>
 
@@ -89,7 +98,7 @@
                     <dd class="col-sm-8">{{ $efa->currency ?? 'N/A' }}</dd>
 
                     <dt class="col-sm-4">Amount:</dt>
-                    <dd class="col-sm-8">{{ isset($efa->amount) ? number_format($efa->amount, 4) : 'N/A' }}</dd>
+                    <dd class="col-sm-8">{{ isset($efa->amount) ? number_format($efa->amount, 2) : 'N/A' }}</dd>
 
                     <dt class="col-sm-4">CM Percentage:</dt>
                     <dd class="col-sm-8">{{ isset($efa->cm_percentage) ? number_format($efa->cm_percentage, 2) : 'N/A' }}%</dd>
@@ -98,13 +107,13 @@
                     <dd class="col-sm-8">{{ $efa->incoterm ?? 'N/A' }}</dd>
 
                     <dt class="col-sm-4">CM Amount:</dt>
-                    <dd class="col-sm-8">{{ isset($efa->cm_amount) ? number_format($efa->cm_amount, 4) : 'N/A' }}</dd>
+                    <dd class="col-sm-8">{{ isset($efa->cm_amount) ? number_format($efa->cm_amount, 2) : 'N/A' }}</dd>
 
                     <dt class="col-sm-4">Freight Value:</dt>
-                    <dd class="col-sm-8">{{ isset($efa->freight_value) ? number_format($efa->freight_value, 4) : 'N/A' }}</dd>
+                    <dd class="col-sm-8">{{ isset($efa->freight_value) ? number_format($efa->freight_value, 2) : 'N/A' }}</dd>
 
                     <dt class="col-sm-4">FOB Value:</dt>
-                    <dd class="col-sm-8">{{ isset($efa->amount) && isset($efa->freight_value) ? number_format($efa->amount - $efa->freight_value, 4) : 'N/A' }}</dd>
+                    <dd class="col-sm-8">{{ isset($efa->amount) && isset($efa->freight_value) ? number_format($efa->amount - $efa->freight_value, 2) : 'N/A' }}</dd>
                 </dl>
             </div>
 
@@ -150,10 +159,10 @@
                     <dd class="col-sm-8">{{ $efa->ex_factory_date ? \Illuminate\Support\Carbon::parse($efa->ex_factory_date)->format('Y-m-d') : 'N/A' }}</dd>
 
                     <dt class="col-sm-4">Net Wet:</dt>
-                    <dd class="col-sm-8">{{ $efa->net_wet ? number_format($efa->net_wet, 4) : 'N/A' }}</dd>
+                    <dd class="col-sm-8">{{ $efa->net_wet ? number_format($efa->net_wet, 2) : 'N/A' }}</dd>
 
                     <dt class="col-sm-4">Gross Wet:</dt>
-                    <dd class="col-sm-8">{{ $efa->gross_wet ? number_format($efa->gross_wet, 4) : 'N/A' }}</dd>
+                    <dd class="col-sm-8">{{ $efa->gross_wet ? number_format($efa->gross_wet, 2) : 'N/A' }}</dd>
                 </dl>
 
                 <h4>Audit Information</h4>

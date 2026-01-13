@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\ExportFormApparel;
+use App\Models\Shipping;
+use App\Models\SaleDetail;
+use Illuminate\Http\Request;
 use App\Models\BillingDetail;
 use App\Models\LogisticsDetail;
-use App\Models\SaleDetail;
-use App\Models\Shipping;
-use Illuminate\Http\Request;
+use App\Models\CustomAuditDetail;
+use App\Models\ExportFormApparel;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\ReportIndividualExport;
 use Illuminate\Database\Eloquent\Builder;
@@ -108,8 +109,8 @@ class ReportIndividualController extends Controller
                 ['column' => 'ep_no', 'title' => 'EP No'],
                 ['column' => 'ep_date', 'title' => 'EP Date'],
                 ['column' => 'ex_pNo', 'title' => 'Export Permit No'],
-                ['column' => 'exp_no', 'title' => 'Export No'],
-                ['column' => 'exp_date', 'title' => 'Export Date'],
+                ['column' => 'exp_no', 'title' => 'Exp No'],
+                ['column' => 'exp_date', 'title' => 'Exp Date'],
                 ['column' => 'transport_port', 'title' => 'Transport Port'],
                 ['column' => 'sb_no', 'title' => 'SB No'],
                 ['column' => 'sb_date', 'title' => 'SB Date'],
@@ -172,6 +173,23 @@ class ReportIndividualController extends Controller
                 ['column' => 'status', 'title' => 'Status'],
                 ['column' => 'forwarder_name', 'title' => 'Forwarder Name'],
                 ['column' => 'total_charges', 'title' => 'Total Charges'],
+                ['column' => 'created_by', 'title' => 'Created By'],
+                ['column' => 'updated_by', 'title' => 'Updated By'],
+                ['column' => 'created_at', 'title' => 'Created At'],
+                ['column' => 'updated_at', 'title' => 'Updated At'],
+            ],
+        ],
+        'audit' => [
+            'model' => CustomAuditDetail::class,
+            'relations' => [],
+            'columns' => [
+                ['column' => 'invoice_no', 'title' => 'Invoice No'],
+                // ['column' => 'id', 'title' => 'ID'],
+                ['column' => 'import_reg_no', 'title' => 'Import Reg No'],
+                ['column' => 'import_bond', 'title' => 'Import Bond'],
+                ['column' => 'total_fabric_used', 'title' => 'Total Fabric Used'],
+                ['column' => 'adjusted_reg', 'title' => 'Adjusted Reg'],
+                ['column' => 'adjusted_reg_page', 'title' => 'Adjusted Reg Page'],
                 ['column' => 'created_by', 'title' => 'Created By'],
                 ['column' => 'updated_by', 'title' => 'Updated By'],
                 ['column' => 'created_at', 'title' => 'Created At'],
@@ -258,7 +276,7 @@ class ReportIndividualController extends Controller
     public function report(Request $request)
     {
         $validated = $request->validate([
-            'module' => 'required|string|in:export,sales,shipping,billing,logistics',
+            'module' => 'required|string|in:export,sales,shipping,billing,logistics,audit',
             'invoice_no' => 'nullable|string|max:255',
             'start_date' => 'nullable|date',
             'end_date' => 'nullable|date|after_or_equal:start_date',
@@ -278,7 +296,7 @@ class ReportIndividualController extends Controller
     {
         // NOTE: Removed the 'site' validation rule as it was unused.
         $validated = $request->validate([
-            'module' => 'required|string|in:export,sales,shipping,billing,logistics',
+            'module' => 'required|string|in:export,sales,shipping,billing,logistics,audit',
             'invoice_no' => 'nullable|string|max:255',
             'start_date' => 'nullable|date',
             'end_date' => 'nullable|date|after_or_equal:start_date',

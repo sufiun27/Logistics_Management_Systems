@@ -11,7 +11,7 @@
             <div class="card">
                 <div class="card-body">
                     <h4 class="card-title">CM Value</h4>
-                    <div class="mb-3">
+                    {{-- <div class="mb-3">
                         <form action="{{ route('cmValue.store') }}" method="POST" class="row g-2">
                             @csrf
                             <div class="col-md-4">
@@ -34,7 +34,7 @@
                                 <button type="submit" class="btn btn-primary">Add</button>
                             </div>
                         </form>
-                    </div>
+                    </div> --}}
                     <div class="table-responsive">
                         <table class="table table-striped table-bordered">
                             <thead>
@@ -46,13 +46,14 @@
                                 </tr>
                             </thead>
                             <tbody>
+
                                 @foreach($cmValues as $cmValue)
                                     <tr>
                                         <form action="{{ route('cmValue.update', $cmValue->id) }}" method="POST">
                                             @csrf
                                             <td>{{ $cmValue->site }}</td>
                                             <td>
-                                                <input type="number" name="cm_value" step="0.01" min="0" class="form-control" 
+                                                <input type="number" name="cm_value" step="0.01" min="0" class="form-control"
                                                        value="{{ $cmValue->cm_value }}" required>
                                             </td>
                                             <td>%</td>

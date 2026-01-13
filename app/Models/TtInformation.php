@@ -15,6 +15,7 @@ class TtInformation extends Model
     protected $fillable = [
         'tt_no',
         'tt_amount',
+        'tt_used_amount',
         'tt_currency',
         'bank_name',
         'tt_site',
@@ -28,6 +29,15 @@ class TtInformation extends Model
     protected $casts = [
         'tt_date' => 'datetime',
     ];
+    protected $appends = [
+        'balance',
+    ];
+
+
+    public function getBalanceAttribute()
+    {
+        return number_format($this->tt_amount - $this->tt_used_amount ?? 0, 2, '.', '');
+    }
 
     public function createdByUser()
     {

@@ -11,7 +11,9 @@
     'tt_no'          => ['title' => 'TT No',        'type' => 'string'],
     'tt_amount'      => ['title' => 'Amount',       'type' => 'string'], // or 'float' if numeric
     'tt_currency'    => ['title' => 'Currency',     'type' => 'string'],
+
     'tt_used_amount' => ['title' => 'Used Amount',  'type' => 'string'], // or 'float' if numeric
+    'balance'        => ['title' => 'Balance',      'type' => 'string'], // or 'float' if numeric
     'bank_name'      => ['title' => 'Bank',         'type' => 'string'],
     'tt_site'        => ['title' => 'Site',         'type' => 'string'],
     'tt_status'      => ['title' => 'Status',       'type' => 'string'],

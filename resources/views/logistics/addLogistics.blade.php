@@ -20,7 +20,7 @@
                 // Define form sections and their fields
                 $sections = [
                     'Custom Related Cost Entry' => [
-                        ['name' => 'invoice_no', 'label' => 'Invoice No', 'placeholder' => 'Invoice No', 'required' => true, 'type' => 'text', 'wrapper' => 'displayDiv'],
+                        ['name' => 'invoice_no', 'label' => 'Invoice No', 'placeholder' => 'Invoice No', 'required' => true, 'type' => 'text', 'wrapper' => 'displayDiv', 'readonly' => true,],
                         ['name' => 'receivable_amount', 'label' => 'Receivable Amount', 'placeholder' => 'Receivable Amount', 'type' => 'number'],
                         ['name' => 'doc_process_fee', 'label' => 'Doc Process Fee', 'placeholder' => 'Doc Process Fee', 'type' => 'number'],
                     ],
@@ -51,65 +51,54 @@
             @endphp
 
             <div class="row">
-                @foreach ($sections as $sectionTitle => $fields)
-                    <div class="col-6">
-                        <hr>
-                        <h3>&nbsp;&nbsp; {{ $sectionTitle }}</h3>
-                        <hr>
-                        @foreach ($fields as $field)
-                            <div class="form-group row">
-                                <label for="{{ $field['name'] }}" class="col-sm-3 text-end control-label col-form-label">{{ $field['label'] }}:</label>
-                                <div class="col-sm-9">
-                                    @php
-                                        $required = isset($field['required']) && $field['required'] ? 'required' : '';
-                                        $readonly = isset($field['readonly']) && $field['readonly'] ? 'readonly' : '';
-                                    @endphp
+            @foreach ($sections as $sectionTitle => $fields)
+                <div class="col-6">
+                    <hr>
+                    <h3>&nbsp;&nbsp; {{ $sectionTitle }}</h3>
+                    <hr>
+                    @foreach ($fields as $field)
+                        <div class="form-group row">
+                            <label for="{{ $field['name'] }}" class="col-sm-3 text-end col-form-label">{{ $field['label'] }}:</label>
+                            <div class="col-sm-9">
+                                @php
+                                    $required = isset($field['required']) && $field['required'] ? 'required' : '';
+                                    $readonly = isset($field['readonly']) && $field['readonly'] ? 'readonly' : '';
+                                @endphp
 
-                                    @if (isset($field['wrapper']))
-                                        <div id="{{ $field['wrapper'] }}">
-                                            <input
-                                                type="{{ $field['type'] }}"
-                                                name="{{ $field['name'] }}"
-                                                class="form-control"
-                                                id="{{ $field['name'] }}"
-                                                placeholder="{{ $field['placeholder'] }}"
-                                                value="{{ old($field['name']) }}"
-                                                {{ $required }}
-                                                {{ $readonly }}
-                                                @if ($field['type'] === 'number')
-                                                    step="0.01"
-                                                @endif
-                                            />
-                                        </div>
-                                    @else
-                                        <input
-                                            type="{{ $field['type'] }}"
-                                            name="{{ $field['name'] }}"
-                                            class="form-control"
-                                            id="{{ $field['name'] }}"
-                                            placeholder="{{ $field['placeholder'] }}"
-                                            value="{{ old($field['name']) }}"
-                                            {{ $required }}
-                                            {{ $readonly }}
-                                            @if ($field['type'] === 'number')
-                                                step="0.01"
-                                            @endif
-                                        />
-                                    @endif
-                                </div>
+                                @if (isset($field['wrapper']))
+                                    <div id="{{ $field['wrapper'] }}">
+                                @endif
+
+                                <input
+                                    type="{{ $field['type'] }}"
+                                    name="{{ $field['name'] }}"
+                                    class="form-control"
+                                    id="{{ $field['name'] }}"
+                                    placeholder="{{ $field['placeholder'] }}"
+                                    value="{{ old($field['name']) }}"
+                                    {{ $required }}
+                                    {{ $readonly }}
+                                    @if ($field['type'] === 'number') step="0.01" @endif
+                                    @if ($field['name'] === 'invoice_no' && !isset($field['wrapper'])) readonly @endif
+                                />
+
+                                @if (isset($field['wrapper']))
+                                    </div>
+                                @endif
                             </div>
-                        @endforeach
-                    </div>
-                @endforeach
-            </div>
-
-            <div class="border-top">
-                <div class="card-body">
-                    <input type="submit" value="Save" class="btn btn-primary">
+                        </div>
+                    @endforeach
                 </div>
+            @endforeach
+        </div>
+
+        <div class="border-top">
+            <div class="card-body">
+                <input type="submit" value="Save" class="btn btn-primary">
             </div>
-        </form>
-    </div>
+        </div>
+    </form>
+</div>
 
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
     <script>

@@ -80,15 +80,36 @@ class LogisticsDetailController extends Controller
         }
 
         $ld = new LogisticsDetail();
-        $ld->fill($request->only([
-            'invoice_no','receivable_amount','doc_process_fee','seal_lock_charge',
-            'agency_commission','documentation_charge','transportation_charge',
-            'short_shipment_certificate_fee','factory_loading_fee','uploading_fee_forwarder_wh',
-            'truck_demurrage_fee_delay_at_depot','cfs_depot_mixed_cargo_loading_fee',
-            'customs_misc_remark_reasons_charge','customs_remark_charge_misc_reasons',
-            'cargo_ho_date','deadline_bill_submission','bill_received_date','status',
-            'forwarder_name','total_charges'
-        ]));
+
+        // $ld->fill($request->only([
+        //     'invoice_no','receivable_amount','doc_process_fee','seal_lock_charge',
+        //     'agency_commission','documentation_charge','transportation_charge',
+        //     'short_shipment_certificate_fee','factory_loading_fee','uploading_fee_forwarder_wh',
+        //     'truck_demurrage_fee_delay_at_depot','cfs_depot_mixed_cargo_loading_fee',
+        //     'customs_misc_remark_reasons_charge','customs_remark_charge_misc_reasons',
+        //     'cargo_ho_date','deadline_bill_submission','bill_received_date','status',
+        //     'forwarder_name','total_charges'
+        // ]));
+        $ld->invoice_no = $export->invoice_no;
+        $ld->receivable_amount = $request->receivable_amount;
+        $ld->doc_process_fee = $request->doc_process_fee;
+        $ld->seal_lock_charge = $request->seal_lock_charge;
+        $ld->agency_commission = $request->agency_commission;
+        $ld->documentation_charge = $request->documentation_charge;
+        $ld->transportation_charge = $request->transportation_charge;
+        $ld->short_shipment_certificate_fee = $request->short_shipment_certificate_fee;
+        $ld->factory_loading_fee = $request->factory_loading_fee;
+        $ld->uploading_fee_forwarder_wh = $request->uploading_fee_forwarder_wh;
+        $ld->truck_demurrage_fee_delay_at_depot = $request->truck_demurrage_fee_delay_at_depot;
+        $ld->cfs_depot_mixed_cargo_loading_fee = $request->cfs_depot_mixed_cargo_loading_fee;
+        $ld->customs_misc_remark_reasons_charge = $request->customs_misc_remark_reasons_charge;
+        $ld->customs_remark_charge_misc_reasons = $request->customs_remark_charge_misc_reasons;
+        $ld->cargo_ho_date = $request->cargo_ho_date;
+        $ld->deadline_bill_submission = $request->deadline_bill_submission;
+        $ld->bill_received_date = $request->bill_received_date;
+        $ld->status = $request->status;
+        $ld->forwarder_name = $request->forwarder_name;
+        $ld->total_charges = $request->total_charges;
         $ld->created_by = auth()->user()->emp_id;
         $ld->save();
 

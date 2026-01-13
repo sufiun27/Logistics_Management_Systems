@@ -16,9 +16,9 @@ return new class extends Migration
             $table->id();
             $table->string('tt_no')->unique();//! this is use as foreign key in export_form_apparels table
 
-            $table->decimal('tt_amount', 16, 4)->default(0.00);//cm value
+            $table->decimal('tt_amount', 20, 4)->default(0.00);//cm value
 
-            $table->decimal('tt_used_amount', 10, 4)->default(0);//cm value
+            $table->decimal('tt_used_amount', 20, 4)->default(0);//cm value
 
             $table->string('tt_currency')->nullable();
             $table->string('bank_name')->nullable();

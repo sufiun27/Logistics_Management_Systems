@@ -16,6 +16,7 @@
     'hs_code'           => ['title' => 'HS Code',                    'type' => 'string'],
     'quantity'          => ['title' => 'Quantity',                   'type' => 'string'],
     'incoterm'          => ['title' => 'Incoterm',                   'type' => 'string'],
+    'amount'            => ['title' => 'Amount',                     'type' => 'string'],
     'fob_value'         => ['title' => 'FOB Value',                  'type' => 'string'],
     'cm_percentage'     => ['title' => 'CM %',                        'type' => 'string'],
     'cm_amount'         => ['title' => 'CM Amount',                   'type' => 'string'],

@@ -9,8 +9,9 @@ class CmValueController extends Controller
 {
     public function index()
     {
+        $user = auth()->user();
         // Fetch the CM value from the database
-        $cmValues = CmValue::all();
+        $cmValues = CmValue::where('site', $user->site)->get();
 
        // return $cmValue;
 
@@ -18,24 +19,25 @@ class CmValueController extends Controller
         return view('cmValue.index', compact('cmValues'));
     }
 
-    public function store(Request $request)
-    {
-       
-        $validated = $request->validate([
-            'cm_value' => 'required|numeric|min:0',
-            'invoice_site' => 'required|string|exists:exports,ExpoterName', // Assuming 'sites' is the table name and 'name' is the column
-        ]);
-        if (CmValue::where('site', $validated['invoice_site'])->exists()) {
-            return redirect()->back()->withErrors(['site' => 'This site already has a CM value.']);
-        }
+    // public function store(Request $request)
+    // {
+    //     //return $request->all();
 
-        CmValue::create([
-            'cm_value' => $validated['cm_value'],
-            'site' => $validated['invoice_site'],
-        ]);
+    //     $validated = $request->validate([
+    //         'cm_value' => 'required|numeric|min:0',
+    //         'invoice_site' => 'required|string|exists:exports,ExpoterName', // Assuming 'sites' is the table name and 'name' is the column
+    //     ]);
+    //     if (CmValue::where('site', $validated['invoice_site'])->exists()) {
+    //         return redirect()->route('cmValue.index')->with('error', 'Invoice already added');
+    //     }
 
-        return redirect()->route('cmValue.index')->with('success', 'CM Value added successfully.');
-    }
+    //     CmValue::create([
+    //         'cm_value' => $validated['cm_value'],
+    //         'site' => $validated['invoice_site'],
+    //     ]);
+
+    //     return redirect()->route('cmValue.index')->with('success', 'CM Value added successfully.');
+    // }
 
     //update
     public function update(Request $request, $id)

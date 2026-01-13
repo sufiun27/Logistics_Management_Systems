@@ -170,19 +170,25 @@ public function store(Request $request)
     {
         // Find the employee by ID
         $employee = User::find($id);
-        //$permissions = Permission::all();
-        $user_permissions= UserPermission::where('user_id',$id)->get();
-        //////
-
-        $permissions = Permission::whereDoesntHave('UserPermission', function ($query) use ($id) {
-            $query->where('user_id', $id);
-        })->get();
-
-        // Check if the employee is found
         if (!$employee) {
             // Handle the case when the employee is not found (you can redirect or display an error message)
             return redirect()->back()->with('error', 'Employee not found');
         }
+        //$permissions = Permission::all();
+        $user_permissions= UserPermission::where('user_id',$id)->get();
+
+        $userPermissionIds = $user_permissions->pluck('permission_id')->toArray();
+
+        //////
+
+        $permissions = Permission::whereNotIn('id', $userPermissionIds)
+        ->orderBy('description', 'asc')
+        ->get();
+
+       // return $permissions;
+
+        // Check if the employee is found
+
 
         // Return the employee to the edit view
         return view('employee.permissions', compact('employee', 'permissions', 'user_permissions'));

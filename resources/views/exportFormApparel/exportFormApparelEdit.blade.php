@@ -61,7 +61,7 @@
                     <div class="form-group row">
                         <label for="notify_name" class="col-sm-3 text-end control-label col-form-label">Notify:</label>
                         <div class="col-sm-9">
-                            <select id="notify_name" required name="notify_name" class="form-control">
+                            <select id="notify_name"  name="notify_name" class="form-control">
                                 <option value="">Select Notify</option>
                                 @foreach($notifies as $notify)
                                 <option value="{{ $notify->name }}" {{ old('notify_name', $exportForm->notify_name) == $notify->name ? 'selected' : '' }}>{{ $notify->name}}</option>
@@ -205,7 +205,7 @@
                     <div class="form-group row">
                         <label for="quantity" class="col-sm-3 text-end control-label col-form-label">Quantity:</label>
                         <div class="col-sm-9">
-                            <input required name="quantity" id="quantity" type="number" class="form-control" value="{{ old('quantity', $exportForm->quantity) }}" placeholder="Quantity"/>
+                            <input required name="quantity" id="quantity" type="number" step="1" min="0" class="form-control" value="{{ old('quantity', $exportForm->quantity) }}" placeholder="Quantity"/>
                         </div>
                     </div>
                     <div class="form-group row">
@@ -221,7 +221,7 @@
                     <div class="form-group row">
                         <label for="amount" class="col-sm-3 text-end control-label col-form-label">Amount:</label>
                         <div class="col-sm-9">
-                            <input required name="amount" id="amount" type="number" class="form-control" value="{{ old('amount', $exportForm->amount) }}" placeholder="Amount"/>
+                            <input required name="amount" id="amount" type="number" step="0.0001" class="form-control" value="{{ old('amount', $exportForm->amount) }}" placeholder="Amount"/>
                         </div>
                     </div>
                     <div class="form-group row">
@@ -248,7 +248,24 @@
                         </div>
                     </div>
                     <div id="freight_value"></div>
+                     <div id="fob_value" class="mt-3 fw-bold text-primary"></div>
                 </div>
+
+                <script>
+                    const cmInput = document.getElementById('cm_amount');
+                    const freightInput = document.getElementById('freight_input');
+                    const fobDiv = document.getElementById('fob_value');
+
+                    function calculateFOB() {
+                        let cmAmount = parseFloat(cmInput.value) || 0;
+                        let freightValue = parseFloat(freightInput.value) || 0;
+                        let fob = cmAmount - freightValue;
+                        fobDiv.innerText = "FOB Value: " + fob.toFixed(2);
+                    }
+
+                    cmInput.addEventListener('input', calculateFOB);
+                    freightInput.addEventListener('input', calculateFOB);
+                </script>
 
                 <div class="col-6">
                     <h4>Ex-Factory Information Entry</h4>
@@ -439,36 +456,110 @@ $(document).ready(function() {
     });
 
     // Incoterm Calculation
-    function updateIncotermCalculation() {
-        var cm_percentage = parseFloat($('#cm_percentage').val());
-        var amount = parseFloat($('#amount').val());
-        var incoterm = $('#incoterm').val();
+function updateIncotermCalculation() {
+    var cm_percentage = parseFloat($('#cm_percentage').val());
+    var amount = parseFloat($('#amount').val());
+    var incoterm = $('#incoterm').val();
 
-        if (!isNaN(cm_percentage) && !isNaN(amount) && incoterm) {
-            if (['FOB', 'CFR', 'FCA', 'EXW', 'CnF'].includes(incoterm)) {
-                var incoterm_calculation = (amount / 100) * cm_percentage;
-                var output = '<input readonly name="cm_amount" id="cm_amount" type="text" class="form-control" value="' + incoterm_calculation.toFixed(2) + '" placeholder="' + incoterm_calculation.toFixed(2) + '"/>';
-                $('#incoterm_calculation').html(output);
-                $('#freight_value').html('');
-            } else if (['CPT', 'CIF', 'DAP', 'DDP'].includes(incoterm)) {
-                var incoterm_calculation = (amount / 100) * cm_percentage;
-                var output = '<input readonly name="cm_amount" id="cm_amount" type="text" class="form-control" value="' + incoterm_calculation.toFixed(2) + '" placeholder="' + incoterm_calculation.toFixed(2) + '"/>';
-                var output1 = '<div class="form-group row">' +
-                             '<label for="freight_value_input" class="col-sm-3 text-end control-label col-form-label">Freight Value:</label>' +
-                             '<div class="col-sm-9">' +
-                             '<input name="freight_value" id="freight_value_input" type="text" class="form-control" placeholder="Freight Value"/>' +
-                             '</div></div>';
-                $('#incoterm_calculation').html(output);
-                $('#freight_value').html(output1);
-            } else {
-                $('#incoterm_calculation').html('Calculate Automatically');
-                $('#freight_value').html('');
-            }
-        } else {
+    if (!isNaN(cm_percentage) && !isNaN(amount) && incoterm) {
+        var incoterm_calculation = (amount / 100) * cm_percentage;
+        var cmOutput = '<input readonly name="cm_amount" id="cm_amount" type="text" class="form-control" ' +
+                       'value="' + incoterm_calculation.toFixed(2) + '" placeholder="' + incoterm_calculation.toFixed(2) + '"/>';
+
+        if (['FOB', 'CFR', 'FCA', 'EXW', 'CnF'].includes(incoterm)) {
+            $('#incoterm_calculation').html(cmOutput);
+            $('#freight_value').html('');
+            $('#fob_value').text('FOB Value: ' + incoterm_calculation.toFixed(2)); // FOB = CM amount (no freight)
+        }
+        else if (['CPT', 'CIF', 'DAP', 'DDP'].includes(incoterm)) {
+            var freightOutput = '<div class="form-group row">' +
+                                '<label for="freight_value_input" class="col-sm-3 text-end control-label col-form-label">Freight Value:</label>' +
+                                '<div class="col-sm-9">' +
+                                '<input name="freight_value" id="freight_value_input" type="number" step="0.01"  class="form-control" placeholder="Freight Value"/>' +
+                                '</div></div>';
+            $('#incoterm_calculation').html(cmOutput);
+            $('#freight_value').html(freightOutput);
+
+            // Attach event dynamically to new freight input
+            $('#freight_value_input').on('input', calculateFOB);
+        }
+        else {
             $('#incoterm_calculation').html('Calculate Automatically');
             $('#freight_value').html('');
+            $('#fob_value').text('');
         }
+    } else {
+        $('#incoterm_calculation').html('Calculate Automatically');
+        $('#freight_value').html('');
+        $('#fob_value').text('');
     }
+}
+
+//! FOB Calculation
+// function calculateFOB() {
+//     //when select incoterm in CPT, CIF, DAP, DDP can only show freight input box
+
+
+
+//     var amount = parseFloat($('#amount').val()) || 0;
+//     var freightValue = parseFloat($('#freight_value_input').val()) || 0;
+//     var fob = amount - freightValue;
+//     $('#fob_value').text('FOB Value: ' + fob.toFixed(2));
+// }
+
+  const freightIncoterms = ['CPT', 'CIF', 'DAP', 'DDP'];
+
+  $('#incoterm').on('change', function () {
+    const selected = $(this).val();
+
+    if (freightIncoterms.includes(selected)) {
+      // show freight input box
+      $('#freight_value').html(`
+        <div class="form-group row">
+          <label for="freight_value_input" class="col-sm-3 text-end control-label col-form-label">Freight Value:</label>
+          <div class="col-sm-9">
+            <input type="number" id="freight_value_input" class="form-control" placeholder="Enter freight value">
+          </div>
+        </div>
+      `);
+      $('#fob_value').show();
+    } else {
+      // hide both freight and FOB display
+      $('#freight_value').empty();
+      $('#fob_value').empty().hide();
+    }
+
+    calculateFOB();
+  });
+
+  // recalculate when values change
+  $(document).on('input', '#amount, #freight_value_input', calculateFOB);
+
+  function calculateFOB() {
+    const incoterm = $('#incoterm').val();
+
+    // Only calculate if incoterm is in freight list
+    if (!freightIncoterms.includes(incoterm)) {
+      $('#fob_value').hide();
+      return;
+    }
+
+    const amount = parseFloat($('#amount').val()) || 0;
+    const freight = parseFloat($('#freight_value_input').val()) || 0;
+
+    if (amount > 0 && freight >= 0) {
+      const fob = amount - freight;
+      $('#fob_value').show().text('FOB Value: ' + fob.toFixed(2));
+    } else {
+      $('#fob_value').hide();
+    }
+  }
+
+  ////////////////////////
+
+
+
+    // Event bindings
 
     $('#cm_percentage, #amount').on('input', updateIncotermCalculation);
     $('#incoterm').on('change', updateIncotermCalculation);
