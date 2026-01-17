@@ -187,7 +187,10 @@
               <!-- User profile and search -->
               <!-- ============================================================== -->
               <li class="nav-item dropdown">
-                <span class="text-light">{{ auth()->user()->name }}</span>
+                @php
+
+                @endphp
+                <span class="text-light">{{ auth()->user()->name }} [ {{ auth()->user()->site }} ]</span>
                 <a
                   class="
                     nav-link
@@ -585,6 +588,12 @@
                       <span class="hide-menu"> Master Report</span></a
                     >
                   </li>
+                    <li class="sidebar-item">
+                        <a href="{{route('reports.finance.index')}}" class="sidebar-link">
+                        <i class="mdi">F R</i>
+                        <span class="hide-menu"> Finance Report</span></a
+                        >
+                    </li>
 
 
 

@@ -1,17 +1,24 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthManager;
+use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\UserController;
-use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\ExportController;
-use App\Http\Controllers\DestCountryController;
+use App\Http\Controllers\NotifyController;
+use App\Http\Controllers\ReportController;
+use App\Http\Controllers\CmValueController;
+use App\Http\Controllers\InvoiceController;
+use App\Http\Controllers\ShippingController;
 use App\Http\Controllers\ConsigneeController;
+use App\Http\Controllers\DestCountryController;
 use App\Http\Controllers\TransportController;
 use App\Http\Controllers\TtInformationController;
+use App\Http\Controllers\ReportIndividualController;
+use App\Http\Controllers\CustomAuditDetailController;
 use App\Http\Controllers\ExportFormApparelController;
-
+use App\Http\Controllers\LogisticsDetailController;
+use App\Http\Controllers\FinanceReportController;
 
 //LOgin routes///////////////////////////////
 Route::get('/login', function () { return view('authentication.login');})->name('login');
@@ -89,7 +96,7 @@ Route::prefix('transport')->middleware('authorization:transport_manage')->group(
     Route::get('deleteTransport/{id}', [TransportController::class, 'deleteTransport'])->name('transport.deleteTransport');
 });
 
-use App\Http\Controllers\NotifyController;
+use App\Http\Controllers\DashboardController;
 Route::prefix('notify')->middleware('authorization:export_manage')->group(function(){
     Route::get('index', [NotifyController::class, 'index'])->name('notify.index');
     Route::get('create', [NotifyController::class, 'create'])->name('notify.create');
@@ -100,7 +107,7 @@ Route::prefix('notify')->middleware('authorization:export_manage')->group(functi
     Route::post('delete/{notify}', [NotifyController::class, 'destroy'])->name('notify.destroy');
 });
 
-use App\Http\Controllers\CmValueController;
+
 Route::prefix('cmValue')->middleware('authorization:cm_percentage')->group(function(){
     Route::get('index', [CmValueController::class, 'index'])->name('cmValue.index');
     Route::post('update/{id}', [CmValueController::class, 'update'])->name('cmValue.update');
@@ -147,7 +154,7 @@ Route::prefix('exportFormApparel')->middleware('authorization:export_manage')->g
     Route::get('exportFormApparelDelete/{id}', [ExportFormApparelController::class, 'exportFormApparelDelete'])->name('exportFormApparel.exportFormApparelDelete');
 });
 ///////shipping/////////////////////
-use App\Http\Controllers\ShippingController;
+use App\Http\Controllers\GetInvoiceController;
 Route::prefix('shipping')->middleware('authorization:shipping_manage')->group(function(){
 
     Route::get('/shipping', [ShippingController::class, 'shipping'])->name('shipping.shipping');
@@ -193,7 +200,7 @@ Route::prefix('sales')->middleware('authorization:sales_manage')->group(function
     Route::get('delete/{id}', [SaleDetailController::class, 'delete'])->name('sales.delete');
 });
 
-use App\Http\Controllers\CustomAuditDetailController;
+
 
 Route::prefix('audit')->middleware('authorization:audit_manage')->group(function(){
     Route::get('indexAudit', [CustomAuditDetailController::class, 'indexAudit'])->name('audit.indexAudit');
@@ -214,7 +221,7 @@ Route::prefix('billing')->middleware('authorization:billing_manage')->group(func
     Route::get('deleteBilling/{id}', [BillingDetailController::class, 'deleteBilling'])->name('billing.deleteBilling');
 });
 
-use App\Http\Controllers\LogisticsDetailController;
+
 Route::get('/logistics/data', [LogisticsDetailController::class, 'data'])->name('logistics.data');
 Route::prefix('logistics')->middleware('authorization:logistics_manage')->group(function(){
     Route::match(['get', 'post'],'indexLogistics', [LogisticsDetailController::class, 'indexLogistics'])->name('logistics.indexLogistics');
@@ -227,12 +234,12 @@ Route::prefix('logistics')->middleware('authorization:logistics_manage')->group(
 
 
 
-use App\Http\Controllers\GetInvoiceController;
+
 Route::post('/getInvoice', [GetInvoiceController::class, 'getInvoice'])->name('getInvoice');
 
 
 
-use App\Http\Controllers\ReportController;
+
 Route::prefix('reports')->middleware('auth')->group(function(){
 
 
@@ -241,19 +248,23 @@ Route::prefix('reports')->middleware('auth')->group(function(){
     Route::get('report', [ReportController::class, 'report'])->name('reports.report');
 
     Route::get('export/master/report', [ReportController::class, 'masterReportExport'])->name('reports.masterReportExport');
+
+    Route::get('finance', function(){ return view('reports.finance.index'); })->name('reports.finance.index');
+    Route::get('finance/data', [FinanceReportController::class, 'financeReport'])->name('reports.finance.report');
+    Route::get('finance/export', [FinanceReportController::class, 'financeReportExport'])->name('reports.finance.export');
 });
 
 
 
 
-use App\Http\Controllers\ReportIndividualController;
+
 Route::middleware('auth')->group(function () {
     Route::get('/reports/individual', [ReportIndividualController::class, 'index'])->name('reports.individual');
     Route::get('/reports/individual/report', [ReportIndividualController::class, 'report'])->name('reports.individual.report');
     Route::get('/reports/individual/export', [ReportIndividualController::class, 'moduleReportExport'])->name('reports.individual.export');
 });
 
-use App\Http\Controllers\DashboardController;
+
 // Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard.index')->middleware('auth');
 //Dashboard routes///////////////////////////
 Route::get('/', [DashboardController::class, 'index'])->name('dashboard.index')->middleware('auth');
